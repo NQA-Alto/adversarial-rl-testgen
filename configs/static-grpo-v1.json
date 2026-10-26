@@ -1,0 +1,23 @@
+{
+  "experiment": "static-grpo-v1",
+  "dataset_id": "internal-v1-96f3d109c508",
+  "prompt_version": "plain-v2",
+  "baseline_run": "baseline-validation-20261025-165958-056732",
+  "baseline_result_sha256": "da4d04ab9477c2ee3cea4ad969c176aff8a8eedb324c0f3dd579ebdf8de5e9f6",
+  "task_source_sha256": "b9656df17b312285b120dada3e1b7e80bf3c90017964639717fe6448aa9c2e25",
+  "steps": 72,
+  "checkpoint_interval": 36,
+  "learning_rate": 0.00001,
+  "group_size": 4,
+  "microbatch_size": 1,
+  "gradient_accumulation_steps": 4,
+  "max_completion_tokens": 64,
+  "lora_rank": 4,
+  "lora_alpha": 8,
+  "seed": 42,
+  "temperature": 1.0,
+  "top_p": 0.95,
+  "top_k": 20,
+  "beta": 0.0,
+  "selection_rule": "Evaluate the preplanned final adapter first; preserve all outcomes. No Test evaluation or adversary in this experiment."
+}

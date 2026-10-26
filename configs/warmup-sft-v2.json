@@ -1,0 +1,18 @@
+{
+  "experiment": "warmup-sft-v2-input-first",
+  "dataset_folder": "warmup-v2-input-first",
+  "dataset_id": "warmup-v2-81a9836cb9c3",
+  "parent_run": "static-grpo-20261025-173307-286988",
+  "parent_result_sha256": "c8c3cc242cbcb05e0313bf9d7c279712461f50ca4453511c191a7e4b5932ba90",
+  "parent_validation_run": "static-validation-20261025-174113-129164",
+  "parent_validation_result_sha256": "4f8fd313ec5912145136e6d83fd81f63d0c30942179c8930fd9c509fefc3f445",
+  "epochs": 1,
+  "gradient_accumulation": 4,
+  "learning_rate": 0.0001,
+  "seed": 42,
+  "max_total_tokens": 768,
+  "max_target_tokens": 64,
+  "checkpoint_steps": 36,
+  "selection_rule": "One preplanned pass over all 285 SFT Train examples, 72 updates including the last partial batch. Use final adapter only. SFT Dev NLL is diagnostic, not checkpoint selection. No Test evaluation.",
+  "method_boundary": "This stage is supervised completion-only training using Train oracle targets, not RL. Any quality gain here must be attributed to SFT and the new Train curriculum. A later RL experiment needs this warmup model as its baseline."
+}

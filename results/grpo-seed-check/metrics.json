@@ -1,0 +1,258 @@
+{
+  "training_seeds": [
+    42,
+    43,
+    44
+  ],
+  "decoding_seed": 42,
+  "aggregate": {
+    "control": {
+      "valid_rate": {
+        "mean": 0.8194444444444444,
+        "sample_std": 0.0,
+        "per_training_seed": [
+          0.8194444444444444,
+          0.8194444444444444,
+          0.8194444444444444
+        ]
+      },
+      "io_accuracy": {
+        "mean": 0.4861111111111111,
+        "sample_std": 0.024056261216234387,
+        "per_training_seed": [
+          0.4722222222222222,
+          0.5138888888888888,
+          0.4722222222222222
+        ]
+      },
+      "attack_rate": {
+        "mean": 0.3101851851851852,
+        "sample_std": 0.02121562821738813,
+        "per_training_seed": [
+          0.2916666666666667,
+          0.3333333333333333,
+          0.3055555555555556
+        ]
+      },
+      "empirical_case_detection_at_4": {
+        "mean": 0.5555555555555556,
+        "sample_std": 0.0,
+        "per_training_seed": [
+          0.5555555555555556,
+          0.5555555555555556,
+          0.5555555555555556
+        ]
+      }
+    },
+    "adversarial": {
+      "valid_rate": {
+        "mean": 0.8101851851851851,
+        "sample_std": 0.016037507477489613,
+        "per_training_seed": [
+          0.7916666666666666,
+          0.8194444444444444,
+          0.8194444444444444
+        ]
+      },
+      "io_accuracy": {
+        "mean": 0.49537037037037035,
+        "sample_std": 0.008018753738744807,
+        "per_training_seed": [
+          0.4861111111111111,
+          0.5,
+          0.5
+        ]
+      },
+      "attack_rate": {
+        "mean": 0.30092592592592593,
+        "sample_std": 0.01603750747748958,
+        "per_training_seed": [
+          0.2916666666666667,
+          0.3194444444444444,
+          0.2916666666666667
+        ]
+      },
+      "empirical_case_detection_at_4": {
+        "mean": 0.5555555555555556,
+        "sample_std": 0.0,
+        "per_training_seed": [
+          0.5555555555555556,
+          0.5555555555555556,
+          0.5555555555555556
+        ]
+      }
+    }
+  },
+  "paired_differences_pp": {
+    "valid_rate": [
+      -2.777777777777779,
+      0.0,
+      0.0
+    ],
+    "io_accuracy": [
+      1.3888888888888895,
+      -1.388888888888884,
+      2.777777777777779
+    ],
+    "attack_rate": [
+      0.0,
+      -1.3888888888888895,
+      -1.3888888888888895
+    ],
+    "empirical_case_detection_at_4": [
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "all_metrics": {
+    "42": {
+      "parent_warmup": {
+        "evaluated_cases": 18,
+        "available_cases": 18,
+        "complete_split": true,
+        "generated_tests": 72,
+        "valid_tests": 56,
+        "correct_expected": 31,
+        "bug_detecting_tests": 20,
+        "cases_detected_with_up_to_4_tests": 9,
+        "valid_rate": 0.7777777777777778,
+        "io_accuracy": 0.4305555555555556,
+        "attack_rate": 0.2777777777777778,
+        "empirical_case_detection_at_4": 0.5,
+        "metric_denominator": "All generated tests, including invalid and truncated tests, for per-test rates"
+      },
+      "control": {
+        "evaluated_cases": 18,
+        "available_cases": 18,
+        "complete_split": true,
+        "generated_tests": 72,
+        "valid_tests": 59,
+        "correct_expected": 34,
+        "bug_detecting_tests": 21,
+        "cases_detected_with_up_to_4_tests": 10,
+        "valid_rate": 0.8194444444444444,
+        "io_accuracy": 0.4722222222222222,
+        "attack_rate": 0.2916666666666667,
+        "empirical_case_detection_at_4": 0.5555555555555556,
+        "metric_denominator": "All generated tests, including invalid and truncated tests, for per-test rates"
+      },
+      "adversarial": {
+        "evaluated_cases": 18,
+        "available_cases": 18,
+        "complete_split": true,
+        "generated_tests": 72,
+        "valid_tests": 57,
+        "correct_expected": 35,
+        "bug_detecting_tests": 21,
+        "cases_detected_with_up_to_4_tests": 10,
+        "valid_rate": 0.7916666666666666,
+        "io_accuracy": 0.4861111111111111,
+        "attack_rate": 0.2916666666666667,
+        "empirical_case_detection_at_4": 0.5555555555555556,
+        "metric_denominator": "All generated tests, including invalid and truncated tests, for per-test rates"
+      }
+    },
+    "43": {
+      "parent_warmup": {
+        "evaluated_cases": 18,
+        "available_cases": 18,
+        "complete_split": true,
+        "generated_tests": 72,
+        "valid_tests": 56,
+        "correct_expected": 31,
+        "bug_detecting_tests": 20,
+        "cases_detected_with_up_to_4_tests": 9,
+        "valid_rate": 0.7777777777777778,
+        "io_accuracy": 0.4305555555555556,
+        "attack_rate": 0.2777777777777778,
+        "empirical_case_detection_at_4": 0.5,
+        "metric_denominator": "All generated tests, including invalid and truncated tests, for per-test rates"
+      },
+      "control": {
+        "evaluated_cases": 18,
+        "available_cases": 18,
+        "complete_split": true,
+        "generated_tests": 72,
+        "valid_tests": 59,
+        "correct_expected": 37,
+        "bug_detecting_tests": 24,
+        "cases_detected_with_up_to_4_tests": 10,
+        "valid_rate": 0.8194444444444444,
+        "io_accuracy": 0.5138888888888888,
+        "attack_rate": 0.3333333333333333,
+        "empirical_case_detection_at_4": 0.5555555555555556,
+        "metric_denominator": "All generated tests, including invalid and truncated tests, for per-test rates"
+      },
+      "adversarial": {
+        "evaluated_cases": 18,
+        "available_cases": 18,
+        "complete_split": true,
+        "generated_tests": 72,
+        "valid_tests": 59,
+        "correct_expected": 36,
+        "bug_detecting_tests": 23,
+        "cases_detected_with_up_to_4_tests": 10,
+        "valid_rate": 0.8194444444444444,
+        "io_accuracy": 0.5,
+        "attack_rate": 0.3194444444444444,
+        "empirical_case_detection_at_4": 0.5555555555555556,
+        "metric_denominator": "All generated tests, including invalid and truncated tests, for per-test rates"
+      }
+    },
+    "44": {
+      "parent_warmup": {
+        "evaluated_cases": 18,
+        "available_cases": 18,
+        "complete_split": true,
+        "generated_tests": 72,
+        "valid_tests": 56,
+        "correct_expected": 31,
+        "bug_detecting_tests": 20,
+        "cases_detected_with_up_to_4_tests": 9,
+        "valid_rate": 0.7777777777777778,
+        "io_accuracy": 0.4305555555555556,
+        "attack_rate": 0.2777777777777778,
+        "empirical_case_detection_at_4": 0.5,
+        "metric_denominator": "All generated tests, including invalid and truncated tests, for per-test rates"
+      },
+      "control": {
+        "evaluated_cases": 18,
+        "available_cases": 18,
+        "complete_split": true,
+        "generated_tests": 72,
+        "valid_tests": 59,
+        "correct_expected": 34,
+        "bug_detecting_tests": 22,
+        "cases_detected_with_up_to_4_tests": 10,
+        "valid_rate": 0.8194444444444444,
+        "io_accuracy": 0.4722222222222222,
+        "attack_rate": 0.3055555555555556,
+        "empirical_case_detection_at_4": 0.5555555555555556,
+        "metric_denominator": "All generated tests, including invalid and truncated tests, for per-test rates"
+      },
+      "adversarial": {
+        "evaluated_cases": 18,
+        "available_cases": 18,
+        "complete_split": true,
+        "generated_tests": 72,
+        "valid_tests": 59,
+        "correct_expected": 36,
+        "bug_detecting_tests": 21,
+        "cases_detected_with_up_to_4_tests": 10,
+        "valid_rate": 0.8194444444444444,
+        "io_accuracy": 0.5,
+        "attack_rate": 0.2916666666666667,
+        "empirical_case_detection_at_4": 0.5555555555555556,
+        "metric_denominator": "All generated tests, including invalid and truncated tests, for per-test rates"
+      }
+    }
+  },
+  "new_optimizer_steps": 384,
+  "new_generated_training_samples": 1536,
+  "new_validation_outputs_rescored": 288,
+  "scope": "GRPO training seeds from one fixed SFT checkpoint and one fixed adversarial pool",
+  "validation_programs": 18,
+  "tests_per_program": 4,
+  "test_set_evaluated": false
+}

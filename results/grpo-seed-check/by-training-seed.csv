@@ -1,0 +1,7 @@
+﻿training_seed,decoding_seed,arm,evaluated_cases,available_cases,complete_split,generated_tests,valid_tests,correct_expected,bug_detecting_tests,cases_detected_with_up_to_4_tests,valid_rate,io_accuracy,attack_rate,empirical_case_detection_at_4,metric_denominator
+42,42,control,18,18,True,72,59,34,21,10,0.8194444444444444,0.4722222222222222,0.2916666666666667,0.5555555555555556,"All generated tests, including invalid and truncated tests, for per-test rates"
+42,42,adversarial,18,18,True,72,57,35,21,10,0.7916666666666666,0.4861111111111111,0.2916666666666667,0.5555555555555556,"All generated tests, including invalid and truncated tests, for per-test rates"
+43,42,control,18,18,True,72,59,37,24,10,0.8194444444444444,0.5138888888888888,0.3333333333333333,0.5555555555555556,"All generated tests, including invalid and truncated tests, for per-test rates"
+43,42,adversarial,18,18,True,72,59,36,23,10,0.8194444444444444,0.5,0.3194444444444444,0.5555555555555556,"All generated tests, including invalid and truncated tests, for per-test rates"
+44,42,control,18,18,True,72,59,34,22,10,0.8194444444444444,0.4722222222222222,0.3055555555555556,0.5555555555555556,"All generated tests, including invalid and truncated tests, for per-test rates"
+44,42,adversarial,18,18,True,72,59,36,21,10,0.8194444444444444,0.5,0.2916666666666667,0.5555555555555556,"All generated tests, including invalid and truncated tests, for per-test rates"

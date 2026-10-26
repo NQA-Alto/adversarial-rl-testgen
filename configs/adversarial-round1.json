@@ -1,0 +1,15 @@
+{
+  "experiment": "adversarial-round1-matched-slots",
+  "parent_run": "static-grpo-20261025-173307-286988",
+  "parent_result_sha256": "c8c3cc242cbcb05e0313bf9d7c279712461f50ca4453511c191a7e4b5932ba90",
+  "parent_validation_run": "static-validation-20261025-174113-129164",
+  "parent_validation_result_sha256": "4f8fd313ec5912145136e6d83fd81f63d0c30942179c8930fd9c509fefc3f445",
+  "pool_run": "adversary-pool-20261025-220733-426070",
+  "pool_result_sha256": "e0cd8afcb5d7f2a9baacf4286935e2ca35c51cf71a5088258b48aabd9b2926f5",
+  "pool_cases_sha256": "3069e139146025eaadd439080e30920f2e3ac2e1c5aec934843f859dd26e9f54",
+  "steps_per_arm": 72,
+  "checkpoint_interval": 36,
+  "passes_per_original_case": 2,
+  "selection_rule": "In pass order and original Train order, replace eligible slots with the least-used accepted candidate, breaking ties by behavior hash. Preserve the same 72 parent-case slots in both arms.",
+  "comparison_rule": "Both arms start from the same frozen parent adapter with fresh optimizers, identical GRPO settings and update budgets. Evaluate preplanned final adapters on frozen Validation only. Preserve gains, ties and losses. No Test evaluation."
+}

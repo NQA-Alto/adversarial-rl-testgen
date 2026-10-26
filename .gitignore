@@ -179,3 +179,35 @@ cython_debug/
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
 .cursorindexingignore
+
+# Local assets and checkpoints
+models/
+checkpoints/
+adapters/
+data/
+evidence/
+cache/
+temp/
+tools/
+*.safetensors
+*.pt
+*.pth
+*.ckpt
+*.bin
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Local run state and working notes
+/AUTONOMOUS_EXPERIMENTS_*.json
+/DEMO_CATALOG.json
+/LATEST_*.json
+/BUOC_*.md
+/HUONG_DAN_*.md
+/KET_QUA_*.md
+/KICH_BAN_*.md
+/NHAT_KY_*.md
+/ROADMAP_*.md
+/TIEN_DO_*.md
+scripts/*.diff.txt
