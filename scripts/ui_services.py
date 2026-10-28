@@ -93,9 +93,11 @@ def start(open_browser):
     environment = os.environ.copy()
     environment.update(PYTHONUTF8="1", PYTHONDONTWRITEBYTECODE="1", PYTHONUNBUFFERED="1", GRADIO_ANALYTICS_ENABLED="False",
                        TEMP=str(ASSETS / "temp"), TMP=str(ASSETS / "temp"), GRADIO_TEMP_DIR=str(ASSETS / "temp/gradio"), MPLCONFIGDIR=str(ASSETS / "cache/matplotlib-ui"))
+    active_path = PROJECT / "configs/active-dataset.json"
+    apps_active = active_path.exists() and json.loads(active_path.read_text(encoding="utf-8")).get("dataset") == "apps-introductory"
     commands = [
-        [sys.executable, str(PROJECT / "scripts/export_tensorboard.py"), "--watch"],
-        [sys.executable, "-m", "tensorboard.main", "--logdir", str(ASSETS / "evidence/tensorboard"), "--host", "127.0.0.1", "--port", "6006", "--load_fast=false", "--reload_interval", "5"],
+        [sys.executable, str(PROJECT / "scripts/export_tensorboard.py"), "--watch", "--scope", "apps" if apps_active else "all"],
+        [sys.executable, "-m", "tensorboard.main", "--logdir", str(ASSETS / ("evidence/tensorboard-apps" if apps_active else "evidence/tensorboard")), "--host", "127.0.0.1", "--port", "6006", "--load_fast=false", "--reload_interval", "5"],
         [sys.executable, str(PROJECT / "scripts/ui_dashboard.py")],
     ]
     state = {"processes": [], "started_at": time.time(), "url": URL, "tensorboard_url": "http://127.0.0.1:6006"}

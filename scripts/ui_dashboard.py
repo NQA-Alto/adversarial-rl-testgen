@@ -352,14 +352,21 @@ def main():
     args = parser.parse_args()
     for folder in (ASSETS / "temp/gradio", ASSETS / "cache/matplotlib-ui"):
         folder.mkdir(parents=True, exist_ok=True)
-    app = build_ui()
+    active = read_json(PROJECT / "configs/active-dataset.json", {})
+    if active.get("dataset") == "apps-introductory":
+        from apps_ui import CSS, build_ui as build_apps_ui
+        app = build_apps_ui()
+        stylesheet = CSS
+    else:
+        app = build_ui()
+        stylesheet = Path(__file__).with_suffix(".css").read_text(encoding="utf-8")
     if args.check:
         print("UI BUILD CHECK PASSED. No model or training was started.")
         return
     import gradio as gr
     app.launch(server_name="127.0.0.1", server_port=args.port, share=False, inbrowser=False,
                theme=gr.themes.Base(primary_hue="slate", neutral_hue="slate", radius_size="sm", font=["Segoe UI", "Arial", "sans-serif"], font_mono=["Consolas", "monospace"]),
-               css=Path(__file__).with_suffix(".css").read_text(encoding="utf-8"),
+               css=stylesheet,
                js="() => { document.documentElement.classList.remove('dark'); const b = document.getElementById('stop-run'); if (b) b.title = 'Dừng lượt đang chạy. Chỉ kết quả đã lưu được giữ.'; }", footer_links=[])
 
 

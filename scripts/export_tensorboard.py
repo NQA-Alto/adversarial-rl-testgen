@@ -30,7 +30,7 @@ def read_lines(path):
 
 def scalar_rows(folder):
     values = []
-    history = load_json(folder / "trainer-log-history.json", [])
+    history = load_json(folder / "trainer-log-history.json", []) + read_lines(folder / "trainer-metrics.jsonl")
     for row in history:
         step = row.get("step")
         if not isinstance(step, (int, float)):
@@ -49,6 +49,9 @@ def scalar_rows(folder):
         step, value = row.get("step"), row.get("gradient_norm")
         if isinstance(step, int) and isinstance(value, (int, float)) and math.isfinite(value):
             values.append(("gradient/norm_observed", step, float(value)))
+    for row in load_json(folder / "gradients.json", []):
+        if isinstance(row.get("step"), int) and isinstance(row.get("norm"), (int, float)):
+            values.append(("gradient/norm_observed", row["step"], float(row["norm"])))
     for row in read_lines(folder / "sft-steps.jsonl"):
         step = row.get("step")
         if not isinstance(step, int):
@@ -61,9 +64,10 @@ def scalar_rows(folder):
 
 
 class Exporter:
-    def __init__(self, evidence):
+    def __init__(self, evidence, scope="all"):
         self.evidence = evidence
-        self.output = evidence / "tensorboard"
+        self.scope = scope
+        self.output = evidence / ("tensorboard-apps" if scope == "apps" else "tensorboard")
         self.output.mkdir(parents=True, exist_ok=True)
         self.state_file = self.output / "export-state.json"
         self.state = load_json(self.state_file, {})
@@ -75,9 +79,11 @@ class Exporter:
         from tensorboard.summary.writer.event_file_writer import EventFileWriter
 
         added = 0
-        folders = {path.parent for name in ("rollouts.jsonl", "trainer-log-history.json", "sft-steps.jsonl") for path in self.evidence.rglob(name)}
+        folders = {path.parent for name in ("rollouts.jsonl", "trainer-log-history.json", "trainer-metrics.jsonl", "sft-steps.jsonl") for path in self.evidence.rglob(name)}
         for folder in sorted(folders):
             relative = folder.relative_to(self.evidence)
+            if self.scope == "apps" and not relative.parts[0].startswith("apps-"):
+                continue
             if any(part in ("source", "tensorboard", "ui-jobs") or "self-check" in part or "preflight" in part for part in relative.parts):
                 continue
             run = relative.as_posix()
@@ -110,8 +116,9 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--assets", type=Path, default=Path(r"D:\DA\TTNT_De19_Assets"))
     parser.add_argument("--watch", action="store_true")
+    parser.add_argument("--scope", choices=("all", "apps"), default="all")
     args = parser.parse_args()
-    exporter = Exporter(args.assets / "evidence")
+    exporter = Exporter(args.assets / "evidence", args.scope)
     try:
         while True:
             count = exporter.sync()

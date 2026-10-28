@@ -1,0 +1,8 @@
+{
+  "dataset": "apps-introductory",
+  "dataset_id": "apps-intro-call-v2-eb69b8869857",
+  "stage": "sft-and-static-grpo",
+  "legacy_backup": "De19-before-APPS-20261028-112210",
+  "prompt_version": "apps-call-v2",
+  "grpo_start": "sft"
+}
