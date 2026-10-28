@@ -202,6 +202,7 @@ tools/
 # Local run state and working notes
 /AUTONOMOUS_EXPERIMENTS_*.json
 /DEMO_CATALOG.json
+/APPS_STATE.json
 /LATEST_*.json
 /BUOC_*.md
 /HUONG_DAN_*.md
