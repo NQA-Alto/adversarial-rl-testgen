@@ -1,0 +1,27 @@
+{
+  "date": "2026-10-29",
+  "output": "D:\\DA\\DoAn_TTNT_De19\\adversarial-rl-testgen\\docs\\BAI_GIANG_DO_AN_TTNT.html",
+  "bytes": 477099,
+  "sections": 23,
+  "self_contained_images": 3,
+  "inline_svg_figures": 3,
+  "model_training_started": false,
+  "model_test_evaluation": false,
+  "source_files": {
+    "docs/lesson/01-foundations.html": "05e2f9192d62cf24b5250c28334d64ed711d69376a2543876c36b1fed9415ae1",
+    "docs/lesson/02-learning.html": "2eea996baf4f6e520147bf1348c06acb0ac9001421c844f67c113d6a64f5a970",
+    "docs/lesson/03-results-and-tensorboard.html": "a5a8b3b9cbb01d81f8b903d354e1c1197b6a21f945b5e5637de75a8d785aaaa6",
+    "docs/lesson/04-practice.html": "deacdf457b6ffadf9bf73dd9bee75cac7dca8bda21308b473222b43edc30b132",
+    "scripts/build_project_lesson.py": "299cbd9258fca3c8b4eeae6e8287a9442afb7f1cf5405dbd9aa85c28fc6ca3bf",
+    "docs/lesson/tensorboard.png": "a2fd2122e016dfa6dc3911853576dc11813c3fd6eb28463e627ee01e908e9427"
+  },
+  "reward_trial_result_sha256": "dc9968334e6cc99fbb3915b3789908cfaaa53a5a08713616d8bc87a6d6f66776",
+  "sampling_runs": 9,
+  "metric_example": [
+    60,
+    45,
+    15,
+    5,
+    4
+  ]
+}

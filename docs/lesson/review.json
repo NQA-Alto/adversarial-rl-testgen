@@ -1,0 +1,65 @@
+{
+  "date": "2026-10-29",
+  "status": "passed",
+  "document_sha256": "3b36aae18a174358dada5a168f8bdd02a67063dec4ae466308cf1aceee997c83",
+  "sections": 23,
+  "inline_svg_figures": 3,
+  "embedded_images": 3,
+  "unique_ids": true,
+  "broken_toc_anchors": 0,
+  "external_script_or_style_dependencies": [],
+  "preview_browser_checked": true,
+  "preview_transport": "localhost HTTP",
+  "direct_file_browser_tested": false,
+  "direct_file_note": "Embedded browser policy permits HTTP/HTTPS only; no attempt to bypass the blocked file protocol.",
+  "browser_images_loaded": 3,
+  "desktop_document_overflow": false,
+  "browser_widget_checks": [
+    {
+      "n": 3,
+      "expected": 3,
+      "reward": 0.1
+    },
+    {
+      "n": 0,
+      "expected": 0,
+      "reward": 0.3
+    },
+    {
+      "n": 10,
+      "expected": 55,
+      "reward": 0
+    },
+    {
+      "n": 3,
+      "expected": 6,
+      "reward": 1
+    },
+    {
+      "grpo": "all-hit",
+      "mean": 1,
+      "std": 0,
+      "all_advantages": 0
+    },
+    {
+      "grpo": "legacy-mixed",
+      "mean": 0.35,
+      "sample_std_rounded": 0.451
+    },
+    {
+      "grpo": "equal-mixed",
+      "mean": 0.5,
+      "sample_std_rounded": 0.43
+    },
+    {
+      "grpo": "equal-all-correct-not-hit",
+      "mean_rounded": 0.667,
+      "std": 0,
+      "all_advantages": 0
+    }
+  ],
+  "model_training_started": false,
+  "model_test_evaluation": false,
+  "print_styles_present": true,
+  "pdf_export_tested": false
+}

@@ -297,7 +297,7 @@ def build_ui():
                 notes = {
                     apps_jobs.TASKS[0]: "Kiểm tra nguồn dữ liệu, tập chia và bộ chấm; không tải model.",
                     apps_jobs.TASKS[1]: "Sinh và chấm 4 test/code trên Validation bằng Qwen gốc. Không huấn luyện.",
-                    apps_jobs.TASKS[2]: "Bắt đầu từ adapter SFT đã lưu, tạo optimizer GRPO mới; sau đó chấm adapter để đo chất lượng." if state().get("sft_training") else "Tạo LoRA mới từ Qwen gốc và học trên Train; không học tiếp adapter cũ. Sau đó chọn chấm adapter để đo chất lượng.",
+                    apps_jobs.TASKS[2]: "Học trên Train từ adapter SFT đã lưu, với optimizer GRPO mới. Sau khi học, chọn Chấm adapter hiện tại trên Validation để đo chất lượng." if state().get("sft_training") else "Tạo LoRA mới từ Qwen gốc và học trên Train; không học tiếp adapter cũ. Sau đó chọn chấm adapter để đo chất lượng.",
                     apps_jobs.TASKS[3]: "Chấm adapter của lượt GRPO mới nhất trên cùng Validation, seed 42. Không cập nhật trọng số.",
                     apps_jobs.TASKS[4]: "Chạy từ Qwen gốc: chấm baseline, SFT 64 bước trên Train, rồi GRPO theo số bước đã chọn. Chấm Validation tại từng mốc; không dùng Test.",
                 }

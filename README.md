@@ -6,6 +6,8 @@ Nhánh `apps-introductory` đang dùng dữ liệu APPS. Đã chạy SFT, GRPO c
 
 ## Tiến độ và phân tích bổ sung
 
+[Bài giảng đồ án từ nền tảng đến TensorBoard](docs/BAI_GIANG_DO_AN_TTNT.html): một file HTML tự chứa, có sơ đồ, ví dụ tính reward/GRPO, hướng dẫn đọc kết quả và hai mô phỏng. Tải file về rồi mở bằng trình duyệt để đọc offline; GitHub thường hiển thị mã HTML thay vì chạy trang.
+
 [Roadmap APPS hiện tại](docs/APPS_PROGRESS.md) · [Phân tích lỗi](results/apps-error-analysis) · [Các phép thử tinh chỉnh](results/apps-tuning) · [EDA và pipeline](results/apps-data-profile)
 
 Hai nhánh GRPO cuối phát hiện cùng hai code; nhánh đối kháng mất tám cơ hội vì expected sai. Đã thử thinking và hai cách diễn đạt hợp đồng đầu ra trên Train; các ứng viên chưa qua tiêu chí nên giữ prompt v2 và checkpoint hiện tại. Đây là các phép thử suy luận, không phải lượt RL mới. Test vẫn được giữ lại.
