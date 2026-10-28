@@ -1,0 +1,4 @@
+variant,generated_tests,valid_tests,correct_expected,bug_detecting_tests,cases_detected,evaluated_cases
+baseline_validation,60,35,15,4,3,15
+sft_validation,60,41,13,4,3,15
+pilot_validation,60,44,15,4,3,15

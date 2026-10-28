@@ -1,0 +1,246 @@
+{
+  "dataset_id": "apps-intro-call-v2-eb69b8869857",
+  "source": "codeparrot/apps",
+  "source_revision": "21e74ddf8de1a21436da12e3e653065c5213e9d1",
+  "scope": "Call-based functions only; finite subdomains; restricted AST interpreter. Not the full APPS Introductory benchmark or ATGen replication.",
+  "splits": {
+    "train": {
+      "cases": 41,
+      "problems": 17,
+      "sha256": "b76af3034722411991b5ff12939648c0330a0079e51d9e650490c3ee845479b7"
+    },
+    "validation": {
+      "cases": 15,
+      "problems": 5,
+      "sha256": "d275394b4985cf8e4e9142885fe297b125ff4b33c4201933bb1c041bf3215c06"
+    },
+    "test": {
+      "cases": 18,
+      "problems": 7,
+      "sha256": "a333162780204cddd87dab2e7fec9c345a8e8ad9dbc080c261e6bfaeb785a8c2"
+    }
+  },
+  "runs": {
+    "baseline_validation": {
+      "folder": "apps-baseline-validation-20261028-131445-783975",
+      "result_sha256": "00d8f7333b9baa4fde06fa4008766281a3319b0bd45d82c36ac21d2172ed8090",
+      "result": {
+        "status": "evaluation_completed",
+        "action": "evaluate",
+        "source_hashes": {
+          "apps_core.py": "5fe2fd6a2a6bf9603da9c7d4a3931bc95b7b750b3748001d0e53eb5c0ddf0242",
+          "apps_profiles.py": "b63ba5a9c1e6319d34925969fd16c438efc887bbdb7c7a40c93bcbb5e35bdf93",
+          "apps_model_runner.py": "409f127ae4cfcc25aa0c7427f31ed2aedbacdc6450efea1e9426cf5d01e0c16f",
+          "restricted_python.py": "542fd37b7ed73225fd2105922845155615e241b246b039e7ccce7fc840967111",
+          "local_model_loader.py": "339d647aa8b2d123cb9972654b9244a0aeb57aa8a02e173bac0f4abfcfa2221a"
+        },
+        "started_at": "2026-10-28T06:14:45.788268+00:00",
+        "model_path": "D:\\DA\\TTNT_De19_Assets\\models\\Qwen3.5-2B",
+        "versions": {
+          "torch": "2.14.1+cu132",
+          "transformers": "5.20.2",
+          "trl": "1.16.0",
+          "peft": "0.21.2"
+        },
+        "dataset_id": "apps-intro-call-v2-eb69b8869857",
+        "split": "validation",
+        "split_sha256": "d275394b4985cf8e4e9142885fe297b125ff4b33c4201933bb1c041bf3215c06",
+        "adapter": null,
+        "adapter_sha256": null,
+        "seed": 42,
+        "tests_per_case": 4,
+        "prompt_version": "apps-call-v1",
+        "model_test_evaluation": false,
+        "complete_split": true,
+        "training": false,
+        "generation": {
+          "max_new_tokens": 96,
+          "temperature": 1.0,
+          "top_p": 0.95,
+          "top_k": 20,
+          "thinking": false
+        },
+        "metrics": {
+          "evaluated_cases": 15,
+          "generated_tests": 60,
+          "valid_tests": 14,
+          "correct_expected": 10,
+          "bug_detecting_tests": 2,
+          "cases_detected": 2,
+          "valid_rate": 0.23333333333333334,
+          "io_accuracy": 0.16666666666666666,
+          "attack_rate": 0.03333333333333333,
+          "case_detection_at_4": 0.13333333333333333,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        },
+        "elapsed_seconds": 34.154,
+        "peak_vram_gib": 4.433,
+        "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU"
+      }
+    },
+    "pilot_training": {
+      "folder": "apps-grpo-pilot-20261028-131726-118879",
+      "result_sha256": "1575c82f5fcccc67202de77c68bc5fa35581595e140e4828ab4a0382ad85d1fe",
+      "result": {
+        "status": "static_grpo_pilot_completed",
+        "action": "train",
+        "source_hashes": {
+          "apps_core.py": "5fe2fd6a2a6bf9603da9c7d4a3931bc95b7b750b3748001d0e53eb5c0ddf0242",
+          "apps_profiles.py": "b63ba5a9c1e6319d34925969fd16c438efc887bbdb7c7a40c93bcbb5e35bdf93",
+          "apps_model_runner.py": "409f127ae4cfcc25aa0c7427f31ed2aedbacdc6450efea1e9426cf5d01e0c16f",
+          "restricted_python.py": "542fd37b7ed73225fd2105922845155615e241b246b039e7ccce7fc840967111",
+          "local_model_loader.py": "339d647aa8b2d123cb9972654b9244a0aeb57aa8a02e173bac0f4abfcfa2221a"
+        },
+        "started_at": "2026-10-28T06:17:26.123027+00:00",
+        "model_path": "D:\\DA\\TTNT_De19_Assets\\models\\Qwen3.5-2B",
+        "versions": {
+          "torch": "2.14.1+cu132",
+          "transformers": "5.20.2",
+          "trl": "1.16.0",
+          "peft": "0.21.2"
+        },
+        "dataset_id": "apps-intro-call-v2-eb69b8869857",
+        "prompt_version": "apps-call-v1",
+        "train_sha256": "b76af3034722411991b5ff12939648c0330a0079e51d9e650490c3ee845479b7",
+        "baseline_path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261028-131445-783975",
+        "baseline_result_sha256": "00d8f7333b9baa4fde06fa4008766281a3319b0bd45d82c36ac21d2172ed8090",
+        "configuration": {
+          "steps": 48,
+          "max_completion_tokens": 96,
+          "learning_rate": 1e-05,
+          "beta": 0.0,
+          "temperature": 1.0,
+          "top_p": 0.95,
+          "top_k": 20,
+          "seed": 42
+        },
+        "training": true,
+        "model_test_evaluation": false,
+        "initialization": "original Qwen3.5-2B plus new rank-4 LoRA; no previous adapters",
+        "scope": "Static APPS GRPO pilot; adversarial curriculum is not implemented in this run",
+        "trainable_parameters": 208896,
+        "optimizer_steps": 48,
+        "changed_adapter_tensors": [
+          "base_model.model.model.language_model.layers.3.self_attn.q_proj.lora_A.weight",
+          "base_model.model.model.language_model.layers.3.self_attn.q_proj.lora_B.weight",
+          "base_model.model.model.language_model.layers.3.self_attn.v_proj.lora_A.weight",
+          "base_model.model.model.language_model.layers.3.self_attn.v_proj.lora_B.weight",
+          "base_model.model.model.language_model.layers.7.self_attn.q_proj.lora_A.weight",
+          "base_model.model.model.language_model.layers.7.self_attn.q_proj.lora_B.weight",
+          "base_model.model.model.language_model.layers.7.self_attn.v_proj.lora_A.weight",
+          "base_model.model.model.language_model.layers.7.self_attn.v_proj.lora_B.weight",
+          "base_model.model.model.language_model.layers.11.self_attn.q_proj.lora_A.weight",
+          "base_model.model.model.language_model.layers.11.self_attn.q_proj.lora_B.weight",
+          "base_model.model.model.language_model.layers.11.self_attn.v_proj.lora_A.weight",
+          "base_model.model.model.language_model.layers.11.self_attn.v_proj.lora_B.weight",
+          "base_model.model.model.language_model.layers.15.self_attn.q_proj.lora_A.weight",
+          "base_model.model.model.language_model.layers.15.self_attn.q_proj.lora_B.weight",
+          "base_model.model.model.language_model.layers.15.self_attn.v_proj.lora_A.weight",
+          "base_model.model.model.language_model.layers.15.self_attn.v_proj.lora_B.weight",
+          "base_model.model.model.language_model.layers.19.self_attn.q_proj.lora_A.weight",
+          "base_model.model.model.language_model.layers.19.self_attn.q_proj.lora_B.weight",
+          "base_model.model.model.language_model.layers.19.self_attn.v_proj.lora_A.weight",
+          "base_model.model.model.language_model.layers.19.self_attn.v_proj.lora_B.weight",
+          "base_model.model.model.language_model.layers.23.self_attn.q_proj.lora_A.weight",
+          "base_model.model.model.language_model.layers.23.self_attn.q_proj.lora_B.weight",
+          "base_model.model.model.language_model.layers.23.self_attn.v_proj.lora_A.weight",
+          "base_model.model.model.language_model.layers.23.self_attn.v_proj.lora_B.weight"
+        ],
+        "nonzero_gradient_steps": 39,
+        "policy_signal_groups": 39,
+        "adapter": {
+          "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-grpo-pilot-20261028-131726-118879\\adapter",
+          "optimizer_step": 48,
+          "parameters_match": true,
+          "adapter_sha256": "edae5c04432ade298766b8443673b782f19b90a570913e091497bc30584ac7df"
+        },
+        "peak_vram_gib": 4.703,
+        "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+        "update_verified": true
+      }
+    },
+    "pilot_validation": {
+      "folder": "apps-adapter-validation-20261028-132320-500719",
+      "result_sha256": "b2035546db50fdad24b095a52bf2cfd9fba7a7abfd1a26717765af3cd351a39c",
+      "result": {
+        "status": "evaluation_completed",
+        "action": "evaluate",
+        "source_hashes": {
+          "apps_core.py": "5fe2fd6a2a6bf9603da9c7d4a3931bc95b7b750b3748001d0e53eb5c0ddf0242",
+          "apps_profiles.py": "b63ba5a9c1e6319d34925969fd16c438efc887bbdb7c7a40c93bcbb5e35bdf93",
+          "apps_model_runner.py": "409f127ae4cfcc25aa0c7427f31ed2aedbacdc6450efea1e9426cf5d01e0c16f",
+          "restricted_python.py": "542fd37b7ed73225fd2105922845155615e241b246b039e7ccce7fc840967111",
+          "local_model_loader.py": "339d647aa8b2d123cb9972654b9244a0aeb57aa8a02e173bac0f4abfcfa2221a"
+        },
+        "started_at": "2026-10-28T06:23:20.504718+00:00",
+        "model_path": "D:\\DA\\TTNT_De19_Assets\\models\\Qwen3.5-2B",
+        "versions": {
+          "torch": "2.14.1+cu132",
+          "transformers": "5.20.2",
+          "trl": "1.16.0",
+          "peft": "0.21.2"
+        },
+        "dataset_id": "apps-intro-call-v2-eb69b8869857",
+        "split": "validation",
+        "split_sha256": "d275394b4985cf8e4e9142885fe297b125ff4b33c4201933bb1c041bf3215c06",
+        "adapter": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-grpo-pilot-20261028-131726-118879\\adapter",
+        "adapter_sha256": "edae5c04432ade298766b8443673b782f19b90a570913e091497bc30584ac7df",
+        "seed": 42,
+        "tests_per_case": 4,
+        "prompt_version": "apps-call-v1",
+        "model_test_evaluation": false,
+        "complete_split": true,
+        "training": false,
+        "generation": {
+          "max_new_tokens": 96,
+          "temperature": 1.0,
+          "top_p": 0.95,
+          "top_k": 20,
+          "thinking": false
+        },
+        "metrics": {
+          "evaluated_cases": 15,
+          "generated_tests": 60,
+          "valid_tests": 17,
+          "correct_expected": 11,
+          "bug_detecting_tests": 1,
+          "cases_detected": 1,
+          "valid_rate": 0.2833333333333333,
+          "io_accuracy": 0.18333333333333332,
+          "attack_rate": 0.016666666666666666,
+          "case_detection_at_4": 0.06666666666666667,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        },
+        "elapsed_seconds": 32.632,
+        "peak_vram_gib": 4.435,
+        "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU"
+      }
+    }
+  },
+  "failure_breakdown": {
+    "baseline_validation": {
+      "schema_or_domain": 42,
+      "truncated": 1,
+      "correct_expected_no_bug": 8,
+      "wrong_expected": 4,
+      "invalid_json": 3,
+      "bug_detected": 2
+    },
+    "pilot_validation": {
+      "schema_or_domain": 38,
+      "invalid_json": 4,
+      "truncated": 1,
+      "wrong_expected": 6,
+      "bug_detected": 1,
+      "correct_expected_no_bug": 10
+    }
+  },
+  "comparison_audit": {
+    "same_prompt_hash_per_case": true,
+    "same_generation_and_seed": true,
+    "same_verifier_source": true,
+    "all_predictions_rescored": true,
+    "test_not_model_evaluated": true
+  },
+  "conclusion": "Fresh static GRPO pilot verifies RL updates, but bug detection did not improve. No APPS adversarial curriculum yet."
+}
