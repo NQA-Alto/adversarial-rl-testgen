@@ -32,7 +32,8 @@ def audit(folder):
         review = {"status": "passed", "predictions_rescored": count, "metrics_recomputed": True,
                   "predictions_sha256": digest(folder / "predictions.jsonl"), "model_test_evaluation": False}
     elif result["status"] in {"static_grpo_pilot_completed", "pilot_no_verified_policy_update"}:
-        cases, manifest = load_cases("train")
+        from apps_curriculum import training_cases
+        cases, manifest, _ = training_cases(result.get("curriculum_path"), result.get("curriculum_sha256"))
         by_id = {case["case_id"]: case for case in cases}
         events = [json.loads(line) for line in (folder / "rollouts.jsonl").read_text(encoding="utf-8").splitlines()]
         count = 0

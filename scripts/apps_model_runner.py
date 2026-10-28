@@ -28,7 +28,7 @@ def run_folder(label):
 
 
 def freeze_sources(folder):
-    names = ("apps_core.py", "apps_profiles.py", "apps_model_runner.py", "restricted_python.py", "local_model_loader.py", "train_static_grpo.py", "check_lora_update.py")
+    names = ("apps_core.py", "apps_profiles.py", "apps_model_runner.py", "restricted_python.py", "local_model_loader.py", "train_static_grpo.py", "check_lora_update.py", "apps_curriculum.py")
     (folder / "source").mkdir()
     for name in names:
         shutil.copy2(Path(__file__).with_name(name), folder / "source" / name)
@@ -138,7 +138,8 @@ def train(args, folder, result):
     from trl import GRPOTrainer
     from train_static_grpo import make_config, save_adapter_checked
 
-    cases, manifest = load_cases("train")
+    from apps_curriculum import training_cases
+    cases, manifest, counts = training_cases(args.curriculum, args.curriculum_sha256)
     state = read(STATE)
     baseline_path = args.baseline_run or Path(state["baseline_validation"]["path"])
     baseline = read(baseline_path / "result.json")
@@ -150,9 +151,13 @@ def train(args, folder, result):
                   train_sha256=manifest["splits"]["train"]["sha256"], baseline_path=str(baseline_path),
                   baseline_result_sha256=digest(baseline_path / "result.json"),
                   configuration=config, training=True, model_test_evaluation=False,
-                  initialization="APPS SFT adapter; new GRPO optimizer" if args.init_adapter else "original Qwen3.5-2B plus new rank-4 LoRA; no previous adapters",
+                  initialization="Declared APPS parent adapter; new GRPO optimizer" if args.init_adapter else "original Qwen3.5-2B plus new rank-4 LoRA; no previous adapters",
                   parent_adapter_sha256=digest(args.init_adapter / "adapter_model.safetensors") if args.init_adapter else None,
-                  scope="Static APPS GRPO pilot; adversarial curriculum is not implemented in this run")
+                  scope="GRPO on a frozen per-round curriculum" if args.curriculum else "Static APPS GRPO pilot; adversarial curriculum is not implemented in this run",
+                  curriculum_path=str(args.curriculum) if args.curriculum else None,
+                  curriculum_sha256=args.curriculum_sha256, curriculum_counts=counts)
+    if args.curriculum:
+        shutil.copy2(args.curriculum, folder / "training-cases.jsonl")
     torch.manual_seed(args.seed)
     model, tokenizer, eos = load_model(args.init_adapter, train=True)
     initial = {name: value.detach().cpu().clone() for name, value in get_peft_model_state_dict(model).items()}
@@ -252,6 +257,8 @@ def main():
     parser.add_argument("--no-publish", action="store_true")
     parser.add_argument("--baseline-run", type=Path)
     parser.add_argument("--init-adapter", type=Path)
+    parser.add_argument("--curriculum", type=Path)
+    parser.add_argument("--curriculum-sha256")
     args = parser.parse_args()
     if not 1 <= args.steps <= 96:
         parser.error("Pilot must use 1 to 96 steps")
