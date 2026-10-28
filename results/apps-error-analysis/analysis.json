@@ -1,0 +1,952 @@
+{
+  "dataset_id": "apps-intro-call-v2-eb69b8869857",
+  "split": "validation",
+  "model_test_evaluation": false,
+  "diagnostic_only": "Input-only attack uses oracle expected solely to diagnose lost opportunities; it is not a usable model test or the primary Attack Rate.",
+  "runs": {
+    "base": {
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261028-145025-399168",
+      "predictions_sha256": "dc67d2cccdd51b766471dc1f08534fcd6219a2b73d86de4f53a594990798a826",
+      "metrics": {
+        "evaluated_cases": 15,
+        "generated_tests": 60,
+        "valid_tests": 35,
+        "correct_expected": 15,
+        "bug_detecting_tests": 4,
+        "cases_detected": 3,
+        "valid_rate": 0.5833333333333334,
+        "io_accuracy": 0.25,
+        "attack_rate": 0.06666666666666667,
+        "case_detection_at_4": 0.2,
+        "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+      },
+      "counts": {
+        "invalid_input_or_json": 23,
+        "input_only_attack": 13,
+        "attack_lost_due_to_wrong_expected": 9,
+        "wrong_expected_matches_buggy_output": 2,
+        "duplicate_valid_input_within_case": 3,
+        "wrong_expected": 20,
+        "bug_detected": 4,
+        "correct_expected_no_bug": 11,
+        "truncated": 2
+      },
+      "detected_case_ids": [
+        "apps-train-2834/m3",
+        "apps-train-2947/m2",
+        "apps-train-2947/m3"
+      ],
+      "input_only_detected_case_ids": [
+        "apps-train-2834/m1",
+        "apps-train-2834/m3",
+        "apps-train-2947/m2",
+        "apps-train-2947/m3",
+        "apps-train-3014/m1",
+        "apps-train-3014/m3"
+      ],
+      "wrong_expected_examples": [
+        {
+          "case_id": "apps-train-2834/m1",
+          "title": "Điểm đối xứng qua một tâm",
+          "model_test": {
+            "expected": [
+              4,
+              0
+            ],
+            "input": {
+              "p": [
+                2,
+                0
+              ],
+              "q": [
+                0,
+                0
+              ]
+            }
+          },
+          "gold_output": [
+            -2,
+            0
+          ],
+          "buggy_output": [
+            2,
+            0
+          ],
+          "input_would_expose_bug_with_oracle_expected": true,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2834/m3",
+          "title": "Điểm đối xứng qua một tâm",
+          "model_test": {
+            "expected": [
+              -2,
+              1
+            ],
+            "input": {
+              "p": [
+                0,
+                2
+              ],
+              "q": [
+                -1,
+                2
+              ]
+            }
+          },
+          "gold_output": [
+            -2,
+            2
+          ],
+          "buggy_output": [
+            1,
+            2
+          ],
+          "input_would_expose_bug_with_oracle_expected": true,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2834/m3",
+          "title": "Điểm đối xứng qua một tâm",
+          "model_test": {
+            "expected": [
+              4,
+              0
+            ],
+            "input": {
+              "p": [
+                2,
+                0
+              ],
+              "q": [
+                0,
+                2
+              ]
+            }
+          },
+          "gold_output": [
+            -2,
+            4
+          ],
+          "buggy_output": [
+            0,
+            4
+          ],
+          "input_would_expose_bug_with_oracle_expected": true,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2947/m1",
+          "title": "Làm tròn đến bội gần nhất, giữ nguyên khi ở giữa",
+          "model_test": {
+            "expected": 2,
+            "input": {
+              "m": 3,
+              "n": 2
+            }
+          },
+          "gold_output": 3,
+          "buggy_output": 3,
+          "input_would_expose_bug_with_oracle_expected": false,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2947/m1",
+          "title": "Làm tròn đến bội gần nhất, giữ nguyên khi ở giữa",
+          "model_test": {
+            "expected": 10,
+            "input": {
+              "m": 5,
+              "n": 7
+            }
+          },
+          "gold_output": 5,
+          "buggy_output": 5,
+          "input_would_expose_bug_with_oracle_expected": false,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2947/m2",
+          "title": "Làm tròn đến bội gần nhất, giữ nguyên khi ở giữa",
+          "model_test": {
+            "expected": 4,
+            "input": {
+              "m": 7,
+              "n": 4
+            }
+          },
+          "gold_output": 7,
+          "buggy_output": 7,
+          "input_would_expose_bug_with_oracle_expected": false,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2947/m2",
+          "title": "Làm tròn đến bội gần nhất, giữ nguyên khi ở giữa",
+          "model_test": {
+            "expected": 6,
+            "input": {
+              "m": 3,
+              "n": 4
+            }
+          },
+          "gold_output": 3,
+          "buggy_output": 4,
+          "input_would_expose_bug_with_oracle_expected": true,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2947/m3",
+          "title": "Làm tròn đến bội gần nhất, giữ nguyên khi ở giữa",
+          "model_test": {
+            "expected": 4,
+            "input": {
+              "m": 5,
+              "n": 4
+            }
+          },
+          "gold_output": 5,
+          "buggy_output": 5,
+          "input_would_expose_bug_with_oracle_expected": false,
+          "model_expected_matches_buggy_output": false
+        }
+      ]
+    },
+    "sft": {
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261028-145425-500329",
+      "predictions_sha256": "26b17cf92ff9aff1feb078f181da89b1dfd6888c63889dece3c944e43c03d382",
+      "metrics": {
+        "evaluated_cases": 15,
+        "generated_tests": 60,
+        "valid_tests": 41,
+        "correct_expected": 13,
+        "bug_detecting_tests": 4,
+        "cases_detected": 3,
+        "valid_rate": 0.6833333333333333,
+        "io_accuracy": 0.21666666666666667,
+        "attack_rate": 0.06666666666666667,
+        "case_detection_at_4": 0.2,
+        "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+      },
+      "counts": {
+        "invalid_input_or_json": 19,
+        "input_only_attack": 12,
+        "attack_lost_due_to_wrong_expected": 8,
+        "wrong_expected_matches_buggy_output": 1,
+        "duplicate_valid_input_within_case": 8,
+        "wrong_expected": 28,
+        "correct_expected_no_bug": 9,
+        "bug_detected": 4
+      },
+      "detected_case_ids": [
+        "apps-train-2868/m3",
+        "apps-train-2947/m1",
+        "apps-train-3014/m3"
+      ],
+      "input_only_detected_case_ids": [
+        "apps-train-2834/m1",
+        "apps-train-2868/m2",
+        "apps-train-2868/m3",
+        "apps-train-2947/m1",
+        "apps-train-2947/m2",
+        "apps-train-2947/m3",
+        "apps-train-3014/m3"
+      ],
+      "wrong_expected_examples": [
+        {
+          "case_id": "apps-train-2834/m1",
+          "title": "Điểm đối xứng qua một tâm",
+          "model_test": {
+            "expected": [
+              -3,
+              -3
+            ],
+            "input": {
+              "p": [
+                2,
+                2
+              ],
+              "q": [
+                0,
+                0
+              ]
+            }
+          },
+          "gold_output": [
+            -2,
+            -2
+          ],
+          "buggy_output": [
+            2,
+            -2
+          ],
+          "input_would_expose_bug_with_oracle_expected": true,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2834/m2",
+          "title": "Điểm đối xứng qua một tâm",
+          "model_test": {
+            "expected": [
+              3,
+              1
+            ],
+            "input": {
+              "p": [
+                0,
+                0
+              ],
+              "q": [
+                -1,
+                2
+              ]
+            }
+          },
+          "gold_output": [
+            -2,
+            4
+          ],
+          "buggy_output": [
+            -2,
+            4
+          ],
+          "input_would_expose_bug_with_oracle_expected": false,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2834/m3",
+          "title": "Điểm đối xứng qua một tâm",
+          "model_test": {
+            "expected": [
+              -1,
+              2
+            ],
+            "input": {
+              "p": [
+                0,
+                0
+              ],
+              "q": [
+                2,
+                2
+              ]
+            }
+          },
+          "gold_output": [
+            4,
+            4
+          ],
+          "buggy_output": [
+            4,
+            4
+          ],
+          "input_would_expose_bug_with_oracle_expected": false,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2834/m3",
+          "title": "Điểm đối xứng qua một tâm",
+          "model_test": {
+            "expected": [
+              -2,
+              "2"
+            ],
+            "input": {
+              "p": [
+                0,
+                2
+              ],
+              "q": [
+                2,
+                0
+              ]
+            }
+          },
+          "gold_output": [
+            4,
+            -2
+          ],
+          "buggy_output": [
+            4,
+            -2
+          ],
+          "input_would_expose_bug_with_oracle_expected": false,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2868/m1",
+          "title": "Mỗi số có một hàng xóm chênh lệch một",
+          "model_test": {
+            "expected": true,
+            "input": {
+              "arr": [
+                0,
+                0,
+                0
+              ]
+            }
+          },
+          "gold_output": false,
+          "buggy_output": false,
+          "input_would_expose_bug_with_oracle_expected": false,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2868/m2",
+          "title": "Mỗi số có một hàng xóm chênh lệch một",
+          "model_test": {
+            "expected": false,
+            "input": {
+              "arr": [
+                0,
+                1,
+                0
+              ]
+            }
+          },
+          "gold_output": true,
+          "buggy_output": false,
+          "input_would_expose_bug_with_oracle_expected": true,
+          "model_expected_matches_buggy_output": true
+        },
+        {
+          "case_id": "apps-train-2947/m1",
+          "title": "Làm tròn đến bội gần nhất, giữ nguyên khi ở giữa",
+          "model_test": {
+            "expected": 7,
+            "input": {
+              "m": 6,
+              "n": 5
+            }
+          },
+          "gold_output": 6,
+          "buggy_output": 6,
+          "input_would_expose_bug_with_oracle_expected": false,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2947/m1",
+          "title": "Làm tròn đến bội gần nhất, giữ nguyên khi ở giữa",
+          "model_test": {
+            "expected": 6,
+            "input": {
+              "m": 4,
+              "n": 5
+            }
+          },
+          "gold_output": 4,
+          "buggy_output": 4,
+          "input_would_expose_bug_with_oracle_expected": false,
+          "model_expected_matches_buggy_output": false
+        }
+      ]
+    },
+    "control": {
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261028-162847-767818",
+      "predictions_sha256": "ffafefa09ac9efd56c6c92cd27a240a22a5842ec33d0946060bb042e582becd9",
+      "metrics": {
+        "evaluated_cases": 15,
+        "generated_tests": 60,
+        "valid_tests": 42,
+        "correct_expected": 13,
+        "bug_detecting_tests": 3,
+        "cases_detected": 2,
+        "valid_rate": 0.7,
+        "io_accuracy": 0.21666666666666667,
+        "attack_rate": 0.05,
+        "case_detection_at_4": 0.13333333333333333,
+        "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+      },
+      "counts": {
+        "invalid_input_or_json": 18,
+        "input_only_attack": 12,
+        "attack_lost_due_to_wrong_expected": 9,
+        "wrong_expected_matches_buggy_output": 1,
+        "duplicate_valid_input_within_case": 8,
+        "wrong_expected": 29,
+        "correct_expected_no_bug": 10,
+        "bug_detected": 3
+      },
+      "detected_case_ids": [
+        "apps-train-2868/m3",
+        "apps-train-3014/m3"
+      ],
+      "input_only_detected_case_ids": [
+        "apps-train-2834/m1",
+        "apps-train-2834/m2",
+        "apps-train-2868/m2",
+        "apps-train-2868/m3",
+        "apps-train-2947/m2",
+        "apps-train-2947/m3",
+        "apps-train-3014/m3"
+      ],
+      "wrong_expected_examples": [
+        {
+          "case_id": "apps-train-2834/m1",
+          "title": "Điểm đối xứng qua một tâm",
+          "model_test": {
+            "expected": [
+              2,
+              2
+            ],
+            "input": {
+              "p": [
+                0,
+                0
+              ],
+              "q": [
+                2,
+                0
+              ]
+            }
+          },
+          "gold_output": [
+            4,
+            0
+          ],
+          "buggy_output": [
+            4,
+            0
+          ],
+          "input_would_expose_bug_with_oracle_expected": false,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2834/m1",
+          "title": "Điểm đối xứng qua một tâm",
+          "model_test": {
+            "expected": [
+              -3,
+              -3
+            ],
+            "input": {
+              "p": [
+                2,
+                2
+              ],
+              "q": [
+                0,
+                0
+              ]
+            }
+          },
+          "gold_output": [
+            -2,
+            -2
+          ],
+          "buggy_output": [
+            2,
+            -2
+          ],
+          "input_would_expose_bug_with_oracle_expected": true,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2834/m2",
+          "title": "Điểm đối xứng qua một tâm",
+          "model_test": {
+            "expected": [
+              3,
+              1
+            ],
+            "input": {
+              "p": [
+                2,
+                2
+              ],
+              "q": [
+                0,
+                0
+              ]
+            }
+          },
+          "gold_output": [
+            -2,
+            -2
+          ],
+          "buggy_output": [
+            -2,
+            2
+          ],
+          "input_would_expose_bug_with_oracle_expected": true,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2834/m3",
+          "title": "Điểm đối xứng qua một tâm",
+          "model_test": {
+            "expected": [
+              -1,
+              2
+            ],
+            "input": {
+              "p": [
+                0,
+                0
+              ],
+              "q": [
+                2,
+                2
+              ]
+            }
+          },
+          "gold_output": [
+            4,
+            4
+          ],
+          "buggy_output": [
+            4,
+            4
+          ],
+          "input_would_expose_bug_with_oracle_expected": false,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2834/m3",
+          "title": "Điểm đối xứng qua một tâm",
+          "model_test": {
+            "expected": [
+              -2,
+              "2"
+            ],
+            "input": {
+              "p": [
+                2,
+                2
+              ],
+              "q": [
+                2,
+                0
+              ]
+            }
+          },
+          "gold_output": [
+            2,
+            -2
+          ],
+          "buggy_output": [
+            2,
+            -2
+          ],
+          "input_would_expose_bug_with_oracle_expected": false,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2868/m1",
+          "title": "Mỗi số có một hàng xóm chênh lệch một",
+          "model_test": {
+            "expected": true,
+            "input": {
+              "arr": [
+                0
+              ]
+            }
+          },
+          "gold_output": false,
+          "buggy_output": false,
+          "input_would_expose_bug_with_oracle_expected": false,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2868/m2",
+          "title": "Mỗi số có một hàng xóm chênh lệch một",
+          "model_test": {
+            "expected": false,
+            "input": {
+              "arr": [
+                0,
+                1,
+                0
+              ]
+            }
+          },
+          "gold_output": true,
+          "buggy_output": false,
+          "input_would_expose_bug_with_oracle_expected": true,
+          "model_expected_matches_buggy_output": true
+        },
+        {
+          "case_id": "apps-train-2947/m1",
+          "title": "Làm tròn đến bội gần nhất, giữ nguyên khi ở giữa",
+          "model_test": {
+            "expected": 2,
+            "input": {
+              "m": 3,
+              "n": 2
+            }
+          },
+          "gold_output": 3,
+          "buggy_output": 3,
+          "input_would_expose_bug_with_oracle_expected": false,
+          "model_expected_matches_buggy_output": false
+        }
+      ]
+    },
+    "adaptive": {
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261028-163412-580046",
+      "predictions_sha256": "52f0d42e0e34a7a65a03aa627516fa00121e53b4ccae7186e9e622918ce36819",
+      "metrics": {
+        "evaluated_cases": 15,
+        "generated_tests": 60,
+        "valid_tests": 41,
+        "correct_expected": 12,
+        "bug_detecting_tests": 3,
+        "cases_detected": 2,
+        "valid_rate": 0.6833333333333333,
+        "io_accuracy": 0.2,
+        "attack_rate": 0.05,
+        "case_detection_at_4": 0.13333333333333333,
+        "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+      },
+      "counts": {
+        "invalid_input_or_json": 19,
+        "input_only_attack": 11,
+        "attack_lost_due_to_wrong_expected": 8,
+        "wrong_expected_matches_buggy_output": 1,
+        "duplicate_valid_input_within_case": 8,
+        "wrong_expected": 29,
+        "correct_expected_no_bug": 9,
+        "bug_detected": 3
+      },
+      "detected_case_ids": [
+        "apps-train-2868/m3",
+        "apps-train-3014/m3"
+      ],
+      "input_only_detected_case_ids": [
+        "apps-train-2834/m1",
+        "apps-train-2834/m2",
+        "apps-train-2868/m2",
+        "apps-train-2868/m3",
+        "apps-train-2947/m2",
+        "apps-train-3014/m3"
+      ],
+      "wrong_expected_examples": [
+        {
+          "case_id": "apps-train-2834/m1",
+          "title": "Điểm đối xứng qua một tâm",
+          "model_test": {
+            "expected": [
+              2,
+              2
+            ],
+            "input": {
+              "p": [
+                0,
+                0
+              ],
+              "q": [
+                2,
+                0
+              ]
+            }
+          },
+          "gold_output": [
+            4,
+            0
+          ],
+          "buggy_output": [
+            4,
+            0
+          ],
+          "input_would_expose_bug_with_oracle_expected": false,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2834/m1",
+          "title": "Điểm đối xứng qua một tâm",
+          "model_test": {
+            "expected": [
+              -3,
+              -3
+            ],
+            "input": {
+              "p": [
+                2,
+                2
+              ],
+              "q": [
+                0,
+                0
+              ]
+            }
+          },
+          "gold_output": [
+            -2,
+            -2
+          ],
+          "buggy_output": [
+            2,
+            -2
+          ],
+          "input_would_expose_bug_with_oracle_expected": true,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2834/m2",
+          "title": "Điểm đối xứng qua một tâm",
+          "model_test": {
+            "expected": [
+              3,
+              1
+            ],
+            "input": {
+              "p": [
+                2,
+                2
+              ],
+              "q": [
+                0,
+                0
+              ]
+            }
+          },
+          "gold_output": [
+            -2,
+            -2
+          ],
+          "buggy_output": [
+            -2,
+            2
+          ],
+          "input_would_expose_bug_with_oracle_expected": true,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2834/m3",
+          "title": "Điểm đối xứng qua một tâm",
+          "model_test": {
+            "expected": [
+              -4,
+              2
+            ],
+            "input": {
+              "p": [
+                0,
+                0
+              ],
+              "q": [
+                2,
+                2
+              ]
+            }
+          },
+          "gold_output": [
+            4,
+            4
+          ],
+          "buggy_output": [
+            4,
+            4
+          ],
+          "input_would_expose_bug_with_oracle_expected": false,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2834/m3",
+          "title": "Điểm đối xứng qua một tâm",
+          "model_test": {
+            "expected": [
+              -2,
+              "2"
+            ],
+            "input": {
+              "p": [
+                0,
+                2
+              ],
+              "q": [
+                2,
+                0
+              ]
+            }
+          },
+          "gold_output": [
+            4,
+            -2
+          ],
+          "buggy_output": [
+            4,
+            -2
+          ],
+          "input_would_expose_bug_with_oracle_expected": false,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2868/m1",
+          "title": "Mỗi số có một hàng xóm chênh lệch một",
+          "model_test": {
+            "expected": true,
+            "input": {
+              "arr": [
+                0,
+                0,
+                0
+              ]
+            }
+          },
+          "gold_output": false,
+          "buggy_output": false,
+          "input_would_expose_bug_with_oracle_expected": false,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2868/m2",
+          "title": "Mỗi số có một hàng xóm chênh lệch một",
+          "model_test": {
+            "expected": false,
+            "input": {
+              "arr": [
+                0,
+                1,
+                0
+              ]
+            }
+          },
+          "gold_output": true,
+          "buggy_output": false,
+          "input_would_expose_bug_with_oracle_expected": true,
+          "model_expected_matches_buggy_output": true
+        },
+        {
+          "case_id": "apps-train-2947/m1",
+          "title": "Làm tròn đến bội gần nhất, giữ nguyên khi ở giữa",
+          "model_test": {
+            "expected": 2,
+            "input": {
+              "m": 4,
+              "n": 3
+            }
+          },
+          "gold_output": 4,
+          "buggy_output": 4,
+          "input_would_expose_bug_with_oracle_expected": false,
+          "model_expected_matches_buggy_output": false
+        }
+      ]
+    }
+  },
+  "paired_comparison": {
+    "both_detect": [
+      "apps-train-2868/m3",
+      "apps-train-3014/m3"
+    ],
+    "only_control": [],
+    "only_adaptive": [],
+    "neither_detect": [
+      "apps-train-2834/m1",
+      "apps-train-2834/m2",
+      "apps-train-2834/m3",
+      "apps-train-2868/m1",
+      "apps-train-2868/m2",
+      "apps-train-2947/m1",
+      "apps-train-2947/m2",
+      "apps-train-2947/m3",
+      "apps-train-2968/m1",
+      "apps-train-2968/m2",
+      "apps-train-2968/m3",
+      "apps-train-3014/m1",
+      "apps-train-3014/m2"
+    ],
+    "identical_raw_outputs": 48
+  }
+}

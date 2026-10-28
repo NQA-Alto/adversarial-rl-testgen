@@ -1,0 +1,47 @@
+{
+  "dataset_id": "apps-intro-call-v2-eb69b8869857",
+  "split_counts_from_manifest": {
+    "train": {
+      "cases": 41,
+      "problems": 17,
+      "sha256": "b76af3034722411991b5ff12939648c0330a0079e51d9e650490c3ee845479b7"
+    },
+    "validation": {
+      "cases": 15,
+      "problems": 5,
+      "sha256": "d275394b4985cf8e4e9142885fe297b125ff4b33c4201933bb1c041bf3215c06"
+    },
+    "test": {
+      "cases": 18,
+      "problems": 7,
+      "sha256": "a333162780204cddd87dab2e7fec9c345a8e8ad9dbc080c261e6bfaeb785a8c2"
+    }
+  },
+  "train_source_input_types": {
+    "Số nguyên": 3,
+    "Danh sách số": 9,
+    "Chuỗi ký tự": 4,
+    "Danh sách chuỗi": 1
+  },
+  "train_domain_sizes": {
+    "2667": 128,
+    "2703": 341,
+    "2820": 820,
+    "2831": 336,
+    "2859": 341,
+    "2865": 121,
+    "2899": 126,
+    "2910": 504,
+    "2914": 1600,
+    "2948": 510,
+    "2961": 340,
+    "2962": 340,
+    "2987": 468,
+    "2991": 36,
+    "3009": 1365,
+    "3019": 363,
+    "3024": 156
+  },
+  "test_content_inspected": false,
+  "model_test_evaluation": false
+}
