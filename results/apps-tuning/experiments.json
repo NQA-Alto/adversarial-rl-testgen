@@ -1,0 +1,264 @@
+{
+  "thinking_probe": {
+    "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-reasoning-probe-20261028-201929-180997",
+    "result": {
+      "status": "stopped_early_infeasible",
+      "plan": {
+        "method": "FROZEN_SFT_INFERENCE_ABLATION_NOT_RL",
+        "dataset_id": "apps-intro-call-v2-eb69b8869857",
+        "train_sha256": "b76af3034722411991b5ff12939648c0330a0079e51d9e650490c3ee845479b7",
+        "source_ids": [
+          2667,
+          2703,
+          2865,
+          2899,
+          2948,
+          2987,
+          3019,
+          3024
+        ],
+        "case_ids": [
+          "apps-train-2667/m1",
+          "apps-train-2703/m1",
+          "apps-train-2865/m1",
+          "apps-train-2899/m1",
+          "apps-train-2948/m1",
+          "apps-train-2987/m1",
+          "apps-train-3019/m1",
+          "apps-train-3024/m1"
+        ],
+        "selection": "Prespecified eight diverse Train tasks, first mutant per source; no Validation/Test selection",
+        "adapter": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-sft-v2-20261028-145103-496784\\adapter",
+        "adapter_sha256": "7ec28547340fcebf67e3bfad629f790e6510b2305b32770ab20b09f97c7f3afa",
+        "prompt_version": "apps-tagged-probe-v1",
+        "seed": 42,
+        "tests_per_case": 4,
+        "configuration": {
+          "max_new_tokens": 768,
+          "max_prompt_tokens": 1536,
+          "temperature": 1.0,
+          "top_p": 0.95,
+          "top_k": 20
+        },
+        "comparison": "Same messages, checkpoint, seed and token cap; only native enable_thinking differs. Prefix/answer parsing is declared before generation.",
+        "acceptance_rule": "Thinking is a candidate for a later Validation experiment only if >=80% terminated, IO accuracy improves by at least 5 percentage points and usable bug-test count does not fall versus direct.",
+        "model_card_note": "The downloaded Qwen3.5-2B model card warns of thinking loops; truncated outputs remain failures.",
+        "source_hashes": {
+          "apps_reasoning_probe.py": "080ebd1035fd5fd479cbe6c0866a75f00791cb22e5e23de58c9ef37ae026ebc1",
+          "apps_core.py": "c54a0ae7a2d47735a845a640be133c0db01ce5430222b20823fed80dd1210af6",
+          "apps_model_runner.py": "159b77f7a25f5b29761c9563aa2506c2eccb5a5b38faefb05269644c8599f538",
+          "local_model_loader.py": "339d647aa8b2d123cb9972654b9244a0aeb57aa8a02e173bac0f4abfcfa2221a",
+          "restricted_python.py": "542fd37b7ed73225fd2105922845155615e241b246b039e7ccce7fc840967111"
+        },
+        "model_test_evaluation": false,
+        "training": false,
+        "publish_demo_checkpoint": false
+      },
+      "modes": {
+        "direct": {
+          "metrics": {
+            "evaluated_cases": 8,
+            "generated_tests": 32,
+            "valid_tests": 5,
+            "correct_expected": 1,
+            "bug_detecting_tests": 0,
+            "cases_detected": 0,
+            "valid_rate": 0.15625,
+            "io_accuracy": 0.03125,
+            "attack_rate": 0.0,
+            "case_detection_at_4": 0.0,
+            "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+          },
+          "terminated_rate": 1.0,
+          "mean_generated_tokens": 41.40625,
+          "elapsed_seconds": 62.103
+        },
+        "thinking": {
+          "complete_arm": false,
+          "planned_samples": 32,
+          "completed_samples": 20,
+          "terminated_samples": 0,
+          "best_possible_terminated_fraction": 0.375,
+          "partial_metrics_not_comparable_to_complete_arm": {
+            "evaluated_cases": 5,
+            "generated_tests": 20,
+            "valid_tests": 0,
+            "correct_expected": 0,
+            "bug_detecting_tests": 0,
+            "cases_detected": 0,
+            "valid_rate": 0.0,
+            "io_accuracy": 0.0,
+            "attack_rate": 0.0,
+            "case_detection_at_4": 0.0,
+            "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+          }
+        }
+      },
+      "training": false,
+      "model_test_evaluation": false,
+      "stopped_at": "2026-10-28T13:27:18.835809+00:00",
+      "thinking_eligible_for_later_validation": false,
+      "adapter_unchanged": true,
+      "stop_note": "Early futility termination was added after the original plan. Even if every remaining sample terminated, the prespecified 80% termination gate could not be met. This is an incomplete engineering feasibility probe, not a complete benchmark comparison."
+    },
+    "review": {
+      "status": "passed",
+      "samples_rescored": 52,
+      "adapter_unchanged": true,
+      "upper_bound_below_predeclared_gate": true,
+      "incomplete_arm": true,
+      "model_test_evaluation": false
+    }
+  },
+  "prompt_trials": [
+    {
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-prompt-v3-trial-20261028-202928-332376",
+      "result_sha256": "00d1ed13475e693bfca0c2812d49aa0df5646f7b7cfe7bb0a78c90c9f797dcc7",
+      "result": {
+        "status": "completed",
+        "plan": {
+          "method": "PROMPT_ONLY_ABLATION_NOT_RL",
+          "dataset_id": "apps-intro-call-v2-eb69b8869857",
+          "adapter_sha256": "7ec28547340fcebf67e3bfad629f790e6510b2305b32770ab20b09f97c7f3afa",
+          "baseline_train": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261028-155601-910485",
+          "baseline_validation": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261028-145425-500329",
+          "candidate": "apps-call-v3",
+          "change": "Remove unrelated integer-output example; explicitly state task JSON output type and finite input contract. No reference code or concrete expected answers in prompts.",
+          "output_type_provenance": "Static interface annotations for the known public APPS Train/Validation tasks, checked against finite-domain references; this is added interface metadata, not an ATGen-original feature.",
+          "generation": {
+            "max_new_tokens": 96,
+            "temperature": 1.0,
+            "top_p": 0.95,
+            "top_k": 20,
+            "thinking": false
+          },
+          "seed": 42,
+          "tests_per_case": 4,
+          "train_gate": "IO accuracy at least +5 percentage points; valid-test and bug-test counts must not decrease versus fixed SFT v2 Train baseline.",
+          "validation_gate": "Only if Train gate passes, evaluate Validation once. Candidate remains separate unless correct-expected count strictly improves and valid/bug-test counts do not decrease versus SFT v2.",
+          "source_hashes": {
+            "apps_prompt_trial.py": "48a837c696dcec59f2f31f551acf54781714ec3bba7effb37593f77697348a42",
+            "apps_output_contracts.py": "90e67e2985a3dbac004b2f77cbab7ebae24baa0509929133dc32b6531625680a",
+            "apps_core.py": "ea24f55c3eaa491f9b536c3e1a482b1f7d5ef982db535267d72ff989d1547c97",
+            "apps_model_runner.py": "3b4825be80f5a076e4d9970aacacf3c0970d28b66fd38abd3d89f418b1648716",
+            "restricted_python.py": "542fd37b7ed73225fd2105922845155615e241b246b039e7ccce7fc840967111",
+            "audit_apps_run.py": "6b4573b68b615dd026488c99620da6a65281a64fe5471f3f4242eb8d6f2dc054"
+          },
+          "training": false,
+          "model_test_evaluation": false
+        },
+        "training": false,
+        "model_test_evaluation": false,
+        "train_gate_passed": false,
+        "train_run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261028-202928-720448",
+        "train_metrics": {
+          "evaluated_cases": 41,
+          "generated_tests": 164,
+          "valid_tests": 2,
+          "correct_expected": 1,
+          "bug_detecting_tests": 1,
+          "cases_detected": 1,
+          "valid_rate": 0.012195121951219513,
+          "io_accuracy": 0.006097560975609756,
+          "attack_rate": 0.006097560975609756,
+          "case_detection_at_4": 0.024390243902439025,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        },
+        "baseline_train_metrics": {
+          "evaluated_cases": 41,
+          "generated_tests": 164,
+          "valid_tests": 111,
+          "correct_expected": 33,
+          "bug_detecting_tests": 15,
+          "cases_detected": 12,
+          "valid_rate": 0.676829268292683,
+          "io_accuracy": 0.20121951219512196,
+          "attack_rate": 0.09146341463414634,
+          "case_detection_at_4": 0.2926829268292683,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        },
+        "validation_evaluated": false,
+        "eligible_prompt_candidate": false,
+        "adapter_unchanged": true,
+        "active_prompt_unchanged": true,
+        "interpretation": "Any gain belongs to the prompt/interface change, not RL. No Test evaluation or model selection by Test."
+      }
+    },
+    {
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-prompt-v4-trial-20261028-203144-299034",
+      "result_sha256": "34e2cae6d140a22cbcad652a5c45bb2cc04915efe917f310fb3b59216c731c57",
+      "result": {
+        "status": "completed",
+        "plan": {
+          "method": "PROMPT_ONLY_ABLATION_NOT_RL",
+          "dataset_id": "apps-intro-call-v2-eb69b8869857",
+          "adapter_sha256": "7ec28547340fcebf67e3bfad629f790e6510b2305b32770ab20b09f97c7f3afa",
+          "baseline_train": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261028-155601-910485",
+          "baseline_validation": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261028-145425-500329",
+          "candidate": "apps-call-v4",
+          "change": "Preserve the complete v2 user prompt and format example; add only expected JSON type to the system instruction.",
+          "output_type_provenance": "Static interface annotations for the known public APPS Train/Validation tasks, checked against finite-domain references; this is added interface metadata, not an ATGen-original feature.",
+          "generation": {
+            "max_new_tokens": 96,
+            "temperature": 1.0,
+            "top_p": 0.95,
+            "top_k": 20,
+            "thinking": false
+          },
+          "seed": 42,
+          "tests_per_case": 4,
+          "train_gate": "IO accuracy at least +5 percentage points; valid-test and bug-test counts must not decrease versus fixed SFT v2 Train baseline.",
+          "validation_gate": "Only if Train gate passes, evaluate Validation once. Candidate remains separate unless correct-expected count strictly improves and valid/bug-test counts do not decrease versus SFT v2.",
+          "source_hashes": {
+            "apps_prompt_trial.py": "c403362edecc2f8fb542fe1bf94242c55f13154f468e5a806a9ab954d537c200",
+            "apps_output_contracts.py": "90e67e2985a3dbac004b2f77cbab7ebae24baa0509929133dc32b6531625680a",
+            "apps_core.py": "8852daf15c5a8e021a1594d44704a61c8bd2ac675c38565eea175f3c1c79cd33",
+            "apps_model_runner.py": "9f1214364f5e7151207758a15d011d14290e9e8aaad0c012048549306dc3a0c8",
+            "restricted_python.py": "542fd37b7ed73225fd2105922845155615e241b246b039e7ccce7fc840967111",
+            "audit_apps_run.py": "6b4573b68b615dd026488c99620da6a65281a64fe5471f3f4242eb8d6f2dc054"
+          },
+          "training": false,
+          "model_test_evaluation": false
+        },
+        "training": false,
+        "model_test_evaluation": false,
+        "train_gate_passed": false,
+        "train_run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261028-203144-642686",
+        "train_metrics": {
+          "evaluated_cases": 41,
+          "generated_tests": 164,
+          "valid_tests": 109,
+          "correct_expected": 34,
+          "bug_detecting_tests": 13,
+          "cases_detected": 11,
+          "valid_rate": 0.6646341463414634,
+          "io_accuracy": 0.2073170731707317,
+          "attack_rate": 0.07926829268292683,
+          "case_detection_at_4": 0.2682926829268293,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        },
+        "baseline_train_metrics": {
+          "evaluated_cases": 41,
+          "generated_tests": 164,
+          "valid_tests": 111,
+          "correct_expected": 33,
+          "bug_detecting_tests": 15,
+          "cases_detected": 12,
+          "valid_rate": 0.676829268292683,
+          "io_accuracy": 0.20121951219512196,
+          "attack_rate": 0.09146341463414634,
+          "case_detection_at_4": 0.2926829268292683,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        },
+        "validation_evaluated": false,
+        "eligible_prompt_candidate": false,
+        "adapter_unchanged": true,
+        "active_prompt_unchanged": true,
+        "interpretation": "Any gain belongs to the prompt/interface change, not RL. No Test evaluation or model selection by Test."
+      }
+    }
+  ],
+  "training": false,
+  "model_test_evaluation": false,
+  "active_configuration_changed": false
+}

@@ -53,3 +53,11 @@ Mốc 28/10/2026 đã hoàn tất hai vòng × 48 bước cho mỗi nhánh. Mode
 - `scripts/apps_adversarial_round.py`: so sánh hai nhánh qua hai vòng.
 - `scripts/audit_apps_run.py`: chấm lại mẫu sinh, target SFT và reward RL.
 - Log, code lấy mẫu và adapter nằm ở `D:/DA/TTNT_De19_Assets/evidence`; mã nguồn và bảng kết quả tổng hợp được đưa vào Git.
+
+## Phân tích và kiểm tra bổ sung sau hai vòng
+
+Đã bổ sung chẩn đoán input-only attack theo hướng ATGen §5.3. Với nhánh đối kháng, 11 input hợp lệ có thể làm lộ lỗi, nhưng chỉ 3 test có expected đúng để tính là bắt lỗi; 8 cơ hội mất do expected sai. Oracle chỉ phục vụ chẩn đoán, không sửa đáp án để tăng chỉ số chính. Hai nhánh cuối phát hiện cùng hai code và có 48/60 đầu ra giống hệt.
+
+Đã thử native thinking với định dạng thẻ và trần 768 token trên Train. Lượt dừng sớm khi 20 mẫu đã lưu đều bị cắt; tiêu chí hoàn tất 80% không còn khả năng đạt. Đây là kiểm tra khả thi chưa đủ toàn bộ nhánh, không phải benchmark hoàn chỉnh hay bằng chứng model không thể suy luận. Định dạng thẻ chưa được SFT nên cũng là yếu tố cần nêu.
+
+Hai phép thử kiểu đầu ra v3/v4 không đạt tiêu chí Train đã đặt, nên không chấm tiếp Validation và không thay cấu hình đang dùng. Các thí nghiệm này là suy luận/prompt, không cập nhật trọng số và không gọi là RL mới. Xem results/apps-error-analysis và results/apps-tuning để lấy số liệu chi tiết.

@@ -4,6 +4,12 @@
 
 Nhánh `apps-introductory` đang dùng dữ liệu APPS. Đã chạy SFT, GRPO cố định và hai vòng curriculum đối kháng bằng model local; các kết quả dữ liệu nội bộ cũ không được gộp vào bảng APPS.
 
+## Tiến độ và phân tích bổ sung
+
+[Roadmap APPS hiện tại](docs/APPS_PROGRESS.md) · [Phân tích lỗi](results/apps-error-analysis) · [Các phép thử tinh chỉnh](results/apps-tuning) · [EDA và pipeline](results/apps-data-profile)
+
+Hai nhánh GRPO cuối phát hiện cùng hai code; nhánh đối kháng mất tám cơ hội vì expected sai. Đã thử thinking và hai cách diễn đạt hợp đồng đầu ra trên Train; các ứng viên chưa qua tiêu chí nên giữ prompt v2 và checkpoint hiện tại. Đây là các phép thử suy luận, không phải lượt RL mới. Test vẫn được giữ lại.
+
 ## Dữ liệu
 
 Nguồn: [codeparrot/apps](https://huggingface.co/datasets/codeparrot/apps), revision `21e74ddf8de1a21436da12e3e653065c5213e9d1`, được [kho APPS của tác giả](https://github.com/hendrycks/apps) dẫn tới.

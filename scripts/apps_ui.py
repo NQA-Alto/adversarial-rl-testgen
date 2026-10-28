@@ -121,12 +121,20 @@ def metric_table():
     return rows
 
 
-def gpu_busy():
+def gpu_busy(ignore_pid=None):
     import psutil
+    ignored = {ignore_pid}
+    if ignore_pid is not None:
+        try:
+            ignored.update(process.pid for process in psutil.Process(ignore_pid).parents())
+        except (psutil.AccessDenied, psutil.NoSuchProcess):
+            pass
     for process in psutil.process_iter(["name", "cmdline"]):
         try:
+            if process.pid in ignored:
+                continue
             if (process.info["name"] or "").lower().startswith("python") and any(
-                    str(value).endswith(("apps_model_runner.py", "apps_sft.py", "apps_round.py", "apps_adversary.py", "apps_adversarial_round.py")) for value in process.info["cmdline"] or []):
+                    str(value).endswith(("apps_model_runner.py", "apps_sft.py", "apps_round.py", "apps_adversary.py", "apps_adversarial_round.py", "apps_reasoning_probe.py", "apps_prompt_trial.py")) for value in process.info["cmdline"] or []):
                 return True
         except (psutil.AccessDenied, psutil.NoSuchProcess):
             pass

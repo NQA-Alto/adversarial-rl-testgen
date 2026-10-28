@@ -28,7 +28,7 @@ def run_folder(label):
 
 
 def freeze_sources(folder):
-    names = ("apps_core.py", "apps_profiles.py", "apps_model_runner.py", "restricted_python.py", "local_model_loader.py", "train_static_grpo.py", "check_lora_update.py", "apps_curriculum.py")
+    names = ("apps_core.py", "apps_profiles.py", "apps_model_runner.py", "restricted_python.py", "local_model_loader.py", "train_static_grpo.py", "check_lora_update.py", "apps_curriculum.py", "apps_output_contracts.py")
     (folder / "source").mkdir()
     for name in names:
         shutil.copy2(Path(__file__).with_name(name), folder / "source" / name)
@@ -253,7 +253,7 @@ def main():
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--steps", type=int, default=48)
     active = read(PROJECT / "configs/active-dataset.json")
-    parser.add_argument("--prompt-version", choices=("apps-call-v1", "apps-call-v2"), default=active.get("prompt_version", PROMPT_VERSION))
+    parser.add_argument("--prompt-version", choices=("apps-call-v1", "apps-call-v2", "apps-call-v3", "apps-call-v4"), default=active.get("prompt_version", PROMPT_VERSION))
     parser.add_argument("--no-publish", action="store_true")
     parser.add_argument("--baseline-run", type=Path)
     parser.add_argument("--init-adapter", type=Path)

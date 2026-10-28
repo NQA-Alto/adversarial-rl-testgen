@@ -130,6 +130,14 @@ def domain_text(case):
 
 
 def model_prompt(case, version=PROMPT_VERSION):
+    if version == "apps-call-v4":
+        from apps_output_contracts import EXPECTED_KINDS, TYPE_TEXT
+        messages = model_prompt(case, "apps-call-v2")
+        messages[0]["content"] += " Required type of expected for this task: " + TYPE_TEXT[EXPECTED_KINDS[case["source_id"]]] + "."
+        return messages
+    if version == "apps-call-v3":
+        from apps_output_contracts import typed_prompt
+        return typed_prompt(case)
     if version == "apps-call-v2":
         return [{"role": "system", "content": "You generate executable test data for Python functions. Follow the input contract exactly. Return ONE JSON object, no markdown, no explanation. The only top-level keys are input and expected. Compute expected from the problem specification; the implementation may contain a bug."},
                 {"role": "user", "content": "Output format example for an unrelated addition function: {\"input\":{\"a\":2,\"b\":3},\"expected\":5}. Do not reuse its field names or numbers.\n\nPROBLEM SPECIFICATION\n" + case["specification"]
