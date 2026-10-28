@@ -1,0 +1,4 @@
+variant,generated_tests,valid_tests,correct_expected,bug_detecting_tests,cases_detected,cases_total
+SFT64_parent,60,41,13,4,3,15
+legacy-v1,60,41,13,4,3,15
+equal-v1,60,45,15,5,4,15

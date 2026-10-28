@@ -1,6 +1,6 @@
 # Tiến độ đồ án trên APPS Introductory
 
-Mốc cập nhật: 28/10/2026. Đây là nhật ký triển khai và thực nghiệm, chưa phải báo cáo chính thức.
+Mốc cập nhật: 29/10/2026. Đây là nhật ký triển khai và thực nghiệm, chưa phải báo cáo chính thức.
 
 | Công việc | Trạng thái APPS | Bằng chứng và phần còn lại |
 |---|---|---|
@@ -30,7 +30,7 @@ Guide yêu cầu giữ Test đến cuối, lưu cả lần thất bại, có bas
 
 ## Công việc tiếp theo
 
-1. Đã kiểm chứng ngân sách SFT. Ứng viên 256 bước chưa đủ tiêu chí bổ sung. Ưu tiên kiểm chứng cách cân bằng các thành phần reward theo ATGen, giữ mốc đối chứng và phân biệt tác động SFT với RL.
+1. Đã kiểm chứng ngân sách SFT. Ứng viên 256 bước chưa đủ tiêu chí bổ sung. Đã kiểm chứng tiếp cách cân bằng reward theo ATGen với hai lượt GRPO 96 bước và các seed sinh test bổ sung; xem mục kết quả cuối tài liệu.
 2. Chấm SFT mới tách biệt với RL, rồi mới cân nhắc lặp lại hai nhánh GRPO từ checkpoint phù hợp; không sửa output khi chấm.
 3. Các hướng suy luận/định dạng vừa thử chưa qua tiêu chí. Nếu thử tiếp phải lưu phiên bản và mốc đối chứng; không đổi số liệu cũ hay dùng Test để lựa chọn.
 4. Kiểm tra độ ổn định của cấu hình APPS đã chọn; hoàn thiện EDA, pipeline, phân tích chi phí và phần đối chiếu ATGen.
@@ -61,3 +61,21 @@ Hình và dữ liệu bổ sung: results/apps-data-profile, results/apps-error-a
 Ứng viên qua tiêu chí bổ sung so với cả mốc lịch sử và đối chứng cùng lượt: False. Tiêu chí ban đầu có ngưỡng tái hiện không đạt vì checkpoint 64 lệch L2 khoảng 0,198% so với lượt lịch sử; kết quả và kế hoạch gốc được giữ nguyên. Kế hoạch bổ sung được ghi trước khi xem Validation mới. Chưa xác định chắc nguyên nhân sai khác khi tái hiện.
 
 Mốc 256 được lưu riêng trong giao diện để kiểm chứng. Các nhánh GRPO/đối kháng đã có vẫn bắt đầu từ SFT 64 bước lịch sử; không gộp tác động của SFT mới thành cải thiện của RL. Test chưa được model đánh giá. Xem results/apps-sft-budget để lấy bảng, đường loss và nhật ký.
+
+## Kiểm chứng tỷ trọng reward GRPO
+
+Hai lượt mới cùng xuất phát từ SFT64 lịch sử, cùng 41 code Train, prompt v2, seed 42 và 96 bước/nhánh. Thử trọng số định dạng/expected/attack 0,1/0,2/0,7 so với 1/3 mỗi thành phần theo tỷ trọng ATGen. Điều kiện định dạng vẫn là JSON của đồ án, khác thinking tags của bài báo. Chỉ thay tỷ trọng, không thay curriculum trong phép thử này.
+
+| Phiên bản | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện @4 /15 |
+|---|---:|---:|---:|---:|
+| SFT64 trước RL | 41 | 13 | 4 | 3 |
+| GRPO reward hiện tại · lượt mới | 41 | 13 | 4 | 3 |
+| GRPO reward chia đều | **45** | **15** | **5** | **4** |
+
+Chữ đậm là giá trị cao nhất từng cột, kể cả khi hòa. Mẫu sai/bị cắt vẫn nằm trong mẫu số. Đây là lượt đối chứng mới; không dùng lại số liệu của lượt 96 bước trước để thay thế.
+
+Ứng viên chia đều qua tiêu chí đặt trước để cân nhắc thử đối kháng tiếp: **False**. Chưa tự thay cấu hình hoặc checkpoint chính. Gradient, thay đổi LoRA, bản lưu và toàn bộ rollout đã được kiểm chứng độc lập; không dùng reward tăng để thay cho đánh giá chất lượng.
+
+[Bảng, hình và phân tích](../results/apps-reward-ablation/README.md) · [Kế hoạch thử nghiệm](APPS_REWARD_EXPERIMENT.md). Test phát triển và Test chính thức vẫn được giữ lại.
+
+Đã kiểm tra thêm seed sinh 42/43/44 trên ba checkpoint cố định. Code phát hiện trung bình của nhánh hiện tại: 3.33 ± 1.53/15; chia đều: 3.67 ± 1.53/15. Đây là một seed huấn luyện và ba seed lấy mẫu; SD mô tả biến động, không phải khoảng tin cậy. [Toàn bộ chín lượt chấm](../results/apps-reward-ablation/SAMPLING.md).

@@ -41,3 +41,21 @@ Mỗi vòng probe policy trên Train; chỉ những code đã bị bắt lỗi m
 Hai vòng, mỗi vòng 48 bước/nhánh. Nhánh đối chứng dùng code cố định, cũng khởi tạo lại optimizer hai lần. Nhánh đối kháng dùng curriculum đóng băng ở đầu từng vòng. Validation và ngân sách sinh test giữ nguyên; Test chưa được model đánh giá. Đây là đối chứng khớp ngân sách học, không khớp tổng chi phí vì nhánh đối kháng cần sinh và lọc code.
 
 Xem [kết quả hai vòng](../results/apps-adversarial) và [phạm vi so với ATGen](ATGEN_ALIGNMENT.md). Mục kết quả cố định phía trên vẫn mô tả lượt chạy trước đó.
+
+## Một bước GRPO diễn ra như thế nào?
+
+Model nhận đề bài và một code có thể sai, rồi sinh bốn cặp input/expected. Bộ chấm chạy reference để xác nhận expected, sau đó chạy code cần kiểm tra để xem test có làm lộ lỗi không. Model không được xem reference hoặc nhân chứng lỗi trong prompt; chúng chỉ nằm ở phía chấm.
+
+Ví dụ nhóm đầu của lượt đối chứng reward mới có bốn điểm `[0; 0,1; 0,3; 0,1]`. Điểm trung bình là 0,125. GRPO so mỗi điểm với trung bình nhóm rồi chia cho độ lệch chuẩn; mẫu 0,3 có tín hiệu tương đối tốt hơn, còn ba mẫu kia có tín hiệu thấp hơn. Đây là so sánh trong nhóm, không phải nhãn đáp án mà người dùng nhập sẵn.
+
+Với cấu hình hiện tại, một nhóm có bốn completion và một bước cập nhật optimizer sau phần gradient accumulation. Lượt 96 bước sinh 384 test trong lúc học. “96 bước” không có nghĩa 96 bài khác nhau hoặc 96 epoch; có thể gặp lại cùng code Train. Script kiểm tra số bước và số rollout sau chạy.
+
+Một nhóm có bốn reward bằng nhau không cung cấp tín hiệu phân biệt cho GRPO. Vì vậy số bước được gọi và số bước có gradient khác 0 có thể khác nhau. Ngược lại, loss hiển thị gần 0 không tự chứng minh model không học: ở cấu hình policy cập nhật một lần và advantage được chuẩn hóa, các số hạng có thể triệt tiêu ở giá trị loss dù gradient vẫn khác 0. Phải xem gradient, thay đổi tensor, kiểm tra adapter đã lưu và chất lượng trên Validation.
+
+SFT khác ở chỗ được cung cấp đáp án mục tiêu đúng và học để khớp đáp án đó. GRPO lấy đầu ra do chính model sinh, chấm bằng môi trường và dùng reward để cập nhật. Bấm “Sinh 4 test” ở Demo chỉ thực hiện phần sinh/chấm, không có bước gradient và cập nhật optimizer.
+
+## Thử tỷ trọng reward
+
+Hai profile được tách riêng khỏi bộ chấm đánh giá: legacy-v1 dùng trọng số định dạng/expected/attack là 0,1/0,2/0,7; equal-v1 dùng 1/3 cho mỗi thành phần. Trần reward đều bằng 1, nhưng các mức giữa khác nhau. Mọi profile vẫn chỉ thưởng attack nếu expected đúng.
+
+Phép so sánh reward giữ cùng checkpoint SFT64, dữ liệu và 96 bước/nhánh, không đồng thời làm mới code đối kháng. Xem [kế hoạch kiểm chứng](APPS_REWARD_EXPERIMENT.md). Đây là thử riêng một thành phần của phương pháp; kết quả phải tách khỏi so sánh curriculum adaptive.

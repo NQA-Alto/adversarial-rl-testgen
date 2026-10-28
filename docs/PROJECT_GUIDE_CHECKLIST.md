@@ -17,3 +17,9 @@ Nguồn: CMP169-Project-Guide.pdf, REV.10-26, 38 trang. Rà soát ngày 28/10/20
 Kết quả thấp hoặc không tăng sau RL không tự động làm sai quy trình: guide yêu cầu lưu cả lần thất bại và phân tích nguyên nhân. Tuy nhiên, không dùng việc có gradient hoặc adapter thay đổi để tuyên bố khả năng tìm lỗi đã cải thiện.
 
 Trước khi chốt bản nộp, cần kiểm tra khả năng chạy lại và phạm vi phương pháp đã triển khai. Các thay đổi dữ liệu, prompt, model, reward hay cách chấm cần có phiên bản và mốc so sánh tương ứng.
+
+## Kiểm chứng reward và biến động lấy mẫu
+
+Đã bổ sung ablation tỷ trọng reward GRPO theo hướng tr.22: hai nhánh cùng parent, dữ liệu, prompt và ngân sách; kế hoạch ghi trước đánh giá. Bộ chấm/metric chính giữ nguyên, reward học có phiên bản riêng. Từng rollout và adapter được kiểm tra lại; trường hợp không đạt tiêu chí tiếp tục được lưu.
+
+Kiểm tra thêm ba seed sinh test được lên kế hoạch trước Validation mới và giữ toàn bộ kết quả. Đây không thay thế nhiều seed huấn luyện. Test vẫn chưa dùng; đóng gói, video và báo cáo cuối tiếp tục theo ưu tiên trước đó của người dùng.

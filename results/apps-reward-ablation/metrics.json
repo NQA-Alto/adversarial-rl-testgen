@@ -1,0 +1,288 @@
+{
+  "trial_folder": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-reward-ablation-20261028-221526-195266",
+  "trial_result_sha256": "dc9968334e6cc99fbb3915b3789908cfaaa53a5a08713616d8bc87a6d6f66776",
+  "trial": {
+    "status": "completed",
+    "plan": {
+      "recorded_at": "2026-10-28T15:15:26.316101+00:00",
+      "method": "STATIC_GRPO_REWARD_WEIGHT_ABLATION",
+      "dataset_id": "apps-intro-call-v2-eb69b8869857",
+      "train_sha256": "b76af3034722411991b5ff12939648c0330a0079e51d9e650490c3ee845479b7",
+      "parent_adapter": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-sft-v2-20261028-145103-496784\\adapter",
+      "parent_adapter_sha256": "7ec28547340fcebf67e3bfad629f790e6510b2305b32770ab20b09f97c7f3afa",
+      "parent_validation": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261028-145425-500329",
+      "parent_validation_sha256": "c786a00a0afac3a7a1b39820f1f1c665027243f46b3a47ee653ea864c66a788c",
+      "arms_in_order": [
+        "legacy-v1",
+        "equal-v1"
+      ],
+      "reward_weights": {
+        "legacy-v1": {
+          "format": 0.1,
+          "accuracy": 0.2,
+          "attack": 0.7
+        },
+        "equal-v1": {
+          "format": 0.3333333333333333,
+          "accuracy": 0.3333333333333333,
+          "attack": 0.3333333333333333
+        }
+      },
+      "steps_per_arm": 96,
+      "seed": 42,
+      "prompt_version": "apps-call-v2",
+      "tests_per_group": 4,
+      "max_new_tokens": 96,
+      "configuration": "Same frozen 41-case static curriculum, new identical GRPO optimizer per arm, lr=1e-5, LoRA rank4, BF16, same case order. Only reward weights differ.",
+      "evaluation_policy": "Train both final adapters before evaluating either. Evaluate Train for fitting, then Validation once per final adapter with identical prompt, per-case seed, 4 samples and budget. No intermediate checkpoint selection.",
+      "primary_outcomes": [
+        "bug_detecting_tests",
+        "cases_detected"
+      ],
+      "secondary_outcomes": [
+        "correct_expected",
+        "valid_tests"
+      ],
+      "candidate_gate": "Equal reward must add >=3 correct expected tests versus fresh legacy control and not reduce valid tests, bug-detecting tests or detected cases versus either control or parent. This is eligibility for a further adversarial comparison, not automatic promotion.",
+      "limits": "One training seed and five Validation problems. Static reward ablation isolates weights, not the full adaptive ATGen method. JSON+domain format reward differs from ATGen thinking tags; equal weights are normalized to total 1. CUDA nondeterminism is not ruled out.",
+      "source": "https://arxiv.org/html/2510.14635v1#S4.SS1",
+      "source_hashes": {
+        "apps_reward_trial.py": "ed327b1ee4f4c09b12c215d34a45a1cf8cf02f2858c3371622834fb5925ec596",
+        "apps_rewards.py": "5f236334aa49cf424153a9df1039f694ebf7fc44d58a140741cca29dbe7641a2",
+        "check_apps_rewards.py": "cbd6f9d3968bcae30d550ae60e8dc3a46057599d81cc2e6b6fc8fff1a0f45822",
+        "apps_core.py": "8852daf15c5a8e021a1594d44704a61c8bd2ac675c38565eea175f3c1c79cd33",
+        "apps_model_runner.py": "b3dc91bf43065256bbcce924f88e497db11f58d69ae5fcc83a894d81cd59ff94",
+        "apps_round.py": "626355c0339629aa7307cec11bebbe3d137f14e80d85af24d3ad3d5ce92cd0ee",
+        "apps_curriculum.py": "9f53830ed4316cf121418ea50c3f0a5f191373a1f37958c990caed9ba0e47109",
+        "apps_profiles.py": "b63ba5a9c1e6319d34925969fd16c438efc887bbdb7c7a40c93bcbb5e35bdf93",
+        "apps_output_contracts.py": "90e67e2985a3dbac004b2f77cbab7ebae24baa0509929133dc32b6531625680a",
+        "restricted_python.py": "542fd37b7ed73225fd2105922845155615e241b246b039e7ccce7fc840967111",
+        "local_model_loader.py": "339d647aa8b2d123cb9972654b9244a0aeb57aa8a02e173bac0f4abfcfa2221a",
+        "train_static_grpo.py": "42d2d34ce7f1a7a86184a984106e49988d31a07c1f2d19018acee8f57421a36c",
+        "check_lora_update.py": "b57d4606fd72f14f653290fbd9252269d4b753eb75dc945ba9752a12bbfdec7d",
+        "audit_apps_run.py": "f7ce9fb53d0a1ebf0060b5388021221b5ef10791d0e7ebf689fd0530dafe1dab"
+      },
+      "state_sha256": "6fbf0ffa6a6e1b3d805b1d5e69d1c76361496b1d203b108ba66e2ba6536df376",
+      "active_config_sha256": "f0143afbedd075c7613637941b5074670309580f28036290c7200b45ea2f94f2",
+      "model_test_evaluation": false
+    },
+    "arms": {
+      "legacy-v1": {
+        "training": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-grpo-pilot-20261028-221526-479759",
+        "training_result_sha256": "e379402ed96471d40ece9c6a65890b310a1962fa0873463cd182814546d5bb7d",
+        "train": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261028-223802-063100",
+        "train_result_sha256": "a83bf70c776158daa97652c929ef7928ef4068d2b3b7c046d0eb3c3757b71746",
+        "train_metrics": {
+          "evaluated_cases": 41,
+          "generated_tests": 164,
+          "valid_tests": 117,
+          "correct_expected": 36,
+          "bug_detecting_tests": 18,
+          "cases_detected": 13,
+          "valid_rate": 0.7134146341463414,
+          "io_accuracy": 0.21951219512195122,
+          "attack_rate": 0.10975609756097561,
+          "case_detection_at_4": 0.3170731707317073,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        },
+        "validation": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261028-223956-859446",
+        "validation_result_sha256": "977ec413d7cecfb98bdf5c0a5280d1493c6441bc3decc579547e3de371e25fd8",
+        "validation_metrics": {
+          "evaluated_cases": 15,
+          "generated_tests": 60,
+          "valid_tests": 41,
+          "correct_expected": 13,
+          "bug_detecting_tests": 4,
+          "cases_detected": 3,
+          "valid_rate": 0.6833333333333333,
+          "io_accuracy": 0.21666666666666667,
+          "attack_rate": 0.06666666666666667,
+          "case_detection_at_4": 0.2,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        }
+      },
+      "equal-v1": {
+        "training": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-grpo-pilot-20261028-222541-317567",
+        "training_result_sha256": "27ac1ea5dbaa49d4db774b3c51d6a83c156edde4a74b5947f73281b311bb19c7",
+        "train": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261028-224059-272319",
+        "train_result_sha256": "1a67e481864967b0b51fe4a38733a4094f3808d56f3eae5a692daea1ceeb6b57",
+        "train_metrics": {
+          "evaluated_cases": 41,
+          "generated_tests": 164,
+          "valid_tests": 122,
+          "correct_expected": 40,
+          "bug_detecting_tests": 20,
+          "cases_detected": 16,
+          "valid_rate": 0.7439024390243902,
+          "io_accuracy": 0.24390243902439024,
+          "attack_rate": 0.12195121951219512,
+          "case_detection_at_4": 0.3902439024390244,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        },
+        "validation": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261028-224232-774612",
+        "validation_result_sha256": "933b9553364724774f2eba281a6d3c508f8d960c0a89705d5c0a45e368ea8dd4",
+        "validation_metrics": {
+          "evaluated_cases": 15,
+          "generated_tests": 60,
+          "valid_tests": 45,
+          "correct_expected": 15,
+          "bug_detecting_tests": 5,
+          "cases_detected": 4,
+          "valid_rate": 0.75,
+          "io_accuracy": 0.25,
+          "attack_rate": 0.08333333333333333,
+          "case_detection_at_4": 0.26666666666666666,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        }
+      }
+    },
+    "model_test_evaluation": false,
+    "training_case_order_match": true,
+    "parent_validation_metrics": {
+      "evaluated_cases": 15,
+      "generated_tests": 60,
+      "valid_tests": 41,
+      "correct_expected": 13,
+      "bug_detecting_tests": 4,
+      "cases_detected": 3,
+      "valid_rate": 0.6833333333333333,
+      "io_accuracy": 0.21666666666666667,
+      "attack_rate": 0.06666666666666667,
+      "case_detection_at_4": 0.2,
+      "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+    },
+    "controlled_evaluation_verified": true,
+    "eligible_for_adversarial_followup": false,
+    "active_checkpoint_unchanged": true
+  },
+  "runs": {
+    "legacy-v1": {
+      "optimizer_steps": 96,
+      "generated_tests_during_training": 384,
+      "nonzero_gradient_steps": 88,
+      "policy_signal_groups": 88,
+      "changed_adapter_tensors": 24,
+      "saved_adapter_exact_match": true,
+      "peak_vram_gib": 4.836,
+      "parent_adapter_sha256": "7ec28547340fcebf67e3bfad629f790e6510b2305b32770ab20b09f97c7f3afa",
+      "train_probe_metrics": {
+        "evaluated_cases": 41,
+        "generated_tests": 164,
+        "valid_tests": 117,
+        "correct_expected": 36,
+        "bug_detecting_tests": 18,
+        "cases_detected": 13,
+        "valid_rate": 0.7134146341463414,
+        "io_accuracy": 0.21951219512195122,
+        "attack_rate": 0.10975609756097561,
+        "case_detection_at_4": 0.3170731707317073,
+        "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+      },
+      "validation_metrics": {
+        "evaluated_cases": 15,
+        "generated_tests": 60,
+        "valid_tests": 41,
+        "correct_expected": 13,
+        "bug_detecting_tests": 4,
+        "cases_detected": 3,
+        "valid_rate": 0.6833333333333333,
+        "io_accuracy": 0.21666666666666667,
+        "attack_rate": 0.06666666666666667,
+        "case_detection_at_4": 0.2,
+        "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+      },
+      "reward_sensitivity": {
+        "groups_by_distinct_reward_levels": {
+          "3": 26,
+          "1": 8,
+          "2": 59,
+          "4": 3
+        },
+        "groups_with_three_or_more_levels": 29,
+        "mean_counterfactual_standardized_reward_difference": 0.10792917615129372,
+        "max_counterfactual_standardized_reward_difference": 0.5528886804227755,
+        "interpretation": "Diagnostic only: recompute both profiles on the SAME stored completions, float64 sample standard deviation and epsilon=1e-4. This is not a second model run or exact logged trainer advantage. With only two reward levels, positive affine rescaling preserves relative standardized scores apart from epsilon effects."
+      },
+      "trainer_summary": {
+        "epoch": 2.341463414634146,
+        "step": 96,
+        "total_flos": 0.0,
+        "train_loss": -0.0012994777256002028,
+        "train_runtime": 591.8,
+        "train_samples_per_second": 0.649,
+        "train_steps_per_second": 0.162
+      }
+    },
+    "equal-v1": {
+      "optimizer_steps": 96,
+      "generated_tests_during_training": 384,
+      "nonzero_gradient_steps": 83,
+      "policy_signal_groups": 83,
+      "changed_adapter_tensors": 24,
+      "saved_adapter_exact_match": true,
+      "peak_vram_gib": 4.836,
+      "parent_adapter_sha256": "7ec28547340fcebf67e3bfad629f790e6510b2305b32770ab20b09f97c7f3afa",
+      "train_probe_metrics": {
+        "evaluated_cases": 41,
+        "generated_tests": 164,
+        "valid_tests": 122,
+        "correct_expected": 40,
+        "bug_detecting_tests": 20,
+        "cases_detected": 16,
+        "valid_rate": 0.7439024390243902,
+        "io_accuracy": 0.24390243902439024,
+        "attack_rate": 0.12195121951219512,
+        "case_detection_at_4": 0.3902439024390244,
+        "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+      },
+      "validation_metrics": {
+        "evaluated_cases": 15,
+        "generated_tests": 60,
+        "valid_tests": 45,
+        "correct_expected": 15,
+        "bug_detecting_tests": 5,
+        "cases_detected": 4,
+        "valid_rate": 0.75,
+        "io_accuracy": 0.25,
+        "attack_rate": 0.08333333333333333,
+        "case_detection_at_4": 0.26666666666666666,
+        "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+      },
+      "reward_sensitivity": {
+        "groups_by_distinct_reward_levels": {
+          "3": 35,
+          "2": 47,
+          "1": 13,
+          "4": 1
+        },
+        "groups_with_three_or_more_levels": 36,
+        "mean_counterfactual_standardized_reward_difference": 0.1174582623554899,
+        "max_counterfactual_standardized_reward_difference": 0.5528886804227755,
+        "interpretation": "Diagnostic only: recompute both profiles on the SAME stored completions, float64 sample standard deviation and epsilon=1e-4. This is not a second model run or exact logged trainer advantage. With only two reward levels, positive affine rescaling preserves relative standardized scores apart from epsilon effects."
+      },
+      "trainer_summary": {
+        "epoch": 2.341463414634146,
+        "step": 96,
+        "total_flos": 0.0,
+        "train_loss": -0.010142551579823097,
+        "train_runtime": 721.0422,
+        "train_samples_per_second": 0.533,
+        "train_steps_per_second": 0.133
+      }
+    }
+  },
+  "case_transitions": {
+    "equal_only_detected": [
+      "apps-train-3014/m3"
+    ],
+    "legacy_only_detected": [],
+    "detected_by_both": [
+      "apps-train-2868/m3",
+      "apps-train-2947/m1",
+      "apps-train-2947/m2"
+    ]
+  },
+  "identical_raw_outputs_of_60": 49,
+  "model_test_evaluation": false,
+  "active_checkpoint_promoted": false
+}

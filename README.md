@@ -21,6 +21,24 @@ Hai nhánh GRPO cuối phát hiện cùng hai code; nhánh đối kháng mất t
 
 [Kết quả, đường loss và giới hạn](results/apps-sft-budget). Đây là thay đổi ngân sách SFT, không phải bằng chứng lợi ích của RL hay curriculum đối kháng. Các mốc GRPO cũ vẫn dùng warmup 64 bước lịch sử. Test chưa được dùng.
 
+## Kiểm chứng tỷ trọng reward GRPO
+
+Hai lượt mới cùng xuất phát từ SFT64 lịch sử, cùng 41 code Train, prompt v2, seed 42 và 96 bước/nhánh. Thử trọng số định dạng/expected/attack 0,1/0,2/0,7 so với 1/3 mỗi thành phần theo tỷ trọng ATGen. Điều kiện định dạng vẫn là JSON của đồ án, khác thinking tags của bài báo. Chỉ thay tỷ trọng, không thay curriculum trong phép thử này.
+
+| Phiên bản | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện @4 /15 |
+|---|---:|---:|---:|---:|
+| SFT64 trước RL | 41 | 13 | 4 | 3 |
+| GRPO reward hiện tại · lượt mới | 41 | 13 | 4 | 3 |
+| GRPO reward chia đều | **45** | **15** | **5** | **4** |
+
+Chữ đậm là giá trị cao nhất từng cột, kể cả khi hòa. Mẫu sai/bị cắt vẫn nằm trong mẫu số. Đây là lượt đối chứng mới; không dùng lại số liệu của lượt 96 bước trước để thay thế.
+
+Ứng viên chia đều qua tiêu chí đặt trước để cân nhắc thử đối kháng tiếp: **False**. Chưa tự thay cấu hình hoặc checkpoint chính. Gradient, thay đổi LoRA, bản lưu và toàn bộ rollout đã được kiểm chứng độc lập; không dùng reward tăng để thay cho đánh giá chất lượng.
+
+[Bảng, hình và phân tích](results/apps-reward-ablation/README.md) · [Kế hoạch thử nghiệm](docs/APPS_REWARD_EXPERIMENT.md). Test phát triển và Test chính thức vẫn được giữ lại.
+
+Đã kiểm tra thêm seed sinh 42/43/44 trên ba checkpoint cố định. Code phát hiện trung bình của nhánh hiện tại: 3.33 ± 1.53/15; chia đều: 3.67 ± 1.53/15. Đây là một seed huấn luyện và ba seed lấy mẫu; SD mô tả biến động, không phải khoảng tin cậy. [Toàn bộ chín lượt chấm](results/apps-reward-ablation/SAMPLING.md).
+
 ## Dữ liệu
 
 Nguồn: [codeparrot/apps](https://huggingface.co/datasets/codeparrot/apps), revision `21e74ddf8de1a21436da12e3e653065c5213e9d1`, được [kho APPS của tác giả](https://github.com/hendrycks/apps) dẫn tới.

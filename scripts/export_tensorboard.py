@@ -45,6 +45,11 @@ def scalar_rows(folder):
         if rewards and isinstance(step, int) and all(isinstance(value, (int, float)) and math.isfinite(value) for value in rewards):
             values.append(("rollout/reward_mean", step, sum(rewards) / len(rewards)))
             values.append(("rollout/policy_signal", step, float(bool(row.get("policy_signal")))))
+            samples = row.get("samples", [])
+            for field, tag in (("valid_format", "verified_valid_rate"), ("correct_expected", "verified_io_accuracy"),
+                               ("bug_detected", "verified_attack_rate")):
+                if samples and all(type(sample.get(field)) is bool for sample in samples):
+                    values.append(("rollout/" + tag, step, sum(sample[field] for sample in samples) / len(samples)))
     for row in read_lines(folder / "gradient-audit.jsonl"):
         step, value = row.get("step"), row.get("gradient_norm")
         if isinstance(step, int) and isinstance(value, (int, float)) and math.isfinite(value):

@@ -9,7 +9,7 @@ Tài liệu gốc: [ATGen: Adversarial Reinforcement Learning for Test Case Gene
 | Đầu vào: đề bài và code cần kiểm tra (§3) | Đề APPS Introductory, hàm `solve`, miền input hữu hạn. Model sinh một cặp input/expected bằng JSON. | Prompt, mã bài nguồn và hash dữ liệu được lưu theo lượt chạy. |
 | IO Accuracy và Attack Rate (§3, §5.1) | Expected phải khớp lời giải tham chiếu; chỉ tính bắt lỗi khi expected đúng và code cần kiểm tra trả khác hoặc phát sinh lỗi thực thi được hỗ trợ. | Từng mẫu được chấm lại từ đầu; mẫu sai định dạng/bị cắt vẫn nằm trong mẫu số. |
 | GRPO (§4.1) | Dùng TRL, nhóm bốn test; chỉ cập nhật LoRA của model sinh test. | Reward từng nhóm, gradient, tham số thay đổi, hash adapter và kiểm tra lưu/nạp. |
-| Reward nhiều thành phần (§4.1) | Dùng các mức 0 / 0,1 / 0,3 / 1 cho test không hợp lệ / sai expected / đúng nhưng chưa bắt lỗi / bắt lỗi. Đây là lựa chọn riêng của đồ án. | Hàm `score` và log rollout; không nói đây là cấu hình reward nguyên bản. |
+| Reward nhiều thành phần (§4.1) | Mặc định dùng các mức 0 / 0,1 / 0,3 / 1; đã thử riêng trọng số chia đều 1/3 theo tỷ trọng bài báo. Format vẫn là JSON/miền input, khác thinking tags. Không gộp hai profile hay sửa cách chấm cũ. | Hàm `score` và log rollout; không nói đây là cấu hình reward nguyên bản. |
 | Sinh code rồi lọc (§4.2) | Model local gốc được yêu cầu giải đúng đề. Code sinh ra phải qua bộ thông dịch giới hạn. Chỉ giữ code sai ở một số input, đúng ở một số input, vượt qua test đúng của policy hiện tại và khác hành vi các mutant ban đầu. | Toàn bộ code được lấy mẫu, lý do loại, nhân chứng lỗi và kết quả kiểm tra lại. Nhân chứng chỉ phục vụ bộ chấm, không đưa vào prompt. |
 | Adaptive curriculum (§4.2) | Chỉ thay những code Train mà policy hiện tại đã bắt được lỗi. Làm mới code giữa các vòng, giữ nguyên các vị trí bài Train còn lại. | Probe trên Train, curriculum đóng băng theo vòng và số mẫu RL thật sự tiếp xúc code đối kháng. |
 | So sánh không có đối kháng (§5.2) | Hai nhánh cùng xuất phát từ SFT, cùng số bước GRPO, cùng số lần khởi tạo optimizer, seed và cách đánh giá. Khác biệt chủ đích là code huấn luyện. | Nhánh GRPO cố định và nhánh adaptive; không dùng lượt 96 bước một mạch trước đây làm đối chứng tương đương cho hai vòng 48 bước. |
@@ -67,3 +67,21 @@ Hai phép thử kiểu đầu ra v3/v4 không đạt tiêu chí Train đã đặ
 Đã so sánh ngân sách 64/256 bước với cùng target pool và prompt v2, có đối chứng cùng quỹ đạo học được lên kế hoạch trước Validation sau khi kiểm tra tái hiện lịch sử không khớp tuyệt đối. SFT256 đạt 21/60 expected đúng, 3/60 test bắt lỗi và 2/15 code được phát hiện. Đủ tiêu chí bổ sung để cân nhắc so sánh RL tiếp theo: False.
 
 Phần kết quả này thuộc SFT khởi động bổ sung của đồ án. Không được dùng nó để nói ATGen đối kháng đã cải thiện. Các phép so sánh GRPO từ SFT64 giữ nguyên; nếu chuyển warmup, cả hai nhánh phải được thử lại từ cùng checkpoint. Xem results/apps-sft-budget để đối chiếu kế hoạch ban đầu, đối chứng bổ sung và số liệu.
+
+## Kiểm chứng tỷ trọng reward GRPO
+
+Hai lượt mới cùng xuất phát từ SFT64 lịch sử, cùng 41 code Train, prompt v2, seed 42 và 96 bước/nhánh. Thử trọng số định dạng/expected/attack 0,1/0,2/0,7 so với 1/3 mỗi thành phần theo tỷ trọng ATGen. Điều kiện định dạng vẫn là JSON của đồ án, khác thinking tags của bài báo. Chỉ thay tỷ trọng, không thay curriculum trong phép thử này.
+
+| Phiên bản | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện @4 /15 |
+|---|---:|---:|---:|---:|
+| SFT64 trước RL | 41 | 13 | 4 | 3 |
+| GRPO reward hiện tại · lượt mới | 41 | 13 | 4 | 3 |
+| GRPO reward chia đều | **45** | **15** | **5** | **4** |
+
+Chữ đậm là giá trị cao nhất từng cột, kể cả khi hòa. Mẫu sai/bị cắt vẫn nằm trong mẫu số. Đây là lượt đối chứng mới; không dùng lại số liệu của lượt 96 bước trước để thay thế.
+
+Ứng viên chia đều qua tiêu chí đặt trước để cân nhắc thử đối kháng tiếp: **False**. Chưa tự thay cấu hình hoặc checkpoint chính. Gradient, thay đổi LoRA, bản lưu và toàn bộ rollout đã được kiểm chứng độc lập; không dùng reward tăng để thay cho đánh giá chất lượng.
+
+[Bảng, hình và phân tích](../results/apps-reward-ablation/README.md) · [Kế hoạch thử nghiệm](APPS_REWARD_EXPERIMENT.md). Test phát triển và Test chính thức vẫn được giữ lại.
+
+Đã kiểm tra thêm seed sinh 42/43/44 trên ba checkpoint cố định. Code phát hiện trung bình của nhánh hiện tại: 3.33 ± 1.53/15; chia đều: 3.67 ± 1.53/15. Đây là một seed huấn luyện và ba seed lấy mẫu; SD mô tả biến động, không phải khoảng tin cậy. [Toàn bộ chín lượt chấm](../results/apps-reward-ablation/SAMPLING.md).

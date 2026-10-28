@@ -1,0 +1,365 @@
+{
+  "sampling_result": {
+    "status": "completed",
+    "sampling_plan_sha256": "c09d48177e22823c70b1cc3084d93932e2b71e55260121fa1aa4fae96619a4b0",
+    "original_trial_result_sha256": "dc9968334e6cc99fbb3915b3789908cfaaa53a5a08713616d8bc87a6d6f66776",
+    "runs": [
+      {
+        "variant": "SFT64_parent",
+        "generation_seed": 42,
+        "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261028-145425-500329",
+        "result_sha256": "c786a00a0afac3a7a1b39820f1f1c665027243f46b3a47ee653ea864c66a788c",
+        "adapter_sha256": "7ec28547340fcebf67e3bfad629f790e6510b2305b32770ab20b09f97c7f3afa",
+        "metrics": {
+          "evaluated_cases": 15,
+          "generated_tests": 60,
+          "valid_tests": 41,
+          "correct_expected": 13,
+          "bug_detecting_tests": 4,
+          "cases_detected": 3,
+          "valid_rate": 0.6833333333333333,
+          "io_accuracy": 0.21666666666666667,
+          "attack_rate": 0.06666666666666667,
+          "case_detection_at_4": 0.2,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        }
+      },
+      {
+        "variant": "legacy-v1",
+        "generation_seed": 42,
+        "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261028-223956-859446",
+        "result_sha256": "977ec413d7cecfb98bdf5c0a5280d1493c6441bc3decc579547e3de371e25fd8",
+        "adapter_sha256": "e0fc7f568a221148d85ed8f7a6ed1f7e6f0deedede990833736a48b5d74c890d",
+        "metrics": {
+          "evaluated_cases": 15,
+          "generated_tests": 60,
+          "valid_tests": 41,
+          "correct_expected": 13,
+          "bug_detecting_tests": 4,
+          "cases_detected": 3,
+          "valid_rate": 0.6833333333333333,
+          "io_accuracy": 0.21666666666666667,
+          "attack_rate": 0.06666666666666667,
+          "case_detection_at_4": 0.2,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        }
+      },
+      {
+        "variant": "equal-v1",
+        "generation_seed": 42,
+        "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261028-224232-774612",
+        "result_sha256": "933b9553364724774f2eba281a6d3c508f8d960c0a89705d5c0a45e368ea8dd4",
+        "adapter_sha256": "7a65991e9e3bd4683a45e4af8c312cfe9c74045e3dc4142537dfc1f22a0ad707",
+        "metrics": {
+          "evaluated_cases": 15,
+          "generated_tests": 60,
+          "valid_tests": 45,
+          "correct_expected": 15,
+          "bug_detecting_tests": 5,
+          "cases_detected": 4,
+          "valid_rate": 0.75,
+          "io_accuracy": 0.25,
+          "attack_rate": 0.08333333333333333,
+          "case_detection_at_4": 0.26666666666666666,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        }
+      },
+      {
+        "variant": "SFT64_parent",
+        "generation_seed": 43,
+        "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-012257-457354",
+        "result_sha256": "d7040575f874d28593315d0d593cd3ce6d7760facb38663fb9c682e827ac04a4",
+        "adapter_sha256": "7ec28547340fcebf67e3bfad629f790e6510b2305b32770ab20b09f97c7f3afa",
+        "metrics": {
+          "evaluated_cases": 15,
+          "generated_tests": 60,
+          "valid_tests": 42,
+          "correct_expected": 12,
+          "bug_detecting_tests": 2,
+          "cases_detected": 2,
+          "valid_rate": 0.7,
+          "io_accuracy": 0.2,
+          "attack_rate": 0.03333333333333333,
+          "case_detection_at_4": 0.13333333333333333,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        }
+      },
+      {
+        "variant": "legacy-v1",
+        "generation_seed": 43,
+        "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-012403-298307",
+        "result_sha256": "95248129decf725119236466f474713621581f42fde1521405794f508b65bcf5",
+        "adapter_sha256": "e0fc7f568a221148d85ed8f7a6ed1f7e6f0deedede990833736a48b5d74c890d",
+        "metrics": {
+          "evaluated_cases": 15,
+          "generated_tests": 60,
+          "valid_tests": 40,
+          "correct_expected": 13,
+          "bug_detecting_tests": 2,
+          "cases_detected": 2,
+          "valid_rate": 0.6666666666666666,
+          "io_accuracy": 0.21666666666666667,
+          "attack_rate": 0.03333333333333333,
+          "case_detection_at_4": 0.13333333333333333,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        }
+      },
+      {
+        "variant": "equal-v1",
+        "generation_seed": 43,
+        "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-012508-208041",
+        "result_sha256": "bf9b554dc72c69ed04ac7935ba9ac91015081b0f82c0c48b08611f275c3df109",
+        "adapter_sha256": "7a65991e9e3bd4683a45e4af8c312cfe9c74045e3dc4142537dfc1f22a0ad707",
+        "metrics": {
+          "evaluated_cases": 15,
+          "generated_tests": 60,
+          "valid_tests": 42,
+          "correct_expected": 14,
+          "bug_detecting_tests": 2,
+          "cases_detected": 2,
+          "valid_rate": 0.7,
+          "io_accuracy": 0.23333333333333334,
+          "attack_rate": 0.03333333333333333,
+          "case_detection_at_4": 0.13333333333333333,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        }
+      },
+      {
+        "variant": "SFT64_parent",
+        "generation_seed": 44,
+        "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-012608-295907",
+        "result_sha256": "d06f14b51fa3e3fdedab0b3a544023ede3f82a065321e1944da41a124f87b174",
+        "adapter_sha256": "7ec28547340fcebf67e3bfad629f790e6510b2305b32770ab20b09f97c7f3afa",
+        "metrics": {
+          "evaluated_cases": 15,
+          "generated_tests": 60,
+          "valid_tests": 46,
+          "correct_expected": 10,
+          "bug_detecting_tests": 5,
+          "cases_detected": 5,
+          "valid_rate": 0.7666666666666667,
+          "io_accuracy": 0.16666666666666666,
+          "attack_rate": 0.08333333333333333,
+          "case_detection_at_4": 0.3333333333333333,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        }
+      },
+      {
+        "variant": "legacy-v1",
+        "generation_seed": 44,
+        "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-012658-866032",
+        "result_sha256": "bf4f8e1c0e788a5d4c8cb8707387eb0c4da64da572806fd3968fb40722b12c2d",
+        "adapter_sha256": "e0fc7f568a221148d85ed8f7a6ed1f7e6f0deedede990833736a48b5d74c890d",
+        "metrics": {
+          "evaluated_cases": 15,
+          "generated_tests": 60,
+          "valid_tests": 45,
+          "correct_expected": 10,
+          "bug_detecting_tests": 5,
+          "cases_detected": 5,
+          "valid_rate": 0.75,
+          "io_accuracy": 0.16666666666666666,
+          "attack_rate": 0.08333333333333333,
+          "case_detection_at_4": 0.3333333333333333,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        }
+      },
+      {
+        "variant": "equal-v1",
+        "generation_seed": 44,
+        "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-012757-984195",
+        "result_sha256": "50f212b5a729cd9810654009818691b8c9c2fbbc843a482adf2eac1705680c76",
+        "adapter_sha256": "7a65991e9e3bd4683a45e4af8c312cfe9c74045e3dc4142537dfc1f22a0ad707",
+        "metrics": {
+          "evaluated_cases": 15,
+          "generated_tests": 60,
+          "valid_tests": 46,
+          "correct_expected": 10,
+          "bug_detecting_tests": 5,
+          "cases_detected": 5,
+          "valid_rate": 0.7666666666666667,
+          "io_accuracy": 0.16666666666666666,
+          "attack_rate": 0.08333333333333333,
+          "case_detection_at_4": 0.3333333333333333,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        }
+      }
+    ],
+    "model_test_evaluation": false,
+    "runs_completed": 9,
+    "training_seeds": 1,
+    "sampling_seeds": 3,
+    "active_checkpoint_unchanged": true,
+    "original_candidate_gate_unchanged": true
+  },
+  "sampling_plan": {
+    "recorded_at": "2026-10-28T15:23:51.664743+00:00",
+    "original_trial_plan_sha256": "5fa191e281d9cd0a8cbf7dd2d944178143a5051b592d6197ebb1e4c123d59619",
+    "purpose": "Supplementary sampling variability check, not additional training or checkpoint selection",
+    "variants": [
+      "SFT64_parent",
+      "legacy-v1",
+      "equal-v1"
+    ],
+    "generation_seeds": [
+      42,
+      43,
+      44
+    ],
+    "reuse": "Seed42 comes from the original trial and historical parent. Run seeds43 and44 on all three fixed final adapters after original trial completion, regardless of its outcome.",
+    "policy": "Report every seed and variant; no selecting a favorable seed. Original candidate gate stays on seed42, supplementary data do not silently replace it. This is one training seed with three sampling seeds, not three trained models per method.",
+    "evaluation": "Same Validation, prompt v2, 4 samples per code, 96 tokens, same per-case seeding formula. No Test.",
+    "source_hashes": {
+      "apps_reward_seed_probe.py": "56a77725ec1cf07965f759cd68540f3ef5eaed49421222d441bcba6e68dbed0c",
+      "apps_model_runner.py": "b3dc91bf43065256bbcce924f88e497db11f58d69ae5fcc83a894d81cd59ff94",
+      "apps_core.py": "8852daf15c5a8e021a1594d44704a61c8bd2ac675c38565eea175f3c1c79cd33",
+      "apps_rewards.py": "5f236334aa49cf424153a9df1039f694ebf7fc44d58a140741cca29dbe7641a2",
+      "audit_apps_run.py": "f7ce9fb53d0a1ebf0060b5388021221b5ef10791d0e7ebf689fd0530dafe1dab",
+      "apps_round.py": "626355c0339629aa7307cec11bebbe3d137f14e80d85af24d3ad3d5ce92cd0ee"
+    },
+    "model_test_evaluation": false
+  },
+  "descriptive_summary": {
+    "SFT64_parent": {
+      "valid_tests": {
+        "mean": 43,
+        "sample_sd": 2.6457513110645907,
+        "values_by_seed": {
+          "42": 41,
+          "43": 42,
+          "44": 46
+        }
+      },
+      "correct_expected": {
+        "mean": 11.666666666666666,
+        "sample_sd": 1.5275252316519468,
+        "values_by_seed": {
+          "42": 13,
+          "43": 12,
+          "44": 10
+        }
+      },
+      "bug_detecting_tests": {
+        "mean": 3.6666666666666665,
+        "sample_sd": 1.5275252316519468,
+        "values_by_seed": {
+          "42": 4,
+          "43": 2,
+          "44": 5
+        }
+      },
+      "cases_detected": {
+        "mean": 3.3333333333333335,
+        "sample_sd": 1.5275252316519468,
+        "values_by_seed": {
+          "42": 3,
+          "43": 2,
+          "44": 5
+        }
+      }
+    },
+    "legacy-v1": {
+      "valid_tests": {
+        "mean": 42,
+        "sample_sd": 2.6457513110645907,
+        "values_by_seed": {
+          "42": 41,
+          "43": 40,
+          "44": 45
+        }
+      },
+      "correct_expected": {
+        "mean": 12,
+        "sample_sd": 1.7320508075688772,
+        "values_by_seed": {
+          "42": 13,
+          "43": 13,
+          "44": 10
+        }
+      },
+      "bug_detecting_tests": {
+        "mean": 3.6666666666666665,
+        "sample_sd": 1.5275252316519468,
+        "values_by_seed": {
+          "42": 4,
+          "43": 2,
+          "44": 5
+        }
+      },
+      "cases_detected": {
+        "mean": 3.3333333333333335,
+        "sample_sd": 1.5275252316519468,
+        "values_by_seed": {
+          "42": 3,
+          "43": 2,
+          "44": 5
+        }
+      }
+    },
+    "equal-v1": {
+      "valid_tests": {
+        "mean": 44.333333333333336,
+        "sample_sd": 2.0816659994661326,
+        "values_by_seed": {
+          "42": 45,
+          "43": 42,
+          "44": 46
+        }
+      },
+      "correct_expected": {
+        "mean": 13,
+        "sample_sd": 2.6457513110645907,
+        "values_by_seed": {
+          "42": 15,
+          "43": 14,
+          "44": 10
+        }
+      },
+      "bug_detecting_tests": {
+        "mean": 4,
+        "sample_sd": 1.7320508075688772,
+        "values_by_seed": {
+          "42": 5,
+          "43": 2,
+          "44": 5
+        }
+      },
+      "cases_detected": {
+        "mean": 3.6666666666666665,
+        "sample_sd": 1.5275252316519468,
+        "values_by_seed": {
+          "42": 4,
+          "43": 2,
+          "44": 5
+        }
+      }
+    }
+  },
+  "equal_minus_legacy_by_sampling_seed": [
+    {
+      "generation_seed": 42,
+      "valid_tests": 4,
+      "correct_expected": 2,
+      "bug_detecting_tests": 1,
+      "cases_detected": 1
+    },
+    {
+      "generation_seed": 43,
+      "valid_tests": 2,
+      "correct_expected": 1,
+      "bug_detecting_tests": 0,
+      "cases_detected": 0
+    },
+    {
+      "generation_seed": 44,
+      "valid_tests": 1,
+      "correct_expected": 0,
+      "bug_detecting_tests": 0,
+      "cases_detected": 0
+    }
+  ],
+  "training_seeds": 1,
+  "sampling_seeds": 3,
+  "model_test_evaluation": false,
+  "statistical_significance_claim": false
+}

@@ -1,0 +1,167 @@
+{
+  "selection": "First stored sample per category and arm, not representative prevalence. Full predictions stay in evidence.",
+  "examples": [
+    {
+      "variant": "equal-v1",
+      "category": "bug_detected",
+      "case_id": "apps-train-2868/m3",
+      "source_id": 2868,
+      "sample": {
+        "bug_detected": true,
+        "buggy_output": true,
+        "correct_expected": true,
+        "generated_tokens": 15,
+        "gold_output": false,
+        "raw_output": "{\"expected\":false,\"input\":{\"arr\":[0,3]}}",
+        "reward": 1.0,
+        "terminated": true,
+        "test": {
+          "expected": false,
+          "input": {
+            "arr": [
+              0,
+              3
+            ]
+          }
+        },
+        "valid_format": true
+      }
+    },
+    {
+      "variant": "equal-v1",
+      "category": "wrong_expected",
+      "case_id": "apps-train-2834/m1",
+      "source_id": 2834,
+      "sample": {
+        "bug_detected": false,
+        "buggy_output": [
+          4,
+          0
+        ],
+        "correct_expected": false,
+        "generated_tokens": 23,
+        "gold_output": [
+          4,
+          0
+        ],
+        "raw_output": "{\"expected\":[2,2],\"input\":{\"p\":[0,0],\"q\":[2,0]}}",
+        "reward": 0.1,
+        "terminated": true,
+        "test": {
+          "expected": [
+            2,
+            2
+          ],
+          "input": {
+            "p": [
+              0,
+              0
+            ],
+            "q": [
+              2,
+              0
+            ]
+          }
+        },
+        "valid_format": true
+      }
+    },
+    {
+      "variant": "equal-v1",
+      "category": "invalid",
+      "case_id": "apps-train-2834/m1",
+      "source_id": 2834,
+      "sample": {
+        "bug_detected": false,
+        "correct_expected": false,
+        "error": "schema_or_domain",
+        "generated_tokens": 23,
+        "raw_output": "{\"expected\":[-2,4],\"input\":{\"p\":[0,2],\"q\":[1,1]}}",
+        "reward": 0.0,
+        "terminated": true,
+        "valid_format": false
+      }
+    },
+    {
+      "variant": "legacy-v1",
+      "category": "bug_detected",
+      "case_id": "apps-train-2868/m3",
+      "source_id": 2868,
+      "sample": {
+        "bug_detected": true,
+        "buggy_output": true,
+        "correct_expected": true,
+        "generated_tokens": 15,
+        "gold_output": false,
+        "raw_output": "{\"expected\":false,\"input\":{\"arr\":[1,3]}}",
+        "reward": 1.0,
+        "terminated": true,
+        "test": {
+          "expected": false,
+          "input": {
+            "arr": [
+              1,
+              3
+            ]
+          }
+        },
+        "valid_format": true
+      }
+    },
+    {
+      "variant": "legacy-v1",
+      "category": "wrong_expected",
+      "case_id": "apps-train-2834/m1",
+      "source_id": 2834,
+      "sample": {
+        "bug_detected": false,
+        "buggy_output": [
+          4,
+          0
+        ],
+        "correct_expected": false,
+        "generated_tokens": 23,
+        "gold_output": [
+          4,
+          0
+        ],
+        "raw_output": "{\"expected\":[2,2],\"input\":{\"p\":[0,0],\"q\":[2,0]}}",
+        "reward": 0.1,
+        "terminated": true,
+        "test": {
+          "expected": [
+            2,
+            2
+          ],
+          "input": {
+            "p": [
+              0,
+              0
+            ],
+            "q": [
+              2,
+              0
+            ]
+          }
+        },
+        "valid_format": true
+      }
+    },
+    {
+      "variant": "legacy-v1",
+      "category": "invalid",
+      "case_id": "apps-train-2834/m1",
+      "source_id": 2834,
+      "sample": {
+        "bug_detected": false,
+        "correct_expected": false,
+        "error": "schema_or_domain",
+        "generated_tokens": 23,
+        "raw_output": "{\"expected\":[-2,4],\"input\":{\"p\":[0,2],\"q\":[1,1]}}",
+        "reward": 0.0,
+        "terminated": true,
+        "valid_format": false
+      }
+    }
+  ]
+}

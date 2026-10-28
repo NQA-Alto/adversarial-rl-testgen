@@ -1,15 +1,36 @@
 import argparse
 import csv
 import json
+import statistics
+from collections import Counter
 from pathlib import Path
 
 from apps_core import canonical, digest, read, write
 from apps_model_runner import PROJECT
 from audit_apps_run import audit
+from apps_rewards import PROFILES, training_reward
 
 
 def rows(path):
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+
+
+def reward_sensitivity(rollouts):
+    levels = Counter()
+    differences = []
+    for row in rollouts:
+        legacy = [training_reward(sample, "legacy-v1") for sample in row["samples"]]
+        equal = [training_reward(sample, "equal-v1") for sample in row["samples"]]
+        levels[str(len(set(legacy)))] += 1
+        def normalized(values):
+            mean, std = statistics.mean(values), statistics.stdev(values)
+            return [(value - mean) / (std + 1e-4) for value in values]
+        differences.append(max(abs(a - b) for a, b in zip(normalized(legacy), normalized(equal), strict=True)))
+    return {"groups_by_distinct_reward_levels": dict(levels),
+            "groups_with_three_or_more_levels": sum(count for key, count in levels.items() if int(key) >= 3),
+            "mean_counterfactual_standardized_reward_difference": statistics.mean(differences),
+            "max_counterfactual_standardized_reward_difference": max(differences),
+            "interpretation": "Diagnostic only: recompute both profiles on the SAME stored completions, float64 sample standard deviation and epsilon=1e-4. This is not a second model run or exact logged trainer advantage. With only two reward levels, positive affine rescaling preserves relative standardized scores apart from epsilon effects."}
 
 
 def summarize(folder):
@@ -28,6 +49,12 @@ def summarize(folder):
             if digest(path / "result.json") != arm[key + "_result_sha256"]:
                 raise ValueError("Evidence changed: " + key)
             audit(path)
+        trained = read(Path(arm["training"]) / "result.json")
+        if (trained["reward_profile"] != profile or trained["reward_weights"] != PROFILES[profile]
+                or trained["parent_adapter_sha256"] != trial["plan"]["parent_adapter_sha256"]
+                or trained["train_sha256"] != trial["plan"]["train_sha256"]
+                or trained["optimizer_steps"] != trial["plan"]["steps_per_arm"]):
+            raise ValueError("Training arm does not match prespecified profile, parent or data")
         record = read(Path(arm["validation"]) / "result.json")
         if canonical(record["metrics"]) != canonical(arm["validation_metrics"]):
             raise ValueError("Trial metrics differ from evaluation")
@@ -73,12 +100,25 @@ def summarize(folder):
                           "changed_adapter_tensors": len(training["changed_adapter_tensors"]), "saved_adapter_exact_match": training["adapter"]["parameters_match"],
                           "peak_vram_gib": training["peak_vram_gib"], "parent_adapter_sha256": training["parent_adapter_sha256"],
                           "train_probe_metrics": arm["train_metrics"], "validation_metrics": arm["validation_metrics"]}
+        summaries[key]["reward_sensitivity"] = reward_sensitivity(rollouts)
         logs = rows(Path(arm["training"]) / "trainer-metrics.jsonl")
         summaries[key]["trainer_summary"] = next((row for row in reversed(logs) if "train_runtime" in row), {})
     summary = {"trial_folder": str(folder), "trial_result_sha256": digest(folder / "result.json"), "trial": trial,
                "runs": summaries, "case_transitions": transitions, "identical_raw_outputs_of_60": same_raw,
                "model_test_evaluation": False, "active_checkpoint_promoted": False}
     write(output / "metrics.json", summary)
+    examples = []
+    for key in ("equal-v1", "legacy-v1"):
+        for category in ("bug_detected", "wrong_expected", "invalid"):
+            found = next(((row, sample) for row in predictions[key] for sample in row["samples"]
+                          if (sample["bug_detected"] if category == "bug_detected" else
+                              sample["valid_format"] and not sample["correct_expected"] if category == "wrong_expected" else
+                              not sample["valid_format"])), None)
+            if found:
+                row, sample = found
+                examples.append({"variant": key, "category": category, "case_id": row["case_id"],
+                                 "source_id": row["source_id"], "sample": sample})
+    write(output / "error-examples.json", {"selection": "First stored sample per category and arm, not representative prevalence. Full predictions stay in evidence.", "examples": examples})
     lines = ["# APPS: kiểm chứng tỷ trọng phần thưởng GRPO", "",
              "Hai lượt mới cùng xuất phát từ SFT64 lịch sử, cùng 41 code Train, seed 42, prompt v2, LoRA rank 4, optimizer mới và 96 bước/nhánh. Thứ tự code và ngân sách rollout được kiểm tra khớp. Khác biệt chủ đích duy nhất là tỷ trọng reward; không thay curriculum đối kháng trong phép thử này.", "",
              "| Thành phần | Hiện tại · legacy-v1 | Chia đều · equal-v1 |", "|---|---:|---:|",
@@ -101,6 +141,9 @@ def summarize(folder):
               "Kết quả trên Train chỉ đo mức khớp tập học, tách riêng trong metrics.json. Reward trung bình của hai profile dùng thang thành phần khác nhau nên không được dùng để kết luận nhánh nào tốt hơn; hình quá trình học bên dưới dùng cùng cờ expected/attack đã kiểm chứng.", "",
               "![Kết quả Validation](validation-comparison.png)", "", "![Diễn biến học trên Train](training-components.png)", "",
               "Một seed train, một seed sinh test và năm bài Validation; các code trong cùng bài có tương quan. Chưa đủ kết luận ổn định hay ý nghĩa thống kê. CUDA nondeterminism chưa loại trừ. Đây là ablation trên dữ liệu cố định, không đo lợi ích của adaptive curriculum. Cả Test phát triển và Test chính thức tiếp tục được giữ lại.", "",
+              "## Tín hiệu nhóm và giới hạn khi đổi reward", "",
+              "GRPO hiện chuẩn hóa reward trong từng nhóm bốn mẫu. Nếu một nhóm chỉ có hai mức kết quả, đổi khoảng cách dương giữa hai mức gần như không đổi điểm chuẩn hóa tương đối; epsilon và tính toán số có thể tạo sai khác nhỏ. Nhóm từ ba mức trở lên mới làm tỷ trọng giữa các mục tiêu thể hiện rõ hơn. Đây là nhận xét về cơ chế, không tự chứng minh nguyên nhân chất lượng model.", "",
+              "metrics.json lưu chẩn đoán đổi profile trên chính các mẫu đã lưu của mỗi nhánh. Chẩn đoán dùng số thực float64, độ lệch chuẩn mẫu và epsilon 1e-4; không gọi đó là advantage được lấy trực tiếp từ trainer hoặc kết quả của một lượt train khác. error-examples.json giữ mẫu đầu tiên theo mỗi loại thành công, sai expected và không hợp lệ để chuẩn bị giải thích; tần suất phải lấy từ toàn bộ kết quả.", "",
               "## Chạy lại và bằng chứng", "",
               "Kế hoạch có timestamp, nguồn đóng băng, hash parent, raw rollout, gradient và adapter nằm trong trial_folder ở metrics.json. Chạy scripts/apps_reward_trial.py để tạo một trial mới; script không công bố đè lên các mốc chính. Sau khi hoàn tất, dùng scripts/summarize_apps_rewards.py với đường dẫn trial để dựng lại bảng/hình."]
     (output / "README.md").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
