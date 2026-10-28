@@ -61,3 +61,9 @@ Mốc 28/10/2026 đã hoàn tất hai vòng × 48 bước cho mỗi nhánh. Mode
 Đã thử native thinking với định dạng thẻ và trần 768 token trên Train. Lượt dừng sớm khi 20 mẫu đã lưu đều bị cắt; tiêu chí hoàn tất 80% không còn khả năng đạt. Đây là kiểm tra khả thi chưa đủ toàn bộ nhánh, không phải benchmark hoàn chỉnh hay bằng chứng model không thể suy luận. Định dạng thẻ chưa được SFT nên cũng là yếu tố cần nêu.
 
 Hai phép thử kiểu đầu ra v3/v4 không đạt tiêu chí Train đã đặt, nên không chấm tiếp Validation và không thay cấu hình đang dùng. Các thí nghiệm này là suy luận/prompt, không cập nhật trọng số và không gọi là RL mới. Xem results/apps-error-analysis và results/apps-tuning để lấy số liệu chi tiết.
+
+## Kiểm chứng riêng giai đoạn SFT
+
+Đã so sánh ngân sách 64/256 bước với cùng target pool và prompt v2, có đối chứng cùng quỹ đạo học được lên kế hoạch trước Validation sau khi kiểm tra tái hiện lịch sử không khớp tuyệt đối. SFT256 đạt 21/60 expected đúng, 3/60 test bắt lỗi và 2/15 code được phát hiện. Đủ tiêu chí bổ sung để cân nhắc so sánh RL tiếp theo: False.
+
+Phần kết quả này thuộc SFT khởi động bổ sung của đồ án. Không được dùng nó để nói ATGen đối kháng đã cải thiện. Các phép so sánh GRPO từ SFT64 giữ nguyên; nếu chuyển warmup, cả hai nhánh phải được thử lại từ cùng checkpoint. Xem results/apps-sft-budget để đối chiếu kế hoạch ban đầu, đối chứng bổ sung và số liệu.

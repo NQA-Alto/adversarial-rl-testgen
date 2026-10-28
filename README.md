@@ -10,6 +10,17 @@ Nhánh `apps-introductory` đang dùng dữ liệu APPS. Đã chạy SFT, GRPO c
 
 Hai nhánh GRPO cuối phát hiện cùng hai code; nhánh đối kháng mất tám cơ hội vì expected sai. Đã thử thinking và hai cách diễn đạt hợp đồng đầu ra trên Train; các ứng viên chưa qua tiêu chí nên giữ prompt v2 và checkpoint hiện tại. Đây là các phép thử suy luận, không phải lượt RL mới. Test vẫn được giữ lại.
 
+## Kiểm chứng ngân sách SFT
+
+Đã thử 256 bước từ model gốc với cùng target pool, prompt v2 và seed. Do tái hiện checkpoint 64 không khớp tuyệt đối, có bổ sung đối chứng 64 trong chính lượt học mới trước khi xem Validation.
+
+| Mốc cùng lượt | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện @4 /15 |
+|---|---:|---:|---:|
+| SFT 64 bước | 15 | 5 | 4 |
+| SFT 256 bước | 21 | 3 | 2 |
+
+[Kết quả, đường loss và giới hạn](results/apps-sft-budget). Đây là thay đổi ngân sách SFT, không phải bằng chứng lợi ích của RL hay curriculum đối kháng. Các mốc GRPO cũ vẫn dùng warmup 64 bước lịch sử. Test chưa được dùng.
+
 ## Dữ liệu
 
 Nguồn: [codeparrot/apps](https://huggingface.co/datasets/codeparrot/apps), revision `21e74ddf8de1a21436da12e3e653065c5213e9d1`, được [kho APPS của tác giả](https://github.com/hendrycks/apps) dẫn tới.

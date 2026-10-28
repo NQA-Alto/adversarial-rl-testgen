@@ -9,7 +9,7 @@ Mốc cập nhật: 28/10/2026. Đây là nhật ký triển khai và thực ngh
 | Nguồn và chia dữ liệu | Đã có phiên bản đóng băng | 29 bài APPS Introductory, 74 code đột biến: Train 17/41, Validation 5/15, Test phát triển 7/18; chia theo bài/URL trong APPS Train. Test chính thức APPS chưa tải. |
 | Tiền xử lý và bộ chấm | Đã kiểm chứng | Hai reference qua test nguồn và đồng ý trên miền hữu hạn; 26.833 cặp code/input đã kiểm tra. Chỉ hỗ trợ phần Python và miền input được khai báo. |
 | EDA và minh họa pipeline | Đã bổ sung hình tái tạo được | Có phân bố bài theo tập, kiểu input và kích thước miền input trên Train; có pipeline và hình phân tích lỗi. Không đọc nội dung Test. |
-| Baseline và SFT | Đã chạy | Prompt v2, Qwen gốc và SFT 64 bước; 319 target Train. SFT được ghi riêng, không gọi là RL. |
+| Baseline và SFT | Đã kiểm chứng 64 và 256 bước | Cùng prompt v2, 319 target Train. SFT256 có 21/60 expected đúng và phát hiện 2/15 code trong Validation; cần giữ riêng với tác động RL. |
 | GRPO cố định | Đã chạy | Lượt 96 bước liền được giữ làm lịch sử; lượt đối chứng mới gồm 2 vòng × 48 bước từ SFT. |
 | Curriculum đối kháng | Đã chạy hai vòng | Sinh 128 và 192 code; lọc 7 và 14 code, tổng 20 hành vi khác nhau. Thay 6 và 9 vị trí Train; model sinh 72 test khi gặp code đối kháng. |
 | Đánh giá Validation | Đã có so sánh có kiểm soát | Cùng checkpoint SFT ban đầu, seed, thứ tự bài và ngân sách. Kết quả cuối: cố định 2/15 code, đối kháng 2/15; SFT 3/15. Chưa có bằng chứng cải thiện. |
@@ -30,7 +30,7 @@ Guide yêu cầu giữ Test đến cuối, lưu cả lần thất bại, có bas
 
 ## Công việc tiếp theo
 
-1. Kiểm chứng ngân sách khởi động SFT: lượt hiện tại mới dùng 256 lượt ví dụ từ pool 319 mẫu, chưa hết một vòng. Thử ngân sách lớn hơn có kế hoạch, giữ prompt v2 và các yếu tố khác; chưa khẳng định đây là nguyên nhân duy nhất.
+1. Đã kiểm chứng ngân sách SFT. Ứng viên 256 bước chưa đủ tiêu chí bổ sung. Ưu tiên kiểm chứng cách cân bằng các thành phần reward theo ATGen, giữ mốc đối chứng và phân biệt tác động SFT với RL.
 2. Chấm SFT mới tách biệt với RL, rồi mới cân nhắc lặp lại hai nhánh GRPO từ checkpoint phù hợp; không sửa output khi chấm.
 3. Các hướng suy luận/định dạng vừa thử chưa qua tiêu chí. Nếu thử tiếp phải lưu phiên bản và mốc đối chứng; không đổi số liệu cũ hay dùng Test để lựa chọn.
 4. Kiểm tra độ ổn định của cấu hình APPS đã chọn; hoàn thiện EDA, pipeline, phân tích chi phí và phần đối chiếu ATGen.
@@ -48,3 +48,16 @@ Guide yêu cầu giữ Test đến cuối, lưu cả lần thất bại, có bas
 Bản roadmap dữ liệu nội bộ trước khi chuyển đổi đã được giữ riêng trong evidence. Không xóa kết quả hay tài liệu cũ.
 
 Hình và dữ liệu bổ sung: results/apps-data-profile, results/apps-error-analysis và results/apps-tuning. Các thử nghiệm tinh chỉnh lần này không cập nhật trọng số, không được gọi là lượt train RL mới.
+
+## Kết quả kiểm chứng ngân sách SFT
+
+Đã chạy SFT 256 bước với pool 319 target Train, 1.024 lượt ví dụ, giữ prompt v2 và các yếu tố học khác. Cả 64 và 256 ở đối chứng bổ sung nằm trong cùng một quỹ đạo học; checkpoint 128 chỉ lưu để phục hồi và không được chấm Validation.
+
+| Mốc cùng lượt học | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện @4 /15 |
+|---|---:|---:|---:|---:|
+| SFT 64 bước | 41 | 15 | 5 | 4 |
+| SFT 256 bước | 54 | 21 | 3 | 2 |
+
+Ứng viên qua tiêu chí bổ sung so với cả mốc lịch sử và đối chứng cùng lượt: False. Tiêu chí ban đầu có ngưỡng tái hiện không đạt vì checkpoint 64 lệch L2 khoảng 0,198% so với lượt lịch sử; kết quả và kế hoạch gốc được giữ nguyên. Kế hoạch bổ sung được ghi trước khi xem Validation mới. Chưa xác định chắc nguyên nhân sai khác khi tái hiện.
+
+Mốc 256 được lưu riêng trong giao diện để kiểm chứng. Các nhánh GRPO/đối kháng đã có vẫn bắt đầu từ SFT 64 bước lịch sử; không gộp tác động của SFT mới thành cải thiện của RL. Test chưa được model đánh giá. Xem results/apps-sft-budget để lấy bảng, đường loss và nhật ký.

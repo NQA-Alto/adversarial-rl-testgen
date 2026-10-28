@@ -1,0 +1,4 @@
+variant,steps,example_exposures,valid_tests,correct_expected,bug_tests,cases_detected,generated_tests,cases_total
+SFT64_historical,64,256,41,13,4,3,60,15
+SFT64_same_trajectory,64,256,41,15,5,4,60,15
+SFT256,256,1024,54,21,3,2,60,15

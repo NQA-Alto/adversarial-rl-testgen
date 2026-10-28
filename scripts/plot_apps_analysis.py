@@ -10,11 +10,13 @@ def main():
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
+    from matplotlib.ticker import MaxNLocator
     plt.rcParams["font.family"] = "DejaVu Sans"
     output = PROJECT / "results/apps-error-analysis"
     analysis = read(output / "analysis.json")
-    variants = ("base", "sft", "control", "adaptive")
-    labels = ["Qwen gốc", "SFT", "GRPO cố định", "GRPO đối kháng"]
+    variants = tuple(key for key in ("base", "sft", "sft256", "control", "adaptive") if key in analysis["runs"])
+    names = {"base": "Qwen gốc", "sft": "SFT 64", "sft256": "SFT 256", "control": "GRPO cố định", "adaptive": "GRPO đối kháng"}
+    labels = [names[key] for key in variants]
     categories = [("invalid_input_or_json", "Input/JSON sai hoặc bị cắt", "#c9c8c0"),
                   ("wrong_expected", "Expected sai", "#c48e6d"),
                   ("correct_expected_no_bug", "Đúng, chưa bắt lỗi", "#93adbb"),
@@ -41,8 +43,9 @@ def main():
     for i, (a, b) in enumerate(zip(potential, usable, strict=True)):
         axes[1].text(i - .18, a + .25, str(a), ha="center", fontsize=10)
         axes[1].text(i + .18, b + .25, str(b), ha="center", fontsize=10)
-    axes[1].set_xticks(x, labels=["Qwen gốc", "SFT", "GRPO\ncố định", "GRPO\nđối kháng"])
-    axes[1].set_ylim(0, 16)
+    axes[1].set_xticks(x, labels=[names[key].replace("GRPO ", "GRPO\n") for key in variants])
+    axes[1].set_ylim(0, max(potential) + 3)
+    axes[1].yaxis.set_major_locator(MaxNLocator(integer=True))
     axes[1].set_xlabel("Phiên bản model")
     axes[1].set_ylabel("Số test / 60 mẫu sinh")
     axes[1].set_title("Cơ hội bị mất khi expected sai", loc="left", fontsize=12)
@@ -81,6 +84,7 @@ def main():
     for bar, value in zip(bars, counts, strict=True):
         axes[0].text(bar.get_x() + bar.get_width() / 2, value + .3, str(value), ha="center")
     axes[0].set_ylim(0, 20)
+    axes[0].yaxis.set_major_locator(MaxNLocator(integer=True))
     axes[0].set_xlabel("Tập phát triển (trong APPS Train)")
     axes[0].set_ylabel("Số bài nguồn")
     axes[0].set_title("Tách theo bài, không trùng giữa tập", fontsize=11)
@@ -113,7 +117,7 @@ def main():
             ax.text((start[0] + end[0]) / 2, (start[1] + end[1]) / 2 + .13, text, ha="center", fontsize=9)
     box(.25, 4.9, 2.1, .8, "APPS Introductory\n29 bài gọi hàm")
     box(3.1, 4.9, 2.15, .8, "Chia theo bài\nTrain / Val / Test")
-    box(6, 4.9, 2.1, .8, "SFT trên Train\nkhởi động adapter")
+    box(6, 4.9, 2.1, .8, "SFT 64 trên Train\nkhởi động adapter")
     box(9, 4.9, 3.2, .8, "GRPO cố định\n2 vòng × 48 bước")
     box(9, 3.1, 3.2, .8, "GRPO đối kháng\n2 vòng × 48 bước", "#e3eee3")
     box(.25, 2.5, 2.5, 1, "Policy hiện tại\nsinh test trên Train")

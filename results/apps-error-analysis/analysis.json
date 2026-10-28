@@ -441,6 +441,291 @@
         }
       ]
     },
+    "sft256": {
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261028-215502-703111",
+      "predictions_sha256": "89d931061aa380b886cdd6b6bec0017d4439d7426bdd6b1f2a860e631d37c604",
+      "metrics": {
+        "evaluated_cases": 15,
+        "generated_tests": 60,
+        "valid_tests": 54,
+        "correct_expected": 21,
+        "bug_detecting_tests": 3,
+        "cases_detected": 2,
+        "valid_rate": 0.9,
+        "io_accuracy": 0.35,
+        "attack_rate": 0.05,
+        "case_detection_at_4": 0.13333333333333333,
+        "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+      },
+      "counts": {
+        "wrong_expected": 33,
+        "input_only_attack": 16,
+        "attack_lost_due_to_wrong_expected": 13,
+        "wrong_expected_matches_buggy_output": 1,
+        "duplicate_valid_input_within_case": 4,
+        "invalid_input_or_json": 6,
+        "correct_expected_no_bug": 18,
+        "bug_detected": 3
+      },
+      "detected_case_ids": [
+        "apps-train-2868/m3",
+        "apps-train-2947/m2"
+      ],
+      "input_only_detected_case_ids": [
+        "apps-train-2834/m1",
+        "apps-train-2834/m2",
+        "apps-train-2834/m3",
+        "apps-train-2868/m2",
+        "apps-train-2868/m3",
+        "apps-train-2947/m2",
+        "apps-train-2968/m1",
+        "apps-train-2968/m2",
+        "apps-train-3014/m1",
+        "apps-train-3014/m2"
+      ],
+      "wrong_expected_examples": [
+        {
+          "case_id": "apps-train-2834/m1",
+          "title": "Điểm đối xứng qua một tâm",
+          "model_test": {
+            "expected": [
+              -2,
+              2
+            ],
+            "input": {
+              "p": [
+                0,
+                0
+              ],
+              "q": [
+                -1,
+                2
+              ]
+            }
+          },
+          "gold_output": [
+            -2,
+            4
+          ],
+          "buggy_output": [
+            -2,
+            4
+          ],
+          "input_would_expose_bug_with_oracle_expected": false,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2834/m1",
+          "title": "Điểm đối xứng qua một tâm",
+          "model_test": {
+            "expected": [
+              2,
+              2
+            ],
+            "input": {
+              "p": [
+                0,
+                0
+              ],
+              "q": [
+                -1,
+                0
+              ]
+            }
+          },
+          "gold_output": [
+            -2,
+            0
+          ],
+          "buggy_output": [
+            -2,
+            0
+          ],
+          "input_would_expose_bug_with_oracle_expected": false,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2834/m1",
+          "title": "Điểm đối xứng qua một tâm",
+          "model_test": {
+            "expected": [
+              -2,
+              0
+            ],
+            "input": {
+              "p": [
+                2,
+                2
+              ],
+              "q": [
+                -1,
+                0
+              ]
+            }
+          },
+          "gold_output": [
+            -4,
+            -2
+          ],
+          "buggy_output": [
+            0,
+            -2
+          ],
+          "input_would_expose_bug_with_oracle_expected": true,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2834/m2",
+          "title": "Điểm đối xứng qua một tâm",
+          "model_test": {
+            "expected": [
+              -1,
+              0
+            ],
+            "input": {
+              "p": [
+                0,
+                2
+              ],
+              "q": [
+                0,
+                2
+              ]
+            }
+          },
+          "gold_output": [
+            0,
+            2
+          ],
+          "buggy_output": [
+            0,
+            6
+          ],
+          "input_would_expose_bug_with_oracle_expected": true,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2834/m2",
+          "title": "Điểm đối xứng qua một tâm",
+          "model_test": {
+            "expected": [
+              2,
+              "1"
+            ],
+            "input": {
+              "p": [
+                0,
+                0
+              ],
+              "q": [
+                -1,
+                2
+              ]
+            }
+          },
+          "gold_output": [
+            -2,
+            4
+          ],
+          "buggy_output": [
+            -2,
+            4
+          ],
+          "input_would_expose_bug_with_oracle_expected": false,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2834/m3",
+          "title": "Điểm đối xứng qua một tâm",
+          "model_test": {
+            "expected": [
+              0,
+              0
+            ],
+            "input": {
+              "p": [
+                2,
+                0
+              ],
+              "q": [
+                -1,
+                2
+              ]
+            }
+          },
+          "gold_output": [
+            -4,
+            4
+          ],
+          "buggy_output": [
+            -1,
+            4
+          ],
+          "input_would_expose_bug_with_oracle_expected": true,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2834/m3",
+          "title": "Điểm đối xứng qua một tâm",
+          "model_test": {
+            "expected": [
+              -2,
+              "2"
+            ],
+            "input": {
+              "p": [
+                2,
+                2
+              ],
+              "q": [
+                2,
+                0
+              ]
+            }
+          },
+          "gold_output": [
+            2,
+            -2
+          ],
+          "buggy_output": [
+            2,
+            -2
+          ],
+          "input_would_expose_bug_with_oracle_expected": false,
+          "model_expected_matches_buggy_output": false
+        },
+        {
+          "case_id": "apps-train-2834/m3",
+          "title": "Điểm đối xứng qua một tâm",
+          "model_test": {
+            "expected": [
+              -2,
+              0
+            ],
+            "input": {
+              "p": [
+                -1,
+                0
+              ],
+              "q": [
+                -1,
+                2
+              ]
+            }
+          },
+          "gold_output": [
+            -1,
+            4
+          ],
+          "buggy_output": [
+            2,
+            4
+          ],
+          "input_would_expose_bug_with_oracle_expected": true,
+          "model_expected_matches_buggy_output": false
+        }
+      ]
+    },
     "control": {
       "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261028-162847-767818",
       "predictions_sha256": "ffafefa09ac9efd56c6c92cd27a240a22a5842ec33d0946060bb042e582becd9",

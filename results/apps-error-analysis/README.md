@@ -6,12 +6,15 @@ Chấm lại các bản ghi đã có, không gọi model hay cập nhật trọn
 |---|---:|---:|---:|---:|---:|---:|
 | base | 25 | 20 | 11 | 4 | 13 | 9 |
 | sft | 19 | 28 | 9 | 4 | 12 | 8 |
+| sft256 | 6 | 33 | 18 | 3 | 16 | 13 |
 | control | 18 | 29 | 10 | 3 | 12 | 9 |
 | adaptive | 19 | 29 | 9 | 3 | 11 | 8 |
 
 *Hai cột cuối là chẩn đoán: giữ input mà model đã sinh và dùng reference để xem input đó có làm lộ lỗi không. Expected do reference cung cấp không được tính thành test đúng của model; các chỉ số chính không thay đổi. Đây là cách xem xét nút thắt input/expected, tương ứng ý tưởng Input Attack Rate ở ATGen §5.3.
 
 ![Phân tích các nhóm thất bại](failure-breakdown.png)
+
+Mốc sft là SFT64 lịch sử; mốc sft256 là kiểm chứng ngân sách riêng. Đối chứng 64/256 trong cùng quỹ đạo học nằm tại [apps-sft-budget](../apps-sft-budget/README.md). Không dùng hình tổng hợp này để gộp tác động SFT và RL.
 
 ## Hai nhánh có phát hiện cùng code không?
 
