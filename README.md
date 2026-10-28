@@ -1,73 +1,87 @@
-# Sinh test Python bằng học tăng cường đối kháng
+# Adversarial Reinforcement Learning for Test Case Generation
 
-Đồ án TTNT cá nhân, tham khảo cách tiếp cận của ATGen. Hệ thống dùng Qwen3.5-2B chạy trên máy để sinh test tìm lỗi trong các hàm Python nhỏ. Protagonist học bằng LoRA + GRPO; adversary giữ nguyên trọng số và sinh chương trình lỗi để bổ sung dữ liệu học.
+Đồ án TTNT cá nhân: huấn luyện tăng cường đối kháng để sinh ca kiểm thử. Hệ thống dùng Qwen3.5-2B chạy local để sinh input và expected cho hàm Python. Gradio điều khiển thí nghiệm; Transformers, PEFT và TRL đảm nhiệm suy luận và huấn luyện trên GPU.
+
+Nhánh `apps-introductory` đang dùng dữ liệu APPS. Đã hoàn tất một lượt SFT và GRPO với code lỗi cố định. Vòng sinh curriculum bằng adversary trên APPS chưa hoàn tất; các kết quả dữ liệu nội bộ cũ không được gộp vào bảng APPS.
+
+## Dữ liệu
+
+Nguồn: [codeparrot/apps](https://huggingface.co/datasets/codeparrot/apps), revision `21e74ddf8de1a21436da12e3e653065c5213e9d1`, được [kho APPS của tác giả](https://github.com/hendrycks/apps) dẫn tới.
+
+Chọn 29 bài Introductory dạng gọi hàm trong APPS Train, giữ nguyên đề và ID nguồn. Miền input được giới hạn để hai lời giải nguồn có thể được đối chiếu trên toàn bộ miền. Code lỗi được tạo bằng thay đổi AST từ lời giải nguồn, không phải code lỗi có sẵn trong APPS.
+
+| Tập phát triển | Bài nguồn | Code lỗi |
+|---|---:|---:|
+| Train | 17 | 41 |
+| Validation | 5 | 15 |
+| Test giữ lại | 7 | 18 |
+
+Các tập tách theo bài và URL. Đã kiểm tra 26.833 cặp code/input. Test phát triển nằm trong APPS Train, không phải Test chính thức. Model chưa được đánh giá trên hai tập Test này. Đây là tập con nhỏ có code đột biến, không phải kết quả benchmark toàn bộ APPS Introductory.
+
+Xem [nguồn và bộ lọc dữ liệu](docs/APPS_DATASET.md), [quy trình huấn luyện](docs/APPS_TRAINING.md).
+
+## Kết quả hiện tại
+
+Cả ba mốc dùng prompt `apps-call-v2`, cùng 15 code Validation, bốn test/code, seed 42 và tối đa 96 token/completion. SFT bắt đầu từ Qwen gốc và LoRA mới; GRPO bắt đầu từ đúng adapter SFT đã chấm, optimizer mới.
+
+| Chỉ số | Qwen gốc | Sau SFT | Sau SFT + GRPO |
+|---|---:|---:|---:|
+| Test hợp lệ | 35/60 (58.33%) | **41/60 (68.33%)** | **44/60 (73.33%)** |
+| Expected đúng | 15/60 (25.00%) | 13/60 (21.67%) | **15/60 (25.00%)** |
+| Test bắt lỗi | 4/60 (6.67%) | 4/60 (6.67%) | 4/60 (6.67%) |
+| Code lỗi phát hiện @4 | 3/15 (20.00%) | 3/15 (20.00%) | 3/15 (20.00%) |
+
+Chữ đậm đánh dấu số tăng so với mốc liền trước, không biểu thị ý nghĩa thống kê. Tỷ lệ hợp lệ tăng sau học; expected đúng ở mốc GRPO trở lại bằng Qwen gốc. Số code phát hiện được vẫn là 3/15, nên chưa có bằng chứng tăng khả năng tìm lỗi trên phép thử này.
+
+![So sánh Validation](results/apps-sft-grpo/validation-comparison.png)
+
+SFT dùng pool 319 mẫu input/expected từ Train, ngân sách 64 bước và bốn mẫu/bước (256 lượt ví dụ). Đây là học có giám sát, không phải RL. GRPO chạy 96 bước, sinh 384 test trong lúc học. Có 78 bước GRPO với gradient khác 0; 24 tensor adapter thay đổi và bản lưu khớp tham số sau học. Đỉnh bộ nhớ PyTorch cấp phát trong GRPO khoảng 4.791 GiB.
+
+Đã chấm lại target SFT, 384 mẫu GRPO và toàn bộ 60 đầu ra của mỗi mốc Validation. Dữ liệu, prompt theo từng case, seed và cấu hình sinh của ba mốc khớp nhau. Log thô, gradient, adapter và mã nguồn lúc chạy được lưu trên D:; bản tóm tắt nằm ở [results/apps-sft-grpo](results/apps-sft-grpo).
+
+Chỉ đổi prompt từ v1 sang v2 đã giúp Qwen gốc tăng test hợp lệ từ 14/60 lên 35/60 và code phát hiện từ 2/15 lên 3/15. Mức tăng đó được ghi riêng, không tính là lợi ích của huấn luyện. Kết quả pilot v1 vẫn giữ trong `results/apps-pilot` và các thư mục evidence cũ.
+
+Reward: 0 nếu sai JSON/ngoài miền/bị cắt; 0,1 nếu input hợp lệ nhưng expected sai; 0,3 nếu expected đúng nhưng chưa bắt lỗi; 1 nếu expected đúng và bắt lỗi. Các mẫu sai vẫn nằm trong mẫu số. Lỗi giới hạn bộ chấm không được tính là bắt bug.
 
 ## Chạy giao diện
 
-Trên bản cài đặt hiện tại, nhấp `MO_GIAO_DIEN.cmd`, mở http://127.0.0.1:7860/?__theme=light. Nhấp `DONG_GIAO_DIEN.cmd` để đóng dịch vụ. Mở giao diện không tự huấn luyện.
+Trên bản cài đặt hiện tại, nhấp `MO_GIAO_DIEN.cmd`, mở http://127.0.0.1:7860/?__theme=light. Nhấp `DONG_GIAO_DIEN.cmd` để đóng dịch vụ. Mở trang không tự train.
 
-- **Demo:** xem đề bài, code, input/expected và kết quả của ba phiên bản model. Chọn Bản ghi đã lưu để xem ngay hoặc Chạy trên máy để sinh kết quả mới trên GPU.
-- **Kết quả:** bảng đầy đủ trên Validation. Bảng thay seed sinh test và bảng thay seed huấn luyện được trình bày riêng.
-- **Thực nghiệm:** chạy tác vụ, theo dõi log và dừng. Chỉ cho phép một tác vụ GPU từ giao diện tại một thời điểm.
-- **Huấn luyện / TensorBoard:** xem loss SFT, reward GRPO và gradient.
+- **Demo:** xem đề, code và đầu ra của Qwen gốc, sau SFT, sau SFT + GRPO; có thể sinh bốn test mới cho một code trên GPU.
+- **Kết quả:** bảng toàn bộ Validation; không chỉ giữ các bài thành công.
+- **Dữ liệu:** nguồn, cách chia tập và giới hạn thí nghiệm.
+- **Thực nghiệm:** kiểm tra dữ liệu, chấm model và khởi chạy huấn luyện; có nút dừng và log.
+- **Huấn luyện:** reward, gradient và thông số lượt GRPO mới nhất. TensorBoard tại http://127.0.0.1:6006 chỉ đọc các lượt APPS.
 
-Ví dụ thực tế trong Demo: đề yêu cầu đảo ngược danh sách, code lỗi lại trả nguyên danh sách. Model sinh `{"input":{"values":[3,1,1]},"expected":[1,1,3]}`; bộ chấm xác nhận expected đúng, trong khi code trả `[3,1,1]`, nên test bắt được lỗi.
+Tác vụ **Huấn luyện SFT + GRPO trên APPS** chạy lại toàn bộ từ Qwen gốc: baseline, SFT 64 bước, GRPO theo số bước chọn và chấm từng mốc. Tác vụ **Huấn luyện GRPO trên Train** bắt đầu từ adapter SFT đã lưu, không học nối tiếp adapter GRPO cuối. Mỗi lần có optimizer và thư mục evidence mới.
 
-## Quy trình thực nghiệm
+Nút Sinh 4 test trong Demo chỉ suy luận/chấm, không cập nhật tham số. Trong log có nút Đầu log/Cuối log; tắt Tự cập nhật log để đọc. Dừng tác vụ sẽ mất cập nhật chưa lưu của lượt đó; kết quả đã lưu vẫn được giữ.
 
-1. Kiểm tra local inference, cập nhật LoRA, lưu/nạp adapter và một pilot GRPO.
-2. Xây bộ bài Python nội bộ và bộ chấm. Input phải thuộc miền, expected được đối chiếu với reference; reference không xuất hiện trong prompt.
-3. Có baseline ban đầu, lượt GRPO sơ bộ 72 bước và SFT 72 bước. Vì vậy mốc Sau SFT có lineage `base → GRPO sơ bộ → SFT`.
-4. Adversary local sinh 256 ứng viên cho 16 bài Train. Bộ lọc giữ code sai trên miền hữu hạn nhưng vượt qua ít nhất một bộ test hợp lệ của policy hiện tại; loại code không được hỗ trợ và trùng hành vi trong pool.
-5. Hai nhánh bắt đầu từ cùng adapter SFT, optimizer mới và cùng thứ tự 96 lượt học. Nhánh cố định dùng code curated; nhánh đối kháng thay 20 lượt bằng 11/12 code đã lọc. Mỗi lượt sinh 4 test và cập nhật theo reward.
-6. Chấm adapter cuối trên cùng 18 code Validation, mỗi code tối đa 4 test. Giữ cả đầu ra sai hoặc bị cắt; không tự sửa output rồi tính điểm.
-7. Kiểm tra thêm seed sinh test và seed huấn luyện theo kế hoạch đã lưu. Test được giữ lại cho bước đánh giá cuối, chưa dùng để tinh chỉnh.
+## Chạy bằng PowerShell
 
-Reward hiện tại: 0 nếu sai định dạng/ngoài miền/chưa sinh xong; 0,1 nếu input hợp lệ nhưng expected sai; 0,3 nếu expected đúng nhưng chưa bắt lỗi; 1 nếu expected đúng và phát hiện lỗi. Code do adversary sinh được chạy bằng trình thông dịch Python giới hạn, không dùng `exec`/`eval` cho code đó. Lỗi giới hạn thông dịch không được tính là bắt bug.
+Các lệnh dùng môi trường đã cài trên máy này, khi GPU không có tác vụ khác:
 
-## Kết quả bước đầu
+```powershell
+$env:PYTHONUTF8 = '1'
+$python = 'D:/DA/TTNT_De19_Assets/env/Scripts/python.exe'
+$project = 'D:/DA/DoAn_TTNT_De19/adversarial-rl-testgen'
+& $python -B "$project/scripts/verify_apps.py"
+& $python -B "$project/scripts/apps_round.py" --grpo-steps 96
+```
 
-Thử nghiệm trên 18 code lỗi thuộc 6 bài Validation, mỗi code sinh 4 test. Bảng dưới dùng seed sinh test 42; kết quả GRPO là trung bình ba seed huấn luyện 42, 43, 44 từ cùng checkpoint SFT và cùng pool đối kháng.
+`fetch_apps.py` tải/kiểm tra nguồn đã ghim phiên bản; `prepare_apps.py` chỉ chuẩn bị dữ liệu khi thư mục phiên bản chưa tồn tại, chủ động từ chối ghi đè dữ liệu đã đóng băng. Không cần tải hoặc chuẩn bị lại trên máy hiện tại.
 
-| Chỉ số | Sau SFT | GRPO cố định | GRPO đối kháng |
-|---|---:|---:|---:|
-| Input/JSON hợp lệ | 77,78% | 81,94% | 81,02% |
-| Expected đúng | 43,06% | 48,61% | 49,54% |
-| Test bắt lỗi | 27,78% | 31,02% | 30,09% |
-| Code lỗi được phát hiện @4 | 50,00% | 55,56% | 55,56% |
-
-Hai nhánh GRPO đều bắt 10/18 code ở cả ba seed train. Dữ liệu đối kháng chưa tạo lợi thế về số code được phát hiện trong phép thử này. Test chưa được đánh giá.
-
-![So sánh theo seed huấn luyện](results/grpo-seed-check/training-seed-stability.png)
-
-Số liệu chi tiết nằm trong `results/grpo-seed-check/`: bảng theo seed, bảng theo bài, phân loại lỗi và `metrics.json`.
-
-Ba tỷ lệ hợp lệ / expected đúng / test bắt lỗi đều dùng mẫu số là toàn bộ test sinh. Tỷ lệ code phát hiện @4 dùng số code lỗi được ít nhất một trong bốn test bắt được. Khi lặp trên nhiều seed, vẫn là cùng 18 code Validation, không cộng thành nhiều code độc lập.
-
-## Đường dẫn và môi trường
+## Môi trường và giới hạn
 
 | Thành phần | Bản cài đặt hiện tại |
 |---|---|
-| Mã nguồn | `D:\DA\DoAn_TTNT_De19\adversarial-rl-testgen` |
-| Model, dữ liệu và log | `D:\DA\TTNT_De19_Assets` |
-| Python huấn luyện | `D:\DA\TTNT_De19_Assets\env\Scripts\python.exe` |
-| Python giao diện | `D:\DA\TTNT_De19_Assets\tools\gui\env\Scripts\python.exe` |
-| Model gốc | `D:\DA\TTNT_De19_Assets\models\Qwen3.5-2B` |
+| Mã nguồn | `D:/DA/DoAn_TTNT_De19/adversarial-rl-testgen` |
+| Model, dữ liệu, evidence | `D:/DA/TTNT_De19_Assets` |
+| Python huấn luyện | `D:/DA/TTNT_De19_Assets/env/Scripts/python.exe` |
+| Python giao diện | `D:/DA/TTNT_De19_Assets/tools/gui/env/Scripts/python.exe` |
+| GPU | RTX 4060 Laptop 8 GB |
+| Model | Qwen3.5-2B, BF16, mmap loader trên Windows |
 
-Các script thí nghiệm hiện dùng đường dẫn D: và kiểm tra hash của dữ liệu, code, pool, adapter nguồn. Model, checkpoint, cache, log đầy đủ và các file trạng thái `LATEST_*.json`/`DEMO_CATALOG.json` được lưu ngoài Git. Giao diện hiện cần các tài nguyên này trên máy; bản clone chưa tự tải và khôi phục toàn bộ thí nghiệm. Phần đóng gói để chạy trên máy mới đang được hoàn thiện.
+Phiên bản thư viện của lượt đánh giá/GRPO nằm trong result. Môi trường train và giao diện có requirements riêng. Model, môi trường Python, cache, log lớn và adapter không đưa vào Git. Clone repo chưa tự tải model hay tái lập toàn bộ môi trường; script còn phụ thuộc đường dẫn D:.
 
-`requirements.txt` ghi phiên bản môi trường huấn luyện đã dùng; `requirements-ui.txt` dành cho môi trường giao diện. PyTorch trong bản cài đặt này dùng CUDA 13.2.
-
-Máy đã kiểm tra: RTX 4060 Laptop 8 GB, suy luận/huấn luyện BF16. Bộ nạp mmap giảm áp lực bộ nhớ khi đọc checkpoint trên Windows. Một số kernel tối ưu chưa cài nên có thông báo dùng triển khai PyTorch tham chiếu; kết quả chạy và số liệu thời gian được giữ trong log.
-
-Lệnh chạy thêm thí nghiệm seed GRPO, chỉ chạy khi không có tác vụ GPU khác:
-
-```powershell
-& 'D:\DA\TTNT_De19_Assets\env\Scripts\python.exe' -B 'D:\DA\DoAn_TTNT_De19\adversarial-rl-testgen\scripts\run_grpo_replicates.py'
-```
-
-Mỗi lần chạy tạo thư mục evidence mới, không ghi đè kết quả cũ. Trước khi train, chương trình kiểm tra cấu hình và đối chiếu 72 đầu ra của một adapter cũ với bộ nạp mới. Kế hoạch giữ 96 bước/nhánh, checkpoint cuối, hai seed mới 43/44; không đổi kế hoạch theo điểm giữa chừng.
-
-## Giới hạn hiện tại
-
-Đây là thực nghiệm trên bài Python nhỏ tự xây dựng, chưa tái hiện benchmark APPS/Codeforces ở quy mô bài báo. Đã có một lần làm mới curriculum đối kháng; adversary chưa học cập nhật trọng số. Các khác biệt điểm số nhỏ cần được phân tích cùng độ dao động và các ví dụ thất bại.
+Năm bài Validation và một seed chưa đủ kết luận ổn định. Miền hữu hạn, test tham chiếu và hai lời giải nguồn giúp kiểm tra dữ liệu, không chứng minh khả năng tổng quát trên APPS. Chưa xác nhận model nền có từng gặp bài công khai này khi tiền huấn luyện hay không. Bản sao lưu trước chuyển đổi ở `D:/DA/TTNT_Backups/De19-before-APPS-20261028-112210`.
