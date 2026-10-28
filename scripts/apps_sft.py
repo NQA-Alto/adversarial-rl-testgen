@@ -34,7 +34,7 @@ def build_examples(seed=42):
     return rows, cases, manifest
 
 
-def train(folder, steps, seed, prompt_version):
+def train(folder, steps, seed, prompt_version, checkpoint_steps=(), reference_adapter=None):
     import torch
     from peft.utils import get_peft_model_state_dict
     from check_lora_update import completion_loss
@@ -48,6 +48,8 @@ def train(folder, steps, seed, prompt_version):
     path.write_text("".join(canonical(row) + "\n" for row in rows), encoding="utf-8", newline="\n")
     config = {"steps": steps, "gradient_accumulation": 4, "learning_rate": 5e-5, "seed": seed,
               "prompt_version": prompt_version, "max_total_tokens": 1664, "max_target_tokens": 96}
+    if checkpoint_steps:
+        config["checkpoint_steps"] = sorted(checkpoint_steps)
     result = {"status": "started", "method": "SFT_NOT_RL", "source_hashes": source, "configuration": config,
               "dataset_id": manifest["dataset_id"], "train_sha256": manifest["splits"]["train"]["sha256"],
               "target_sha256": digest(path), "training_examples": len(rows), "model_test_evaluation": False,
@@ -113,6 +115,24 @@ def train(folder, steps, seed, prompt_version):
         with (folder / "sft-steps.jsonl").open("a", encoding="utf-8", newline="\n") as stream:
             stream.write(canonical(event) + "\n")
         print("SFT STEP", step + 1, "/", steps, "loss", round(event["loss"], 5), flush=True)
+        if step + 1 in checkpoint_steps:
+            checkpoint = save_adapter_checked(model, folder / ("checkpoint-" + str(step + 1)), step + 1)
+            result.setdefault("checkpoints", {})[str(step + 1)] = checkpoint
+            if reference_adapter and step + 1 == 64:
+                from safetensors.torch import load_file
+                saved = load_file(str(Path(reference_adapter) / "adapter_model.safetensors"), device="cpu")
+                live = {name: value.detach().cpu() for name, value in get_peft_model_state_dict(model).items()}
+                if set(saved) != set(live):
+                    raise RuntimeError("Reference adapter keys differ")
+                squared = sum(float((live[name].float() - saved[name].float()).square().sum()) for name in saved)
+                baseline_squared = sum(float(value.float().square().sum()) for value in saved.values())
+                replay = {"reference_adapter": str(reference_adapter), "exact_tensor_match": all(torch.equal(live[name], saved[name]) for name in saved),
+                          "relative_l2_difference": math.sqrt(squared / max(baseline_squared, 1e-30)),
+                          "max_absolute_difference": max(float((live[name].float() - saved[name].float()).abs().max()) for name in saved)}
+                result["step64_replay"] = replay
+                write(folder / "step64-replay.json", replay)
+                print("SFT STEP 64 REPLAY:", replay, flush=True)
+            write(folder / "result.json", result)
     optimizer.zero_grad(set_to_none=True)
     model.gradient_checkpointing_disable()
     after = probe()
@@ -134,16 +154,20 @@ if __name__ == "__main__":
     sys.stdout.reconfigure(encoding="utf-8")
     parser = argparse.ArgumentParser()
     parser.add_argument("--steps", type=int, default=64)
+    parser.add_argument("--checkpoint-steps", type=int, nargs="*", default=[])
+    parser.add_argument("--reference-adapter", type=Path)
     args = parser.parse_args()
-    if not 1 <= args.steps <= 96:
-        parser.error("SFT steps must be 1..96")
+    if not 1 <= args.steps <= 256 or any(not 1 <= step <= args.steps for step in args.checkpoint_steps):
+        parser.error("SFT steps must be 1..256 and checkpoint steps must be within that budget")
+    if args.reference_adapter and 64 not in args.checkpoint_steps:
+        parser.error("Reference replay requires a checkpoint at step 64")
     import os
     from apps_core import ASSETS
     os.environ.update(HF_HUB_OFFLINE="1", HF_HOME=str(ASSETS / "cache/huggingface"), TEMP=str(ASSETS / "temp"), TMP=str(ASSETS / "temp"), PYTHONUTF8="1")
     folder = run_folder("sft-v2")
     print("EVIDENCE:", folder, flush=True)
     try:
-        train(folder, args.steps, 42, "apps-call-v2")
+        train(folder, args.steps, 42, "apps-call-v2", args.checkpoint_steps, args.reference_adapter)
     except Exception as error:
         result = read(folder / "result.json") if (folder / "result.json").exists() else {}
         result.update(status="failed", error=repr(error))

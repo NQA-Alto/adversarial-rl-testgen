@@ -104,6 +104,7 @@ def metric_table():
     rows = []
     current = state()
     variants = [("baseline_validation", "Qwen gốc"), ("sft_validation", "Sau SFT"),
+                ("sft_budget_validation", "SFT 256 bước · kiểm chứng"),
                 ("pilot_validation", "GRPO cố định · 96 bước liền" if current.get("adversarial_validation") else "Sau SFT + GRPO" if current.get("sft_training") else "Sau GRPO pilot"),
                 ("paired_control_validation", "GRPO cố định · 2 vòng"),
                 ("adversarial_validation", "GRPO đối kháng · 2 vòng")]
@@ -134,7 +135,7 @@ def gpu_busy(ignore_pid=None):
             if process.pid in ignored:
                 continue
             if (process.info["name"] or "").lower().startswith("python") and any(
-                    str(value).endswith(("apps_model_runner.py", "apps_sft.py", "apps_round.py", "apps_adversary.py", "apps_adversarial_round.py", "apps_reasoning_probe.py", "apps_prompt_trial.py")) for value in process.info["cmdline"] or []):
+                    str(value).endswith(("apps_model_runner.py", "apps_sft.py", "apps_round.py", "apps_adversary.py", "apps_adversarial_round.py", "apps_reasoning_probe.py", "apps_prompt_trial.py", "apps_sft_budget_trial.py")) for value in process.info["cmdline"] or []):
                 return True
         except (psutil.AccessDenied, psutil.NoSuchProcess):
             pass
@@ -194,7 +195,7 @@ def run_live(identity, variant):
         command = [str(TRAIN_PYTHON), "-B", str(PROJECT / "scripts/apps_model_runner.py"), "evaluate", "--case", identity]
         if variant != "Qwen gốc":
             key = {"Sau SFT": "sft_training", "GRPO cố định · 2 vòng": "paired_control_training",
-                   "GRPO đối kháng · 2 vòng": "adversarial_training"}.get(variant, "pilot_training")
+                   "GRPO đối kháng · 2 vòng": "adversarial_training", "SFT 256 bước · kiểm chứng": "sft_budget_training"}.get(variant, "pilot_training")
             pilot = state().get(key)
             if not pilot:
                 yield "Chưa có adapter APPS.", ""
@@ -244,6 +245,8 @@ def build_ui():
             comparison = gr.HTML(saved(identity))
             with gr.Accordion("Chạy trực tiếp trên máy", open=False):
                 variants = ["Qwen gốc", "Sau SFT", "GRPO cố định · 2 vòng", "GRPO đối kháng · 2 vòng"] if state().get("adversarial_validation") else ["Qwen gốc", "Sau SFT", "Sau SFT + GRPO"] if state().get("sft_training") else ["Qwen gốc", "Sau GRPO pilot"]
+                if state().get("sft_budget_training"):
+                    variants.insert(2, "SFT 256 bước · kiểm chứng")
                 variant = gr.Radio(variants, value="Qwen gốc", label="Phiên bản")
                 button = gr.Button("Sinh 4 test", variant="primary")
                 live = gr.HTML()
@@ -256,6 +259,8 @@ def build_ui():
             refresh = gr.Button("Cập nhật kết quả")
             refresh.click(metric_table, outputs=table)
             gr.Markdown("Mỗi code Validation sinh 4 test, seed 42. Mẫu sai và bị cắt vẫn nằm trong mẫu số. Hai nhánh GRPO 2 vòng cùng bắt đầu từ SFT và cùng ngân sách học. Mốc 96 bước liền là lượt thực nghiệm trước đó." if state().get("adversarial_validation") else "Mỗi code Validation sinh 4 test, seed 42. Mẫu sai và bị cắt vẫn nằm trong mẫu số. Các mốc SFT và GRPO được đánh giá riêng. Vòng sinh code đối kháng trên APPS đang được hoàn thiện.")
+            if state().get("sft_budget_validation"):
+                gr.Markdown("Mốc SFT 256 bước được chấm riêng để kiểm chứng ngân sách học. Các nhánh GRPO hiện tại vẫn xuất phát từ SFT 64 bước.")
         with gr.Tab("Dữ liệu"):
             gr.Dataframe(value=[[name, spec["problems"], spec["cases"]] for name, spec in manifest["splits"].items()], headers=["Tập phát triển", "Bài APPS", "Code lỗi"], interactive=False)
             gr.Markdown("Nguồn: **codeparrot/apps**, nhãn Introductory. Tập con dùng bài dạng gọi hàm và miền input hữu hạn được ghi rõ. Code lỗi được tạo bằng thay đổi AST từ lời giải nguồn, không phải code lỗi có sẵn của APPS.\n\nTrain/Validation/Test phát triển được chia theo bài trong **APPS Train**. Tập Test chính thức của APPS chưa tải, chưa đánh giá. Test phát triển chưa được model đánh giá.\n\nHai lời giải nguồn phải qua test gốc và đồng ý trên toàn bộ miền input thực nghiệm. Bài không đạt bộ lọc được ghi lý do loại.")
