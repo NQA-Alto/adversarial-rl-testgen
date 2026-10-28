@@ -33,6 +33,10 @@ def audit(folder):
                   "predictions_sha256": digest(folder / "predictions.jsonl"), "model_test_evaluation": False}
     elif result["status"] in {"static_grpo_pilot_completed", "pilot_no_verified_policy_update"}:
         from apps_curriculum import training_cases
+        from apps_rewards import PROFILES, training_reward
+        profile = result.get("reward_profile", "legacy-v1")
+        if "reward_weights" in result and result["reward_weights"] != PROFILES[profile]:
+            raise ValueError("Recorded reward weights differ from profile")
         cases, manifest, _ = training_cases(result.get("curriculum_path"), result.get("curriculum_sha256"))
         by_id = {case["case_id"]: case for case in cases}
         events = [json.loads(line) for line in (folder / "rollouts.jsonl").read_text(encoding="utf-8").splitlines()]
@@ -44,7 +48,12 @@ def audit(folder):
                 for key in ("valid_format", "correct_expected", "bug_detected", "reward"):
                     if checked[key] != sample[key]:
                         raise ValueError("Training reward mismatch")
-                rewards.append(checked["reward"])
+                value = training_reward(checked, profile)
+                if "training_reward" in sample and sample["training_reward"] != value:
+                    raise ValueError("Training profile reward mismatch")
+                if profile != "legacy-v1" and ("training_reward" not in sample or event.get("reward_profile") != profile):
+                    raise ValueError("Missing research reward provenance")
+                rewards.append(value)
                 count += 1
             if rewards != event["rewards"] or event["policy_signal"] != (max(rewards) - min(rewards) > 1e-8):
                 raise ValueError("Group reward mismatch")
@@ -52,7 +61,7 @@ def audit(folder):
             raise ValueError("Adapter hash mismatch")
         review = {"status": "passed", "train_samples_rescored": count, "groups": len(events),
                   "adapter_hash_verified": True, "policy_update_verified": result["update_verified"],
-                  "quality_improvement_claim": False, "model_test_evaluation": False}
+                  "reward_profile": profile, "quality_improvement_claim": False, "model_test_evaluation": False}
     elif result["status"] == "apps_supervised_warmup_completed":
         cases, manifest = load_cases("train")
         by_id = {case["case_id"]: case for case in cases}

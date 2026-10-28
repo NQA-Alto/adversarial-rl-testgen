@@ -28,7 +28,7 @@ def run_folder(label):
 
 
 def freeze_sources(folder):
-    names = ("apps_core.py", "apps_profiles.py", "apps_model_runner.py", "restricted_python.py", "local_model_loader.py", "train_static_grpo.py", "check_lora_update.py", "apps_curriculum.py", "apps_output_contracts.py")
+    names = ("apps_core.py", "apps_profiles.py", "apps_model_runner.py", "restricted_python.py", "local_model_loader.py", "train_static_grpo.py", "check_lora_update.py", "apps_curriculum.py", "apps_output_contracts.py", "apps_rewards.py")
     (folder / "source").mkdir()
     for name in names:
         shutil.copy2(Path(__file__).with_name(name), folder / "source" / name)
@@ -139,6 +139,8 @@ def train(args, folder, result):
     from train_static_grpo import make_config, save_adapter_checked
 
     from apps_curriculum import training_cases
+    from apps_rewards import PROFILES, training_reward
+    reward_profile = getattr(args, "reward_profile", "legacy-v1")
     cases, manifest, counts = training_cases(args.curriculum, args.curriculum_sha256)
     state = read(STATE)
     baseline_path = args.baseline_run or Path(state["baseline_validation"]["path"])
@@ -155,7 +157,9 @@ def train(args, folder, result):
                   parent_adapter_sha256=digest(args.init_adapter / "adapter_model.safetensors") if args.init_adapter else None,
                   scope="GRPO on a frozen per-round curriculum" if args.curriculum else "Static APPS GRPO pilot; adversarial curriculum is not implemented in this run",
                   curriculum_path=str(args.curriculum) if args.curriculum else None,
-                  curriculum_sha256=args.curriculum_sha256, curriculum_counts=counts)
+                  curriculum_sha256=args.curriculum_sha256, curriculum_counts=counts,
+                  reward_profile=reward_profile, reward_weights=PROFILES[reward_profile],
+                  reward_format_scope="Strict JSON plus bounded input validity; this differs from ATGen thinking tags")
     if args.curriculum:
         shutil.copy2(args.curriculum, folder / "training-cases.jsonl")
     torch.manual_seed(args.seed)
@@ -185,16 +189,17 @@ def train(args, folder, result):
             sample = score(raw.strip(), bool(tokens) and tokens[-1] in eos, case, *functions[identity])
             if sample.get("error") == "verifier_limit":
                 raise RuntimeError("Verifier limit; refusing to train with that reward")
-            sample.update(case_id=identity, generated_tokens=len(tokens))
+            sample.update(case_id=identity, generated_tokens=len(tokens),
+                          training_reward=training_reward(sample, reward_profile))
             batch.append(sample)
-            values.append(sample["reward"])
+            values.append(sample["training_reward"])
         for index in range(0, len(batch), 4):
             group = batch[index:index + 4]
             if len(group) != 4 or len({s["case_id"] for s in group}) != 1:
                 raise RuntimeError("Invalid GRPO group")
-            rewards = [s["reward"] for s in group]
+            rewards = [s["training_reward"] for s in group]
             event = {"group": len(events) + 1, "optimizer_step_before": trainer_state.global_step,
-                     "case_id": group[0]["case_id"], "rewards": rewards,
+                     "case_id": group[0]["case_id"], "rewards": rewards, "reward_profile": reward_profile,
                      "policy_signal": max(rewards) - min(rewards) > 1e-8, "samples": group}
             events.append(event)
             with (folder / "rollouts.jsonl").open("a", encoding="utf-8", newline="\n") as stream:
@@ -259,9 +264,13 @@ def main():
     parser.add_argument("--init-adapter", type=Path)
     parser.add_argument("--curriculum", type=Path)
     parser.add_argument("--curriculum-sha256")
+    from apps_rewards import PROFILES
+    parser.add_argument("--reward-profile", choices=tuple(PROFILES), default="legacy-v1")
     args = parser.parse_args()
     if not 1 <= args.steps <= 96:
         parser.error("Pilot must use 1 to 96 steps")
+    if args.action == "train" and args.reward_profile != "legacy-v1" and not args.no_publish:
+        parser.error("Research reward profiles require --no-publish")
     folder = run_folder("grpo-pilot" if args.action == "train" else "adapter-validation" if args.adapter else "baseline-validation")
     print("EVIDENCE:", folder, flush=True)
     result = {"status": "started", "action": args.action, "source_hashes": freeze_sources(folder),
