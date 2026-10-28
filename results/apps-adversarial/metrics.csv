@@ -1,0 +1,5 @@
+variant,label,valid,correct_expected,bug_detecting_tests,cases_detected,generated_tests,cases_total
+base,Qwen gốc,35,15,4,3,60,15
+sft,SFT,41,13,4,3,60,15
+control,SFT + GRPO cố định,42,13,3,2,60,15
+adaptive,SFT + GRPO đối kháng,41,12,3,2,60,15

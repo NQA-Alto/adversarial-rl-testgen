@@ -145,6 +145,9 @@ def main(args):
                       adversarial_generated_test_exposures=sum(stage["arms"]["adaptive"]["adversarial_generated_test_exposures"] for stage in result["rounds"]))
         write(root / "result.json", result)
         write(PROJECT / "APPS_STATE.json", state)
+        config = read(PROJECT / "configs/active-dataset.json")
+        config.update(stage="sft-and-adaptive-grpo", grpo_start="sft", adversary_refresh="per-round")
+        write(PROJECT / "configs/active-dataset.json", config)
         print("ADAPTIVE ROUNDS COMPLETED:", canonical({arm: stage["metrics"] for arm, stage in result["rounds"][-1]["arms"].items()}), flush=True)
     except BaseException as error:
         result.update(status="failed", error=repr(error))

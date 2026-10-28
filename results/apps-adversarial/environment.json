@@ -1,0 +1,24 @@
+{
+  "captured_at": "2026-10-28T09:19:23.681916+00:00",
+  "os": "Windows-11-10.0.26200-SP0",
+  "cpu": "AMD Ryzen 7 7840H  w/ Radeon 780M Graphics",
+  "logical_cpus": 16,
+  "physical_ram_bytes": 16975253504,
+  "gpu_memory_driver": "NVIDIA GeForce RTX 4060 Laptop GPU, 8188 MiB, 617.42",
+  "python": "3.12.15 (main, Oct 21 2026, 17:48:33) [MSC v.1944 64 bit (AMD64)]",
+  "libraries": {
+    "torch": "2.14.1+cu132",
+    "transformers": "5.20.2",
+    "trl": "1.16.0",
+    "peft": "0.21.2",
+    "accelerate": "1.15.0",
+    "datasets": "5.1.0",
+    "safetensors": "0.8.0"
+  },
+  "model_repository": "Qwen/Qwen3.5-2B",
+  "model_revision_from_local_download": "15852e8c16360a2fea060d615a32b45270f8a8fc",
+  "weights_sha256": "aa33250c4fc64891ddfaba3a314fd9542ea371843c387178b425fbcc5ed680b1",
+  "weights_match_download_metadata": true,
+  "inference_and_training": "Local GPU, BF16; rank-4 LoRA for test generator only; no external model APIs",
+  "data_and_assets_root": "D:\\DA\\TTNT_De19_Assets"
+}

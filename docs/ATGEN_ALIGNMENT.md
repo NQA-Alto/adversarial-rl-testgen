@@ -1,0 +1,55 @@
+# Đối chiếu đồ án với ATGen
+
+Tài liệu gốc: [ATGen: Adversarial Reinforcement Learning for Test Case Generation](https://arxiv.org/abs/2510.14635), bản v1, mục 3–5.
+
+Đồ án triển khai có điều chỉnh ở quy mô nhỏ. Mục tiêu là kiểm tra khả năng sinh test đúng đáp án và phát hiện lỗi của code Python bằng mô hình local, sau đó đo tác động của curriculum đối kháng. Chưa thể xem kết quả trên tập con này là tái lập kết quả benchmark của bài báo.
+
+| Thành phần tham chiếu | Cách triển khai trong đồ án | Bằng chứng cần kiểm tra |
+|---|---|---|
+| Đầu vào: đề bài và code cần kiểm tra (§3) | Đề APPS Introductory, hàm `solve`, miền input hữu hạn. Model sinh một cặp input/expected bằng JSON. | Prompt, mã bài nguồn và hash dữ liệu được lưu theo lượt chạy. |
+| IO Accuracy và Attack Rate (§3, §5.1) | Expected phải khớp lời giải tham chiếu; chỉ tính bắt lỗi khi expected đúng và code cần kiểm tra trả khác hoặc phát sinh lỗi thực thi được hỗ trợ. | Từng mẫu được chấm lại từ đầu; mẫu sai định dạng/bị cắt vẫn nằm trong mẫu số. |
+| GRPO (§4.1) | Dùng TRL, nhóm bốn test; chỉ cập nhật LoRA của model sinh test. | Reward từng nhóm, gradient, tham số thay đổi, hash adapter và kiểm tra lưu/nạp. |
+| Reward nhiều thành phần (§4.1) | Dùng các mức 0 / 0,1 / 0,3 / 1 cho test không hợp lệ / sai expected / đúng nhưng chưa bắt lỗi / bắt lỗi. Đây là lựa chọn riêng của đồ án. | Hàm `score` và log rollout; không nói đây là cấu hình reward nguyên bản. |
+| Sinh code rồi lọc (§4.2) | Model local gốc được yêu cầu giải đúng đề. Code sinh ra phải qua bộ thông dịch giới hạn. Chỉ giữ code sai ở một số input, đúng ở một số input, vượt qua test đúng của policy hiện tại và khác hành vi các mutant ban đầu. | Toàn bộ code được lấy mẫu, lý do loại, nhân chứng lỗi và kết quả kiểm tra lại. Nhân chứng chỉ phục vụ bộ chấm, không đưa vào prompt. |
+| Adaptive curriculum (§4.2) | Chỉ thay những code Train mà policy hiện tại đã bắt được lỗi. Làm mới code giữa các vòng, giữ nguyên các vị trí bài Train còn lại. | Probe trên Train, curriculum đóng băng theo vòng và số mẫu RL thật sự tiếp xúc code đối kháng. |
+| So sánh không có đối kháng (§5.2) | Hai nhánh cùng xuất phát từ SFT, cùng số bước GRPO, cùng số lần khởi tạo optimizer, seed và cách đánh giá. Khác biệt chủ đích là code huấn luyện. | Nhánh GRPO cố định và nhánh adaptive; không dùng lượt 96 bước một mạch trước đây làm đối chứng tương đương cho hai vòng 48 bước. |
+
+## Những điều chỉnh phải nêu khi bảo vệ
+
+- Dùng Qwen3.5-2B chạy trên RTX 4060 Laptop 8 GB và LoRA rank 4. Thư viện huấn luyện là Transformers/PEFT/TRL.
+- Hai vai trò dùng hai lần nạp model local tuần tự. Model sinh code giữ nguyên trọng số; model sinh test có adapter được học bằng RL. Không phải hai model cùng được cập nhật bằng RL.
+- JSON trực tiếp, tắt chế độ thinking; chưa triển khai định dạng suy luận có thẻ của bài báo.
+- Chỉ 29 bài APPS, chia theo bài thành Train/Validation/Test phát triển. Code ban đầu là đột biến AST; code bổ sung được model local sinh rồi lọc. Không phải bộ dữ liệu APPS + Codeforces của tác giả.
+- Bộ chấm vét cạn miền input đã khai báo và chỉ hỗ trợ một phần Python. “Sai” hoặc “đúng” khi lọc code chỉ được xác nhận trong miền đó. Đây không phải chứng minh cho mọi input có thể có của đề gốc.
+- Làm mới curriculum theo vòng là bản xấp xỉ theo lô. Không làm mới theo từng minibatch; không khẳng định độ khó tăng đơn điệu hay đã vượt giới hạn dữ liệu cố định.
+- SFT là bước khởi động bổ sung của đồ án, không được cộng lợi ích của SFT hoặc đổi prompt vào lợi ích của RL.
+- Chưa làm ứng dụng lọc Best-of-N và RL để huấn luyện model sinh code ở phần ứng dụng của bài báo.
+
+## Cách giải thích phạm vi
+
+Đồ án giải quyết phần sinh và kiểm chứng ca kiểm thử cho code Python trong một tập bài APPS giới hạn. Hệ thống vừa kiểm tra test có đúng đáp án không, vừa kiểm tra test có làm lộ lỗi không; sau đó dùng reward để học adapter sinh test. Phần đối kháng bổ sung những code mà test hiện tại bỏ sót để tạo dữ liệu học mới. Đồ án đo phần này bằng một nhánh đối chứng có cùng ngân sách học.
+
+Đã chạy được thuật toán không đồng nghĩa với đã chứng minh hiệu quả. Chỉ được kết luận cải thiện khi có số liệu đánh giá tương ứng; kết quả thấp hoặc không cải thiện phải được giữ lại. Test phát triển dành cho lần đánh giá cuối; Test chính thức APPS chưa tải và chưa đánh giá. Các mốc hiện tại dùng Validation, không gọi là kết quả Test chính thức.
+
+## Một ví dụ đối kháng thực sự đã sinh được
+
+Ở vòng đầu, bài APPS 3019 yêu cầu đếm số lần một ký tự xuất hiện, có phân biệt chữ hoa và chữ thường. Candidate `r1-3019-08` lại chuyển ký tự cần tìm sang chữ thường trước khi đếm.
+
+- Test hiện tại có `strng="bba", letter="a", expected=1`: code mới vẫn trả 1, nên test này bỏ sót lỗi.
+- Bộ chấm tìm được `strng="a", letter="A", expected=0`: code mới trả 1. Như vậy code mới vẫn sai, không phải lời giải đúng.
+- Candidate này vượt qua các test đúng hiện tại của ba vị trí bài 3019 và sai ở 90/363 input đã khai báo. Nó được đưa vào pool để thay code ở những vị trí đủ điều kiện.
+
+Đây là “đối kháng” theo khả năng của policy tại thời điểm lọc. Không đồng nghĩa với code khó hơn cho mọi người hay lỗi chỉ xuất hiện ở rất ít input. Input nhân chứng trên được lưu để kiểm chứng, không đưa vào prompt cho model sinh test. Bằng chứng gốc nằm trong `apps-adversary-20261028-160208-467069`, các file `policy-suites.json` và `adversarial-cases.jsonl`.
+
+## Nơi lưu bằng chứng
+
+Mốc 28/10/2026 đã hoàn tất hai vòng × 48 bước cho mỗi nhánh. Model sinh test thực sự gặp code đối kháng khi sinh 72/384 test trong quá trình GRPO; hai pool có 20 hành vi code khác nhau. Nhánh đối kháng có 86/96 bước gradient khác 0, adapter sau từng vòng được kiểm tra khớp bản lưu. Đây là bằng chứng chạy và học, không phải bằng chứng hiệu quả.
+
+Đánh giá cuối trên cùng Validation: GRPO cố định và GRPO đối kháng đều phát hiện 2/15 code, trong khi SFT là 3/15. Kết quả này chưa xác nhận lợi ích đối kháng. Bảng đầy đủ, phân loại thất bại và số liệu từng vòng nằm ở [results/apps-adversarial](../results/apps-adversarial/README.md). Không chọn lại checkpoint vòng một chỉ vì điểm Validation cao hơn; mốc cuối giữ đúng ngân sách đã định trước.
+
+- `scripts/apps_model_runner.py`: GRPO, đánh giá và lưu adapter.
+- `scripts/apps_adversary.py`: sinh code local, lọc và kiểm tra lại pool.
+- `scripts/apps_curriculum.py`: kiểm tra curriculum giữ nguyên bài, reference, miền input và tập chia.
+- `scripts/apps_adversarial_round.py`: so sánh hai nhánh qua hai vòng.
+- `scripts/audit_apps_run.py`: chấm lại mẫu sinh, target SFT và reward RL.
+- Log, code lấy mẫu và adapter nằm ở `D:/DA/TTNT_De19_Assets/evidence`; mã nguồn và bảng kết quả tổng hợp được đưa vào Git.

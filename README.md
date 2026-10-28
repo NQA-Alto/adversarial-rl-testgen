@@ -2,7 +2,7 @@
 
 Đồ án TTNT cá nhân: huấn luyện tăng cường đối kháng để sinh ca kiểm thử. Hệ thống dùng Qwen3.5-2B chạy local để sinh input và expected cho hàm Python. Gradio điều khiển thí nghiệm; Transformers, PEFT và TRL đảm nhiệm suy luận và huấn luyện trên GPU.
 
-Nhánh `apps-introductory` đang dùng dữ liệu APPS. Đã hoàn tất một lượt SFT và GRPO với code lỗi cố định. Vòng sinh curriculum bằng adversary trên APPS chưa hoàn tất; các kết quả dữ liệu nội bộ cũ không được gộp vào bảng APPS.
+Nhánh `apps-introductory` đang dùng dữ liệu APPS. Đã chạy SFT, GRPO cố định và hai vòng curriculum đối kháng bằng model local; các kết quả dữ liệu nội bộ cũ không được gộp vào bảng APPS.
 
 ## Dữ liệu
 
@@ -20,7 +20,28 @@ Các tập tách theo bài và URL. Đã kiểm tra 26.833 cặp code/input. Tes
 
 Xem [nguồn và bộ lọc dữ liệu](docs/APPS_DATASET.md), [quy trình huấn luyện](docs/APPS_TRAINING.md).
 
-## Kết quả hiện tại
+## Kết quả đối kháng hiện tại
+
+Hai nhánh bắt đầu từ cùng adapter SFT, mỗi nhánh hai vòng × 48 bước GRPO. Cùng prompt v2, Validation, seed 42 và bốn test/code. Đối chứng cũng khởi tạo lại optimizer mỗi vòng; chi phí sinh/lọc code là phần tính toán thêm của nhánh đối kháng.
+
+| Phiên bản | Test hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện @4 /15 |
+|---|---:|---:|---:|---:|
+| Qwen gốc | 35 | **15** | **4** | **3** |
+| SFT | 41 | 13 | **4** | **3** |
+| SFT + GRPO cố định | **42** | 13 | 3 | 2 |
+| SFT + GRPO đối kháng | 41 | 12 | 3 | 2 |
+
+Chữ đậm là giá trị lớn nhất từng cột, kể cả khi hòa. Tất cả mẫu sai/bị cắt vẫn nằm trong mẫu số.
+
+Nhánh đối kháng bắt được lỗi ở 2/15 code; nhánh cố định là 2/15. Đây là một seed trên năm bài Validation; chưa đủ kết luận hiệu quả tổng quát hoặc tái lập mức cải thiện trong bài báo.
+
+Code bổ sung được Qwen local gốc sinh rồi lọc: còn sai trong miền kiểm tra nhưng vượt qua test đúng của policy hiện tại. Chỉ adapter sinh test được học bằng RL; model sinh code giữ nguyên trọng số. Làm mới curriculum giữa các vòng là cách triển khai theo lô ở quy mô nhỏ.
+
+[Kết quả và phân tích từng vòng](results/apps-adversarial) · [Đối chiếu với ATGen](docs/ATGEN_ALIGNMENT.md)
+
+![So sánh đối kháng trên Validation](results/apps-adversarial/validation-comparison.png)
+
+## Lượt GRPO cố định trước đó
 
 Cả ba mốc dùng prompt `apps-call-v2`, cùng 15 code Validation, bốn test/code, seed 42 và tối đa 96 token/completion. SFT bắt đầu từ Qwen gốc và LoRA mới; GRPO bắt đầu từ đúng adapter SFT đã chấm, optimizer mới.
 
@@ -47,7 +68,7 @@ Reward: 0 nếu sai JSON/ngoài miền/bị cắt; 0,1 nếu input hợp lệ nh
 
 Trên bản cài đặt hiện tại, nhấp `MO_GIAO_DIEN.cmd`, mở http://127.0.0.1:7860/?__theme=light. Nhấp `DONG_GIAO_DIEN.cmd` để đóng dịch vụ. Mở trang không tự train.
 
-- **Demo:** xem đề, code và đầu ra của Qwen gốc, sau SFT, sau SFT + GRPO; có thể sinh bốn test mới cho một code trên GPU.
+- **Demo:** xem đề, code và đầu ra của Qwen gốc, GRPO cố định và GRPO đối kháng; có thể sinh bốn test mới cho một code trên GPU.
 - **Kết quả:** bảng toàn bộ Validation; không chỉ giữ các bài thành công.
 - **Dữ liệu:** nguồn, cách chia tập và giới hạn thí nghiệm.
 - **Thực nghiệm:** kiểm tra dữ liệu, chấm model và khởi chạy huấn luyện; có nút dừng và log.

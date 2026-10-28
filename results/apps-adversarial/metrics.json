@@ -1,0 +1,636 @@
+{
+  "round_folder": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adaptive-rounds-20261028-160540-543908",
+  "plan": {
+    "dataset_id": "apps-intro-call-v2-eb69b8869857",
+    "train_sha256": "b76af3034722411991b5ff12939648c0330a0079e51d9e650490c3ee845479b7",
+    "rounds": 2,
+    "steps_per_round_per_arm": 48,
+    "seed": 42,
+    "samples_per_problem": 16,
+    "prompt_version": "apps-call-v2",
+    "source_hashes": {
+      "apps_core.py": "c54a0ae7a2d47735a845a640be133c0db01ce5430222b20823fed80dd1210af6",
+      "apps_model_runner.py": "159b77f7a25f5b29761c9563aa2506c2eccb5a5b38faefb05269644c8599f538",
+      "apps_adversary.py": "9b6480d6d7caf9e273ecd4c8cd7607f3c0421f6f0d4c8ba71f14f60165b20dbf",
+      "apps_adversarial_round.py": "f493b2565d2eb8207c20cb760585ce447b811399f8906628a8043249c0266457",
+      "apps_curriculum.py": "9f53830ed4316cf121418ea50c3f0a5f191373a1f37958c990caed9ba0e47109",
+      "audit_apps_run.py": "6b4573b68b615dd026488c99620da6a65281a64fe5471f3f4242eb8d6f2dc054",
+      "apps_profiles.py": "b63ba5a9c1e6319d34925969fd16c438efc887bbdb7c7a40c93bcbb5e35bdf93",
+      "restricted_python.py": "542fd37b7ed73225fd2105922845155615e241b246b039e7ccce7fc840967111",
+      "local_model_loader.py": "339d647aa8b2d123cb9972654b9244a0aeb57aa8a02e173bac0f4abfcfa2221a",
+      "train_static_grpo.py": "42d2d34ce7f1a7a86184a984106e49988d31a07c1f2d19018acee8f57421a36c",
+      "check_lora_update.py": "b57d4606fd72f14f653290fbd9252269d4b753eb75dc945ba9752a12bbfdec7d",
+      "apps_round.py": "626355c0339629aa7307cec11bebbe3d137f14e80d85af24d3ad3d5ce92cd0ee"
+    },
+    "parent_adapter_sha256": "7ec28547340fcebf67e3bfad629f790e6510b2305b32770ab20b09f97c7f3afa",
+    "control": "Curated static code, same 41 case slots, two optimizer restarts",
+    "adaptive": "Refresh locally sampled code between rounds, replace only original cases caught by the current policy",
+    "adversary": "Frozen original local Qwen3.5-2B; samples correct solutions then filters naturally incorrect solutions",
+    "selection": "Final checkpoint at the declared budget, no checkpoint selection by Validation, no Test model evaluation",
+    "initial_probe": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261028-155601-910485",
+    "initial_pool": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adversary-20261028-160208-467069",
+    "initial_pool_sha256": "e3db9f74736ba24f2cb5f2fa1b61dd05de7f47491e6bd3e1449b4cd26111716c"
+  },
+  "runs": {
+    "base": {
+      "label": "Qwen gốc",
+      "result": {
+        "status": "evaluation_completed",
+        "action": "evaluate",
+        "source_hashes": {
+          "apps_core.py": "c54a0ae7a2d47735a845a640be133c0db01ce5430222b20823fed80dd1210af6",
+          "apps_profiles.py": "b63ba5a9c1e6319d34925969fd16c438efc887bbdb7c7a40c93bcbb5e35bdf93",
+          "apps_model_runner.py": "7b613030de0e5209e683c7e6c6724a104eed8a0cfb44ff4e2f630e31ae92201e",
+          "restricted_python.py": "542fd37b7ed73225fd2105922845155615e241b246b039e7ccce7fc840967111",
+          "local_model_loader.py": "339d647aa8b2d123cb9972654b9244a0aeb57aa8a02e173bac0f4abfcfa2221a",
+          "train_static_grpo.py": "42d2d34ce7f1a7a86184a984106e49988d31a07c1f2d19018acee8f57421a36c",
+          "check_lora_update.py": "b57d4606fd72f14f653290fbd9252269d4b753eb75dc945ba9752a12bbfdec7d"
+        },
+        "started_at": "2026-10-28T07:50:25.405217+00:00",
+        "model_path": "D:\\DA\\TTNT_De19_Assets\\models\\Qwen3.5-2B",
+        "versions": {
+          "torch": "2.14.1+cu132",
+          "transformers": "5.20.2",
+          "trl": "1.16.0",
+          "peft": "0.21.2"
+        },
+        "dataset_id": "apps-intro-call-v2-eb69b8869857",
+        "split": "validation",
+        "split_sha256": "d275394b4985cf8e4e9142885fe297b125ff4b33c4201933bb1c041bf3215c06",
+        "adapter": null,
+        "adapter_sha256": null,
+        "seed": 42,
+        "tests_per_case": 4,
+        "prompt_version": "apps-call-v2",
+        "model_test_evaluation": false,
+        "complete_split": true,
+        "training": false,
+        "generation": {
+          "max_new_tokens": 96,
+          "temperature": 1.0,
+          "top_p": 0.95,
+          "top_k": 20,
+          "thinking": false
+        },
+        "metrics": {
+          "evaluated_cases": 15,
+          "generated_tests": 60,
+          "valid_tests": 35,
+          "correct_expected": 15,
+          "bug_detecting_tests": 4,
+          "cases_detected": 3,
+          "valid_rate": 0.5833333333333334,
+          "io_accuracy": 0.25,
+          "attack_rate": 0.06666666666666667,
+          "case_detection_at_4": 0.2,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        },
+        "elapsed_seconds": 25.856,
+        "peak_vram_gib": 4.492,
+        "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU"
+      },
+      "result_sha256": "bd9a7cc7f5dc6f22f940f14ea27edd2ce807b5f4e7a0441510d5296112591d07",
+      "failure_breakdown": {
+        "invalid_or_truncated": 25,
+        "wrong_expected": 20,
+        "bug_detected": 4,
+        "correct_expected_no_bug": 11
+      }
+    },
+    "sft": {
+      "label": "SFT",
+      "result": {
+        "status": "evaluation_completed",
+        "action": "evaluate",
+        "source_hashes": {
+          "apps_core.py": "c54a0ae7a2d47735a845a640be133c0db01ce5430222b20823fed80dd1210af6",
+          "apps_profiles.py": "b63ba5a9c1e6319d34925969fd16c438efc887bbdb7c7a40c93bcbb5e35bdf93",
+          "apps_model_runner.py": "7b613030de0e5209e683c7e6c6724a104eed8a0cfb44ff4e2f630e31ae92201e",
+          "restricted_python.py": "542fd37b7ed73225fd2105922845155615e241b246b039e7ccce7fc840967111",
+          "local_model_loader.py": "339d647aa8b2d123cb9972654b9244a0aeb57aa8a02e173bac0f4abfcfa2221a",
+          "train_static_grpo.py": "42d2d34ce7f1a7a86184a984106e49988d31a07c1f2d19018acee8f57421a36c",
+          "check_lora_update.py": "b57d4606fd72f14f653290fbd9252269d4b753eb75dc945ba9752a12bbfdec7d"
+        },
+        "started_at": "2026-10-28T07:54:25.505335+00:00",
+        "model_path": "D:\\DA\\TTNT_De19_Assets\\models\\Qwen3.5-2B",
+        "versions": {
+          "torch": "2.14.1+cu132",
+          "transformers": "5.20.2",
+          "trl": "1.16.0",
+          "peft": "0.21.2"
+        },
+        "dataset_id": "apps-intro-call-v2-eb69b8869857",
+        "split": "validation",
+        "split_sha256": "d275394b4985cf8e4e9142885fe297b125ff4b33c4201933bb1c041bf3215c06",
+        "adapter": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-sft-v2-20261028-145103-496784\\adapter",
+        "adapter_sha256": "7ec28547340fcebf67e3bfad629f790e6510b2305b32770ab20b09f97c7f3afa",
+        "seed": 42,
+        "tests_per_case": 4,
+        "prompt_version": "apps-call-v2",
+        "model_test_evaluation": false,
+        "complete_split": true,
+        "training": false,
+        "generation": {
+          "max_new_tokens": 96,
+          "temperature": 1.0,
+          "top_p": 0.95,
+          "top_k": 20,
+          "thinking": false
+        },
+        "metrics": {
+          "evaluated_cases": 15,
+          "generated_tests": 60,
+          "valid_tests": 41,
+          "correct_expected": 13,
+          "bug_detecting_tests": 4,
+          "cases_detected": 3,
+          "valid_rate": 0.6833333333333333,
+          "io_accuracy": 0.21666666666666667,
+          "attack_rate": 0.06666666666666667,
+          "case_detection_at_4": 0.2,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        },
+        "elapsed_seconds": 23.116,
+        "peak_vram_gib": 4.494,
+        "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU"
+      },
+      "result_sha256": "c786a00a0afac3a7a1b39820f1f1c665027243f46b3a47ee653ea864c66a788c",
+      "failure_breakdown": {
+        "invalid_or_truncated": 19,
+        "wrong_expected": 28,
+        "correct_expected_no_bug": 9,
+        "bug_detected": 4
+      }
+    },
+    "control": {
+      "label": "SFT + GRPO cố định",
+      "result": {
+        "status": "evaluation_completed",
+        "action": "evaluate",
+        "source_hashes": {
+          "apps_core.py": "c54a0ae7a2d47735a845a640be133c0db01ce5430222b20823fed80dd1210af6",
+          "apps_profiles.py": "b63ba5a9c1e6319d34925969fd16c438efc887bbdb7c7a40c93bcbb5e35bdf93",
+          "apps_model_runner.py": "159b77f7a25f5b29761c9563aa2506c2eccb5a5b38faefb05269644c8599f538",
+          "restricted_python.py": "542fd37b7ed73225fd2105922845155615e241b246b039e7ccce7fc840967111",
+          "local_model_loader.py": "339d647aa8b2d123cb9972654b9244a0aeb57aa8a02e173bac0f4abfcfa2221a",
+          "train_static_grpo.py": "42d2d34ce7f1a7a86184a984106e49988d31a07c1f2d19018acee8f57421a36c",
+          "check_lora_update.py": "b57d4606fd72f14f653290fbd9252269d4b753eb75dc945ba9752a12bbfdec7d",
+          "apps_curriculum.py": "9f53830ed4316cf121418ea50c3f0a5f191373a1f37958c990caed9ba0e47109"
+        },
+        "started_at": "2026-10-28T09:28:47.774057+00:00",
+        "model_path": "D:\\DA\\TTNT_De19_Assets\\models\\Qwen3.5-2B",
+        "versions": {
+          "torch": "2.14.1+cu132",
+          "transformers": "5.20.2",
+          "trl": "1.16.0",
+          "peft": "0.21.2"
+        },
+        "dataset_id": "apps-intro-call-v2-eb69b8869857",
+        "split": "validation",
+        "split_sha256": "d275394b4985cf8e4e9142885fe297b125ff4b33c4201933bb1c041bf3215c06",
+        "adapter": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-grpo-pilot-20261028-162317-284683\\adapter",
+        "adapter_sha256": "cf9c121a3260b516de070b14bd1ef7e4e134097eb443156a64693ab0e6b9f8da",
+        "seed": 42,
+        "tests_per_case": 4,
+        "prompt_version": "apps-call-v2",
+        "model_test_evaluation": false,
+        "complete_split": true,
+        "training": false,
+        "generation": {
+          "max_new_tokens": 96,
+          "temperature": 1.0,
+          "top_p": 0.95,
+          "top_k": 20,
+          "thinking": false
+        },
+        "metrics": {
+          "evaluated_cases": 15,
+          "generated_tests": 60,
+          "valid_tests": 42,
+          "correct_expected": 13,
+          "bug_detecting_tests": 3,
+          "cases_detected": 2,
+          "valid_rate": 0.7,
+          "io_accuracy": 0.21666666666666667,
+          "attack_rate": 0.05,
+          "case_detection_at_4": 0.13333333333333333,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        },
+        "elapsed_seconds": 23.209,
+        "peak_vram_gib": 4.494,
+        "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU"
+      },
+      "result_sha256": "a6a0cba2acf2a04bf16c15770901dd6859325f8b98155a6047098fe1996932b4",
+      "failure_breakdown": {
+        "invalid_or_truncated": 18,
+        "wrong_expected": 29,
+        "correct_expected_no_bug": 10,
+        "bug_detected": 3
+      }
+    },
+    "adaptive": {
+      "label": "SFT + GRPO đối kháng",
+      "result": {
+        "status": "evaluation_completed",
+        "action": "evaluate",
+        "source_hashes": {
+          "apps_core.py": "c54a0ae7a2d47735a845a640be133c0db01ce5430222b20823fed80dd1210af6",
+          "apps_profiles.py": "b63ba5a9c1e6319d34925969fd16c438efc887bbdb7c7a40c93bcbb5e35bdf93",
+          "apps_model_runner.py": "159b77f7a25f5b29761c9563aa2506c2eccb5a5b38faefb05269644c8599f538",
+          "restricted_python.py": "542fd37b7ed73225fd2105922845155615e241b246b039e7ccce7fc840967111",
+          "local_model_loader.py": "339d647aa8b2d123cb9972654b9244a0aeb57aa8a02e173bac0f4abfcfa2221a",
+          "train_static_grpo.py": "42d2d34ce7f1a7a86184a984106e49988d31a07c1f2d19018acee8f57421a36c",
+          "check_lora_update.py": "b57d4606fd72f14f653290fbd9252269d4b753eb75dc945ba9752a12bbfdec7d",
+          "apps_curriculum.py": "9f53830ed4316cf121418ea50c3f0a5f191373a1f37958c990caed9ba0e47109"
+        },
+        "started_at": "2026-10-28T09:34:12.585989+00:00",
+        "model_path": "D:\\DA\\TTNT_De19_Assets\\models\\Qwen3.5-2B",
+        "versions": {
+          "torch": "2.14.1+cu132",
+          "transformers": "5.20.2",
+          "trl": "1.16.0",
+          "peft": "0.21.2"
+        },
+        "dataset_id": "apps-intro-call-v2-eb69b8869857",
+        "split": "validation",
+        "split_sha256": "d275394b4985cf8e4e9142885fe297b125ff4b33c4201933bb1c041bf3215c06",
+        "adapter": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-grpo-pilot-20261028-162924-967971\\adapter",
+        "adapter_sha256": "3f2e8bd87a055f07a485e4970f8ce4828ac20ac1033a9e07115296ce16312d88",
+        "seed": 42,
+        "tests_per_case": 4,
+        "prompt_version": "apps-call-v2",
+        "model_test_evaluation": false,
+        "complete_split": true,
+        "training": false,
+        "generation": {
+          "max_new_tokens": 96,
+          "temperature": 1.0,
+          "top_p": 0.95,
+          "top_k": 20,
+          "thinking": false
+        },
+        "metrics": {
+          "evaluated_cases": 15,
+          "generated_tests": 60,
+          "valid_tests": 41,
+          "correct_expected": 12,
+          "bug_detecting_tests": 3,
+          "cases_detected": 2,
+          "valid_rate": 0.6833333333333333,
+          "io_accuracy": 0.2,
+          "attack_rate": 0.05,
+          "case_detection_at_4": 0.13333333333333333,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        },
+        "elapsed_seconds": 21.2,
+        "peak_vram_gib": 4.494,
+        "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU"
+      },
+      "result_sha256": "e84e76d861c099438c0f59360b97d9afad9df4a4e05a71090bd00d5ca636b7f6",
+      "failure_breakdown": {
+        "invalid_or_truncated": 19,
+        "wrong_expected": 29,
+        "correct_expected_no_bug": 9,
+        "bug_detected": 3
+      }
+    }
+  },
+  "rounds": [
+    {
+      "round": 1,
+      "pool": {
+        "status": "completed",
+        "dataset_id": "apps-intro-call-v2-eb69b8869857",
+        "round": 1,
+        "probe": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261028-155601-910485",
+        "probe_predictions_sha256": "0ab6ee9297ec55a99eff569fe6b830d98f11f6811fabc8278fd91e70337feb3d",
+        "parent_adapter": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-sft-v2-20261028-145103-496784\\adapter",
+        "parent_adapter_sha256": "7ec28547340fcebf67e3bfad629f790e6510b2305b32770ab20b09f97c7f3afa",
+        "eligible_problems": 8,
+        "eligible_case_slots": 12,
+        "configuration": {
+          "mode": "sample_correct_solutions_then_filter",
+          "model": "frozen original local Qwen3.5-2B",
+          "samples_per_problem": 16,
+          "max_new_tokens": 256,
+          "temperature": 1.0,
+          "top_p": 0.95,
+          "top_k": 20,
+          "seed": 42
+        },
+        "training": false,
+        "model_test_evaluation": false,
+        "sampled_candidates": 128,
+        "accepted_candidates": 7,
+        "gate_counts": {
+          "wrong_on_every_input": 5,
+          "unsupported_code": 62,
+          "incorrect_but_passes_current_policy": 7,
+          "caught_by_current_policy": 16,
+          "correct_on_declared_domain": 26,
+          "truncated": 7,
+          "duplicate_behavior": 5
+        },
+        "elapsed_seconds": 148.055,
+        "pool_sha256": "e3db9f74736ba24f2cb5f2fa1b61dd05de7f47491e6bd3e1449b4cd26111716c",
+        "peak_vram_gib": 4.464
+      },
+      "curricula": {
+        "control": {
+          "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adaptive-rounds-20261028-160540-543908\\round-1-control-curriculum.jsonl",
+          "sha256": "623fbcacf9da9fba88b11511cac80d8416e38766888619a4a1aa824810162dd6",
+          "counts": {
+            "static_curated": 41
+          }
+        },
+        "adaptive": {
+          "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adaptive-rounds-20261028-160540-543908\\round-1-adaptive-curriculum.jsonl",
+          "sha256": "ae3ebce26b0a83fc7565666e90b8f9c52f891eb44207a1b9860b647d86c5d4fd",
+          "counts": {
+            "static_curated": 35,
+            "local_adversary": 6
+          }
+        }
+      },
+      "arms": {
+        "control": {
+          "training": {
+            "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-grpo-pilot-20261028-160548-378647",
+            "result_sha256": "994bee6a7f05dabe3c91e7a2735d2820db1fb1efec2e3a61858724a31d4f3d6d",
+            "adapter_path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-grpo-pilot-20261028-160548-378647\\adapter",
+            "adapter_sha256": "790aaa5f4f6504fa0d35534fa619674a76b6d6b8e6235759411b829fd48572a6"
+          },
+          "validation": {
+            "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261028-160928-376991",
+            "result_sha256": "9ed9e3c0478c4bc4856d49ade1147cee4177ead222dfa0a4a75d12201277c61c"
+          },
+          "adversarial_generated_test_exposures": 0,
+          "metrics": {
+            "evaluated_cases": 15,
+            "generated_tests": 60,
+            "valid_tests": 40,
+            "correct_expected": 12,
+            "bug_detecting_tests": 3,
+            "cases_detected": 2,
+            "valid_rate": 0.6666666666666666,
+            "io_accuracy": 0.2,
+            "attack_rate": 0.05,
+            "case_detection_at_4": 0.13333333333333333,
+            "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+          }
+        },
+        "adaptive": {
+          "training": {
+            "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-grpo-pilot-20261028-161000-332407",
+            "result_sha256": "5a98d5564f7a1a1d6cb08c6c6469acb3b824c1ae0ebcf0a8c02a258e9d70ba3b",
+            "adapter_path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-grpo-pilot-20261028-161000-332407\\adapter",
+            "adapter_sha256": "0f83af9dc7304932ffc12ade0931fa46f0efcfebe1f1681ed0d8eb91911de0d7"
+          },
+          "validation": {
+            "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261028-161436-353146",
+            "result_sha256": "0dd5189fddcec501ef9a8aa558ac835b1e201eb920d4fcd0ccd99f8afe5ce103"
+          },
+          "adversarial_generated_test_exposures": 28,
+          "metrics": {
+            "evaluated_cases": 15,
+            "generated_tests": 60,
+            "valid_tests": 41,
+            "correct_expected": 13,
+            "bug_detecting_tests": 4,
+            "cases_detected": 3,
+            "valid_rate": 0.6833333333333333,
+            "io_accuracy": 0.21666666666666667,
+            "attack_rate": 0.06666666666666667,
+            "case_detection_at_4": 0.2,
+            "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+          }
+        }
+      },
+      "matched_training_configuration_and_case_order": true,
+      "novel_behaviors_vs_prior_rounds": 7,
+      "accepted_code_examples": [
+        {
+          "buggy_code": "def solve(s):\n    s = list(s)\n    n = len(s)\n    total_flips = 0\n    for i in range(n - 1, -1, -1):\n        total_flips += (1 if s[i] == '1' else 0)\n        for j in range(i + 1, n):\n            if s[j] == '1':\n                total_flips += 1\n                break\n    return total_flips\n",
+          "candidate_id": "r1-2899-05",
+          "gate": {
+            "accepted": true,
+            "behavior_sha256": "d9e68137c94ac509962ebec8f09eeef2d5a560f3d74bfb0899996e50b67ebbd0",
+            "domain_inputs": 126,
+            "passes_policy_cases": [
+              "apps-train-2899/m2"
+            ],
+            "reason": "incorrect_but_passes_current_policy",
+            "witness_for_audit_only": {
+              "gold": "{\"output\":1}",
+              "input": {
+                "s": "01"
+              },
+              "observed": "{\"output\":2}"
+            },
+            "wrong_inputs": 112
+          },
+          "round": 1,
+          "sample_source": "local_base_model",
+          "source_id": "2899"
+        },
+        {
+          "buggy_code": "def solve(s):\n    flipped = 0\n    n = len(s)\n    for i in range(n):\n        if s[i] == '1':\n            flipped += 1\n    if flipped > 0:\n        flipped += n - (flipped - (n // 2))\n    return flipped\n",
+          "candidate_id": "r1-2899-16",
+          "gate": {
+            "accepted": true,
+            "behavior_sha256": "de507f2a1eb1340be28c9a6c1bef6ec8bc7784f9138c5bd4115299ca62ee75a7",
+            "domain_inputs": 126,
+            "passes_policy_cases": [
+              "apps-train-2899/m2"
+            ],
+            "reason": "incorrect_but_passes_current_policy",
+            "witness_for_audit_only": {
+              "gold": "{\"output\":1}",
+              "input": {
+                "s": "01"
+              },
+              "observed": "{\"output\":3}"
+            },
+            "wrong_inputs": 119
+          },
+          "round": 1,
+          "sample_source": "local_base_model",
+          "source_id": "2899"
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "pool": {
+        "status": "completed",
+        "dataset_id": "apps-intro-call-v2-eb69b8869857",
+        "round": 2,
+        "probe": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261028-161513-740526",
+        "probe_predictions_sha256": "1ede49fc0c056c5efc7f9a575831ce618240da6e0366f5e30add81ec4b1187b0",
+        "parent_adapter": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-grpo-pilot-20261028-161000-332407\\adapter",
+        "parent_adapter_sha256": "0f83af9dc7304932ffc12ade0931fa46f0efcfebe1f1681ed0d8eb91911de0d7",
+        "eligible_problems": 12,
+        "eligible_case_slots": 16,
+        "configuration": {
+          "mode": "sample_correct_solutions_then_filter",
+          "model": "frozen original local Qwen3.5-2B",
+          "samples_per_problem": 16,
+          "max_new_tokens": 256,
+          "temperature": 1.0,
+          "top_p": 0.95,
+          "top_k": 20,
+          "seed": 42
+        },
+        "training": false,
+        "model_test_evaluation": false,
+        "sampled_candidates": 192,
+        "accepted_candidates": 14,
+        "gate_counts": {
+          "unsupported_code": 98,
+          "correct_on_declared_domain": 40,
+          "incorrect_but_passes_current_policy": 14,
+          "caught_by_current_policy": 23,
+          "wrong_on_every_input": 7,
+          "duplicate_behavior": 5,
+          "truncated": 5
+        },
+        "elapsed_seconds": 367.976,
+        "pool_sha256": "5db8c9ea9239ba92fd4654e55c53b158974ec22fc2265ed64b5550c0ff008b53",
+        "peak_vram_gib": 4.496
+      },
+      "curricula": {
+        "control": {
+          "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adaptive-rounds-20261028-160540-543908\\round-2-control-curriculum.jsonl",
+          "sha256": "623fbcacf9da9fba88b11511cac80d8416e38766888619a4a1aa824810162dd6",
+          "counts": {
+            "static_curated": 41
+          }
+        },
+        "adaptive": {
+          "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adaptive-rounds-20261028-160540-543908\\round-2-adaptive-curriculum.jsonl",
+          "sha256": "a84aabcf19faf25d4b9c56a5b7ac2208687f4649f8a456d7b5ea8e7158c62e98",
+          "counts": {
+            "static_curated": 32,
+            "local_adversary": 9
+          }
+        }
+      },
+      "arms": {
+        "control": {
+          "training": {
+            "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-grpo-pilot-20261028-162317-284683",
+            "result_sha256": "2d66385cea2b0ba54c65894d36e08d4379668f781bab90dcc2b009939b15dac1",
+            "adapter_path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-grpo-pilot-20261028-162317-284683\\adapter",
+            "adapter_sha256": "cf9c121a3260b516de070b14bd1ef7e4e134097eb443156a64693ab0e6b9f8da"
+          },
+          "validation": {
+            "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261028-162847-767818",
+            "result_sha256": "a6a0cba2acf2a04bf16c15770901dd6859325f8b98155a6047098fe1996932b4"
+          },
+          "adversarial_generated_test_exposures": 0,
+          "metrics": {
+            "evaluated_cases": 15,
+            "generated_tests": 60,
+            "valid_tests": 42,
+            "correct_expected": 13,
+            "bug_detecting_tests": 3,
+            "cases_detected": 2,
+            "valid_rate": 0.7,
+            "io_accuracy": 0.21666666666666667,
+            "attack_rate": 0.05,
+            "case_detection_at_4": 0.13333333333333333,
+            "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+          }
+        },
+        "adaptive": {
+          "training": {
+            "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-grpo-pilot-20261028-162924-967971",
+            "result_sha256": "59ff3e5332a0824159e372bef7bb3efd662bed28c48896bb1b1111cce1dad9f0",
+            "adapter_path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-grpo-pilot-20261028-162924-967971\\adapter",
+            "adapter_sha256": "3f2e8bd87a055f07a485e4970f8ce4828ac20ac1033a9e07115296ce16312d88"
+          },
+          "validation": {
+            "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261028-163412-580046",
+            "result_sha256": "e84e76d861c099438c0f59360b97d9afad9df4a4e05a71090bd00d5ca636b7f6"
+          },
+          "adversarial_generated_test_exposures": 44,
+          "metrics": {
+            "evaluated_cases": 15,
+            "generated_tests": 60,
+            "valid_tests": 41,
+            "correct_expected": 12,
+            "bug_detecting_tests": 3,
+            "cases_detected": 2,
+            "valid_rate": 0.6833333333333333,
+            "io_accuracy": 0.2,
+            "attack_rate": 0.05,
+            "case_detection_at_4": 0.13333333333333333,
+            "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+          }
+        }
+      },
+      "matched_training_configuration_and_case_order": true,
+      "novel_behaviors_vs_prior_rounds": 13,
+      "accepted_code_examples": [
+        {
+          "buggy_code": "def solve(numbers):\n    if len(numbers) < 2:\n        return 0\n    sorted_numbers = sorted(list(set(numbers)))\n    largest = sorted_numbers[0] + sorted_numbers[1]\n    if len(sorted_numbers) < 3:\n        return largest\n    current_max = largest\n    for num in sorted_numbers[2:]:\n        potential = current_max + num\n        if potential > current_max:\n            current_max = potential\n    return current_max\n",
+          "candidate_id": "r2-2831-01",
+          "gate": {
+            "accepted": true,
+            "behavior_sha256": "4bf7cb7239a23f7b0d56b5a7be90be10cdef64099ee3fb81ecfea5a55960967d",
+            "domain_inputs": 336,
+            "passes_policy_cases": [
+              "apps-train-2831/m3"
+            ],
+            "reason": "incorrect_but_passes_current_policy",
+            "witness_for_audit_only": {
+              "gold": "{\"output\":-4}",
+              "input": {
+                "numbers": [
+                  -2,
+                  -2
+                ]
+              },
+              "observed": "{\"exception\":\"IndexError\"}"
+            },
+            "wrong_inputs": 252
+          },
+          "round": 2,
+          "sample_source": "local_base_model",
+          "source_id": "2831"
+        },
+        {
+          "buggy_code": "def solve(numbers):\n    result = 0\n    for i in range(len(numbers)):\n        for j in range(i + 1, len(numbers)):\n            current = numbers[i] + numbers[j]\n            if current > result:\n                result = current\n    return result\n",
+          "candidate_id": "r2-2831-09",
+          "gate": {
+            "accepted": true,
+            "behavior_sha256": "3c1594015866b2f8516a470d915fbfb483ec4ea8e63c2b97e75574625f94f34a",
+            "domain_inputs": 336,
+            "passes_policy_cases": [
+              "apps-train-2831/m3"
+            ],
+            "reason": "incorrect_but_passes_current_policy",
+            "witness_for_audit_only": {
+              "gold": "{\"output\":-4}",
+              "input": {
+                "numbers": [
+                  -2,
+                  -2
+                ]
+              },
+              "observed": "{\"output\":0}"
+            },
+            "wrong_inputs": 21
+          },
+          "round": 2,
+          "sample_source": "local_base_model",
+          "source_id": "2831"
+        }
+      ]
+    }
+  ],
+  "model_test_evaluation": false,
+  "adversarial_generated_test_exposures": 72,
+  "limits": "Five Validation source problems, 15 mutated programs, one seed; finite call-based input domains. No official APPS Test evaluation. Matched optimizer-step and generation budgets, not matched total wall-clock or code-sampling compute.",
+  "distinct_accepted_behaviors_across_rounds": 20
+}

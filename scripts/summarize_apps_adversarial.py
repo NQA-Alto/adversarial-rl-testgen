@@ -43,6 +43,7 @@ def summarize(folder):
             problem_rows.append([key, source_id, len(samples), sum(sample["valid_format"] for sample in samples),
                                  sum(sample["correct_expected"] for sample in samples), sum(sample["bug_detected"] for sample in samples),
                                  sum(any(sample["bug_detected"] for sample in prediction["samples"]) for prediction in predictions)])
+    seen_behaviors = set()
     for stage in result["rounds"]:
         pool = Path(stage["pool"])
         audit_pool(pool)
@@ -50,9 +51,28 @@ def summarize(folder):
         for arm in stage["arms"].values():
             audit(Path(arm["training"]["path"]))
             audit(Path(arm["validation"]["path"]))
+            for key in ("training", "validation"):
+                entry = arm[key]
+                if digest(Path(entry["path"]) / "result.json") != entry["result_sha256"]:
+                    raise ValueError("Recorded run hash changed")
+        train = {key: read(Path(arm["training"]["path"]) / "result.json") for key, arm in stage["arms"].items()}
+        orders = {key: [event["case_id"] for event in rows(Path(arm["training"]["path"]) / "rollouts.jsonl")]
+                  for key, arm in stage["arms"].items()}
+        if train["control"]["configuration"] != train["adaptive"]["configuration"] or orders["control"] != orders["adaptive"]:
+            raise ValueError("Training configurations or case order differ between arms")
+        for key, arm in stage["arms"].items():
+            expected_parent = result["plan"]["parent_adapter_sha256"] if stage["round"] == 1 else result["rounds"][stage["round"] - 2]["arms"][key]["training"]["adapter_sha256"]
+            if train[key]["parent_adapter_sha256"] != expected_parent or not train[key]["parent_adapter_exact_match"]:
+                raise ValueError("Parent lineage mismatch")
+        stage["matched_training_configuration_and_case_order"] = True
         accepted = rows(pool / "adversarial-cases.jsonl")
+        behaviors = {(row["source_id"], row["gate"]["behavior_sha256"]) for row in accepted}
         summary["rounds"].append({"round": stage["round"], "pool": reviewed, "curricula": stage["curricula"],
-                                  "arms": stage["arms"], "accepted_code_examples": accepted[:2]})
+                                  "arms": stage["arms"], "matched_training_configuration_and_case_order": True,
+                                  "novel_behaviors_vs_prior_rounds": len(behaviors - seen_behaviors),
+                                  "accepted_code_examples": accepted[:2]})
+        seen_behaviors.update(behaviors)
+    summary["distinct_accepted_behaviors_across_rounds"] = len(seen_behaviors)
     output = PROJECT / "results/apps-adversarial"
     output.mkdir(exist_ok=True, parents=True)
     write(output / "metrics.json", summary)
@@ -81,6 +101,7 @@ def summarize(folder):
     control = summary["runs"]["control"]["result"]["metrics"]
     adaptive = summary["runs"]["adaptive"]["result"]["metrics"]
     lines += ["", f'Nhánh đối kháng phát hiện {adaptive["cases_detected"]}/15 code, đối chứng cố định phát hiện {control["cases_detected"]}/15. Test bắt lỗi lần lượt {adaptive["bug_detecting_tests"]}/60 và {control["bug_detecting_tests"]}/60.', "",
+              f'Tổng cộng {summary["distinct_accepted_behaviors_across_rounds"]} hành vi code đối kháng khác nhau giữa các vòng; số code qua bộ lọc trong bảng có thể gồm hành vi lặp lại từ vòng trước.', "",
               "Đối kháng ở đây có nghĩa là code vượt qua những test đúng mà policy hiện tại sinh được, đồng thời còn nhân chứng sai trong miền input đã khai báo. Điều đó không chứng minh code khó hơn với mọi model hoặc sai ở ít input hơn. Code không được hỗ trợ, code đúng toàn miền, code sai toàn miền, code trùng hành vi và code bị cắt đều bị loại.", "",
               "Hai nhánh khớp số bước học và ngân sách sinh test; nhánh đối kháng tốn thêm chi phí probe và sinh/lọc code. Không tuyên bố tổng chi phí tính toán bằng nhau.", "",
               "Các lượt GRPO cố định 96 bước một mạch trước đây vẫn được giữ trong results/apps-sft-grpo; không dùng chúng thay cho đối chứng hai vòng trong bảng này.", "",

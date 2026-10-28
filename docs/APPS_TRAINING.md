@@ -31,3 +31,13 @@ Trong log, tắt Tự cập nhật log để đọc, hoặc dùng Đầu log/Cu�
 ## Giới hạn
 
 Đây là tập con APPS dạng gọi hàm với code đột biến, không phải benchmark đầy đủ. Validation gồm năm bài nguồn và 15 code lỗi; một seed chưa đủ kết luận ổn định. Test phát triển và Test chính thức chưa được model đánh giá. Vòng sinh curriculum bằng adversary trên APPS chưa nằm trong lượt SFT + GRPO cố định này.
+
+## Curriculum đối kháng theo vòng
+
+Đã bổ sung `apps_adversary.py` và `apps_adversarial_round.py`. Model sinh code là Qwen local gốc, không cập nhật trọng số. Model sinh test bắt đầu từ SFT và học adapter bằng GRPO.
+
+Mỗi vòng probe policy trên Train; chỉ những code đã bị bắt lỗi mới được xét thay. Code sinh thêm phải sai ở một số input trong miền khai báo, đúng ở một số input khác, vượt qua các test đúng hiện tại và khác hành vi các mutant ban đầu. Code ngoài phần Python được hỗ trợ bị loại. Nhân chứng lỗi chỉ phục vụ audit.
+
+Hai vòng, mỗi vòng 48 bước/nhánh. Nhánh đối chứng dùng code cố định, cũng khởi tạo lại optimizer hai lần. Nhánh đối kháng dùng curriculum đóng băng ở đầu từng vòng. Validation và ngân sách sinh test giữ nguyên; Test chưa được model đánh giá. Đây là đối chứng khớp ngân sách học, không khớp tổng chi phí vì nhánh đối kháng cần sinh và lọc code.
+
+Xem [kết quả hai vòng](../results/apps-adversarial) và [phạm vi so với ATGen](ATGEN_ALIGNMENT.md). Mục kết quả cố định phía trên vẫn mô tả lượt chạy trước đó.
