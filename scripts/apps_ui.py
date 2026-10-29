@@ -135,7 +135,7 @@ def gpu_busy(ignore_pid=None):
             if process.pid in ignored:
                 continue
             if (process.info["name"] or "").lower().startswith("python") and any(
-                    Path(str(value)).name in ("apps_model_runner.py", "apps_sft.py", "apps_round.py", "apps_adversary.py", "apps_adversarial_round.py", "apps_reasoning_probe.py", "apps_prompt_trial.py", "apps_sft_budget_trial.py", "apps_sft_paired_control.py", "apps_reward_trial.py", "apps_reward_seed_probe.py", "apps_adversarial_review.py", "apps_lora_trial.py") for value in process.info["cmdline"] or []):
+                    Path(str(value)).name in ("apps_model_runner.py", "apps_sft.py", "apps_round.py", "apps_adversary.py", "apps_adversarial_round.py", "apps_reasoning_probe.py", "apps_prompt_trial.py", "apps_sft_budget_trial.py", "apps_sft_paired_control.py", "apps_reward_trial.py", "apps_reward_seed_probe.py", "apps_adversarial_review.py", "apps_lora_trial.py", "apps_order_trial.py") for value in process.info["cmdline"] or []):
                 return True
         except (psutil.AccessDenied, psutil.NoSuchProcess):
             pass

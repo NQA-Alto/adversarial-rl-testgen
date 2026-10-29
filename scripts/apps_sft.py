@@ -11,7 +11,18 @@ from apps_model_runner import freeze_sources, load_model, render_prompt, run_fol
 from restricted_python import RestrictedFunction
 
 
-def build_examples(seed=42):
+def target_text(inputs, expected, order="sorted-v1"):
+    text = canonical({"input": inputs, "expected": expected})
+    if order == "sorted-v1":
+        return text
+    if order != "input-first-v1":
+        raise ValueError("Unknown supervised target order")
+    value = json.loads(text)
+    return json.dumps({"input": value["input"], "expected": value["expected"]}, ensure_ascii=False,
+                      separators=(",", ":"), allow_nan=False)
+
+
+def build_examples(seed=42, target_order="sorted-v1"):
     cases, manifest = load_cases("train")
     rng = random.Random(seed)
     rows = []
@@ -20,7 +31,7 @@ def build_examples(seed=42):
         buggy = RestrictedFunction(case["buggy_code"], case["arguments"])
         groups = {True: [], False: []}
         for inputs in all_inputs(case):
-            target = canonical({"input": inputs, "expected": reference(**inputs)})
+            target = target_text(inputs, reference(**inputs), target_order)
             checked = score(target, True, case, reference, buggy)
             if not checked["valid_format"] or not checked["correct_expected"]:
                 raise RuntimeError("Invalid supervised target")
@@ -34,13 +45,13 @@ def build_examples(seed=42):
     return rows, cases, manifest
 
 
-def train(folder, steps, seed, prompt_version, checkpoint_steps=(), reference_adapter=None, lora_profile="attention-qv-v1"):
+def train(folder, steps, seed, prompt_version, checkpoint_steps=(), reference_adapter=None, lora_profile="attention-qv-v1", target_order="sorted-v1"):
     import torch
     from peft.utils import get_peft_model_state_dict
     from check_lora_update import completion_loss
     from train_static_grpo import save_adapter_checked
 
-    rows, cases, manifest = build_examples(seed)
+    rows, cases, manifest = build_examples(seed, target_order)
     source = freeze_sources(folder)
     source["apps_sft.py"] = digest(Path(__file__))
     __import__("shutil").copy2(__file__, folder / "source/apps_sft.py")
@@ -50,6 +61,8 @@ def train(folder, steps, seed, prompt_version, checkpoint_steps=(), reference_ad
               "prompt_version": prompt_version, "max_total_tokens": 1664, "max_target_tokens": 96}
     if lora_profile != "attention-qv-v1":
         config["lora_profile"] = lora_profile
+    if target_order != "sorted-v1":
+        config["target_order"] = target_order
     if checkpoint_steps:
         config["checkpoint_steps"] = sorted(checkpoint_steps)
     result = {"status": "started", "method": "SFT_NOT_RL", "source_hashes": source, "configuration": config,
@@ -164,6 +177,7 @@ if __name__ == "__main__":
     parser.add_argument("--reference-adapter", type=Path)
     from apps_lora import PROFILES
     parser.add_argument("--lora-profile", choices=tuple(PROFILES), default="attention-qv-v1")
+    parser.add_argument("--target-order", choices=("sorted-v1", "input-first-v1"), default="sorted-v1")
     args = parser.parse_args()
     if not 1 <= args.steps <= 256 or any(not 1 <= step <= args.steps for step in args.checkpoint_steps):
         parser.error("SFT steps must be 1..256 and checkpoint steps must be within that budget")
@@ -175,7 +189,7 @@ if __name__ == "__main__":
     folder = run_folder("sft-v2")
     print("EVIDENCE:", folder, flush=True)
     try:
-        train(folder, args.steps, 42, "apps-call-v2", args.checkpoint_steps, args.reference_adapter, args.lora_profile)
+        train(folder, args.steps, 42, "apps-call-v2", args.checkpoint_steps, args.reference_adapter, args.lora_profile, args.target_order)
     except Exception as error:
         result = read(folder / "result.json") if (folder / "result.json").exists() else {}
         result.update(status="failed", error=repr(error))
