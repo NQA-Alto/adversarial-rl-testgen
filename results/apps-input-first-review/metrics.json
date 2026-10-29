@@ -1,0 +1,428 @@
+{
+  "folder": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adversarial-review-20261030-000103-918808",
+  "plan": {
+    "recorded_at": "2026-10-29T17:01:04.042719+00:00",
+    "purpose": "Descriptive sampling robustness of the actual final adversarial and matched static checkpoints",
+    "dataset_id": "apps-intro-call-v2-eb69b8869857",
+    "generation_seeds": [
+      42,
+      43,
+      44
+    ],
+    "variants": {
+      "base": {
+        "adapter": null,
+        "adapter_sha256": null,
+        "reuse": {
+          "42": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261028-145025-399168",
+          "43": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135547-788409",
+          "44": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135851-953625"
+        }
+      },
+      "sft": {
+        "adapter": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-sft-v2-20261029-143238-169569\\adapter",
+        "adapter_sha256": "403277126cd42c8be75ee52403e2861ad4defeebca47f2cb5853d1a699f44cab",
+        "reuse": {
+          "42": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150134-946011",
+          "43": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150415-895699",
+          "44": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+        }
+      },
+      "control": {
+        "adapter": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-grpo-pilot-20261029-153745-897502\\adapter",
+        "adapter_sha256": "fcaf58eeeb738e05b2cae6cbe31bfc8b167282e84c9b5d5b05bddaf0ad4e6950",
+        "reuse": {
+          "42": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154226-616412"
+        }
+      },
+      "adaptive": {
+        "adapter": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-grpo-pilot-20261029-154304-947738\\adapter",
+        "adapter_sha256": "b6a2da08635e850dfa3d8a788ea5db53d41e4fe39720aa437c5b1efd316e8a89",
+        "reuse": {
+          "42": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154738-578998"
+        }
+      }
+    },
+    "prompt_version": "apps-call-v2",
+    "split": "validation",
+    "tests_per_case": 4,
+    "max_new_tokens": 96,
+    "selection": "Report all 12 variant/seed combinations. No retraining, checkpoint replacement or favorable seed selection.",
+    "timing": "Final seed42 results known; supplementary seeds planned before their new control/adaptive evaluations. Conditional research follow-up, when used, was documented before target-order Validation.",
+    "reused_evaluations": 8,
+    "research_comparison": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adaptive-rounds-20261029-151720-421870",
+    "comparison_result_sha256": "274d2422edb66a78d131d8c746e079732e48394d82a581e54249fc2837aac950",
+    "summary_output": "D:\\DA\\DoAn_TTNT_De19\\adversarial-rl-testgen\\results\\apps-input-first-review",
+    "limits": "One training trajectory per method; sampling seeds are not training replicates. Five Validation problems, 15 mutant programs. Descriptive SD, not significance or confidence intervals.",
+    "source_hashes": {
+      "apps_adversarial_review.py": "2c92fd905eaf2de76eae7b97d476f118b62001ad91b81c9e8b67353c0ab98010",
+      "apps_model_runner.py": "f4d9277be033a5a2330a6b21397ea6b5d64677765d3a9058f957c0c3ed878077",
+      "apps_core.py": "8852daf15c5a8e021a1594d44704a61c8bd2ac675c38565eea175f3c1c79cd33",
+      "apps_profiles.py": "b63ba5a9c1e6319d34925969fd16c438efc887bbdb7c7a40c93bcbb5e35bdf93",
+      "restricted_python.py": "542fd37b7ed73225fd2105922845155615e241b246b039e7ccce7fc840967111",
+      "audit_apps_run.py": "f7ce9fb53d0a1ebf0060b5388021221b5ef10791d0e7ebf689fd0530dafe1dab",
+      "apps_round.py": "626355c0339629aa7307cec11bebbe3d137f14e80d85af24d3ad3d5ce92cd0ee",
+      "apps_adversarial_round.py": "db8b288c3bc4261f4cc0cba06eaba138f4118eb7524cd7b1c6e3a9ad99371190",
+      "apps_lora.py": "a7b149d708d39890e5dd1aa6403bf507c9af5b480be114aa5035baae49bba672"
+    },
+    "state_sha256": "6fbf0ffa6a6e1b3d805b1d5e69d1c76361496b1d203b108ba66e2ba6536df376",
+    "active_config_sha256": "f0143afbedd075c7613637941b5074670309580f28036290c7200b45ea2f94f2",
+    "adaptive_round": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adaptive-rounds-20261029-151720-421870",
+    "model_test_evaluation": false
+  },
+  "result_sha256": "f68696cc2e2f3373034e4a3dd3c6bceb7c50437db88c6d02995208033baab1b8",
+  "runs": [
+    {
+      "variant": "base",
+      "generation_seed": 42,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261028-145025-399168",
+      "reused": true,
+      "result_sha256": "bd9a7cc7f5dc6f22f940f14ea27edd2ce807b5f4e7a0441510d5296112591d07",
+      "adapter_sha256": null,
+      "metrics": {
+        "evaluated_cases": 15,
+        "generated_tests": 60,
+        "valid_tests": 35,
+        "correct_expected": 15,
+        "bug_detecting_tests": 4,
+        "cases_detected": 3,
+        "valid_rate": 0.5833333333333334,
+        "io_accuracy": 0.25,
+        "attack_rate": 0.06666666666666667,
+        "case_detection_at_4": 0.2,
+        "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+      }
+    },
+    {
+      "variant": "sft",
+      "generation_seed": 42,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150134-946011",
+      "reused": true,
+      "result_sha256": "00f46772c247f8291728ca4c977656ba9b7f01bd1eb6d2c94a661c1da4697e82",
+      "adapter_sha256": "403277126cd42c8be75ee52403e2861ad4defeebca47f2cb5853d1a699f44cab",
+      "metrics": {
+        "evaluated_cases": 15,
+        "generated_tests": 60,
+        "valid_tests": 41,
+        "correct_expected": 18,
+        "bug_detecting_tests": 6,
+        "cases_detected": 3,
+        "valid_rate": 0.6833333333333333,
+        "io_accuracy": 0.3,
+        "attack_rate": 0.1,
+        "case_detection_at_4": 0.2,
+        "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+      }
+    },
+    {
+      "variant": "control",
+      "generation_seed": 42,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154226-616412",
+      "reused": true,
+      "result_sha256": "c9fcdb44fc3ea82d509fe8d221b9faaa26a362a10ca325c4ac62a28291550dbf",
+      "adapter_sha256": "fcaf58eeeb738e05b2cae6cbe31bfc8b167282e84c9b5d5b05bddaf0ad4e6950",
+      "metrics": {
+        "evaluated_cases": 15,
+        "generated_tests": 60,
+        "valid_tests": 41,
+        "correct_expected": 19,
+        "bug_detecting_tests": 4,
+        "cases_detected": 3,
+        "valid_rate": 0.6833333333333333,
+        "io_accuracy": 0.31666666666666665,
+        "attack_rate": 0.06666666666666667,
+        "case_detection_at_4": 0.2,
+        "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+      }
+    },
+    {
+      "variant": "adaptive",
+      "generation_seed": 42,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154738-578998",
+      "reused": true,
+      "result_sha256": "2b52c1660b36036f3d9a44aca929fbbd371138e44a3a80939164cd8bc9558daf",
+      "adapter_sha256": "b6a2da08635e850dfa3d8a788ea5db53d41e4fe39720aa437c5b1efd316e8a89",
+      "metrics": {
+        "evaluated_cases": 15,
+        "generated_tests": 60,
+        "valid_tests": 41,
+        "correct_expected": 16,
+        "bug_detecting_tests": 5,
+        "cases_detected": 3,
+        "valid_rate": 0.6833333333333333,
+        "io_accuracy": 0.26666666666666666,
+        "attack_rate": 0.08333333333333333,
+        "case_detection_at_4": 0.2,
+        "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+      }
+    },
+    {
+      "variant": "base",
+      "generation_seed": 43,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135547-788409",
+      "reused": true,
+      "result_sha256": "4dfa86b8e56f6453c6a5c71cda92191b7ce5467e66e60b77b1ed4e34268fbf19",
+      "adapter_sha256": null,
+      "metrics": {
+        "evaluated_cases": 15,
+        "generated_tests": 60,
+        "valid_tests": 35,
+        "correct_expected": 17,
+        "bug_detecting_tests": 3,
+        "cases_detected": 3,
+        "valid_rate": 0.5833333333333334,
+        "io_accuracy": 0.2833333333333333,
+        "attack_rate": 0.05,
+        "case_detection_at_4": 0.2,
+        "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+      }
+    },
+    {
+      "variant": "sft",
+      "generation_seed": 43,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150415-895699",
+      "reused": true,
+      "result_sha256": "e1291dfe9426d7d25ea55a5caf621397699319a4dbaf085a4566cfe8c52b6f1b",
+      "adapter_sha256": "403277126cd42c8be75ee52403e2861ad4defeebca47f2cb5853d1a699f44cab",
+      "metrics": {
+        "evaluated_cases": 15,
+        "generated_tests": 60,
+        "valid_tests": 42,
+        "correct_expected": 22,
+        "bug_detecting_tests": 5,
+        "cases_detected": 4,
+        "valid_rate": 0.7,
+        "io_accuracy": 0.36666666666666664,
+        "attack_rate": 0.08333333333333333,
+        "case_detection_at_4": 0.26666666666666666,
+        "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+      }
+    },
+    {
+      "variant": "control",
+      "generation_seed": 43,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000104-341566",
+      "reused": false,
+      "result_sha256": "12a5561e2867fdb8d41514baf3da37636cc738ccb2a68375c91dd3a326b2ad22",
+      "adapter_sha256": "fcaf58eeeb738e05b2cae6cbe31bfc8b167282e84c9b5d5b05bddaf0ad4e6950",
+      "metrics": {
+        "evaluated_cases": 15,
+        "generated_tests": 60,
+        "valid_tests": 42,
+        "correct_expected": 22,
+        "bug_detecting_tests": 4,
+        "cases_detected": 3,
+        "valid_rate": 0.7,
+        "io_accuracy": 0.36666666666666664,
+        "attack_rate": 0.06666666666666667,
+        "case_detection_at_4": 0.2,
+        "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+      }
+    },
+    {
+      "variant": "adaptive",
+      "generation_seed": 43,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000152-699688",
+      "reused": false,
+      "result_sha256": "f4ca0a2f83d6ec4cb1201c20c06e08727c3f65c435b80dd7ded7c4b8ddbc4cbb",
+      "adapter_sha256": "b6a2da08635e850dfa3d8a788ea5db53d41e4fe39720aa437c5b1efd316e8a89",
+      "metrics": {
+        "evaluated_cases": 15,
+        "generated_tests": 60,
+        "valid_tests": 43,
+        "correct_expected": 22,
+        "bug_detecting_tests": 4,
+        "cases_detected": 3,
+        "valid_rate": 0.7166666666666667,
+        "io_accuracy": 0.36666666666666664,
+        "attack_rate": 0.06666666666666667,
+        "case_detection_at_4": 0.2,
+        "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+      }
+    },
+    {
+      "variant": "base",
+      "generation_seed": 44,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135851-953625",
+      "reused": true,
+      "result_sha256": "93b8828209ff6111956020651d51a818c592774d46fd2282faf8b72a5c47f879",
+      "adapter_sha256": null,
+      "metrics": {
+        "evaluated_cases": 15,
+        "generated_tests": 60,
+        "valid_tests": 36,
+        "correct_expected": 12,
+        "bug_detecting_tests": 4,
+        "cases_detected": 4,
+        "valid_rate": 0.6,
+        "io_accuracy": 0.2,
+        "attack_rate": 0.06666666666666667,
+        "case_detection_at_4": 0.26666666666666666,
+        "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+      }
+    },
+    {
+      "variant": "sft",
+      "generation_seed": 44,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244",
+      "reused": true,
+      "result_sha256": "012343f74b8919e23cf10f2ca5e1f809b699701d03b5f948fbb105b5e4d14555",
+      "adapter_sha256": "403277126cd42c8be75ee52403e2861ad4defeebca47f2cb5853d1a699f44cab",
+      "metrics": {
+        "evaluated_cases": 15,
+        "generated_tests": 60,
+        "valid_tests": 47,
+        "correct_expected": 17,
+        "bug_detecting_tests": 5,
+        "cases_detected": 5,
+        "valid_rate": 0.7833333333333333,
+        "io_accuracy": 0.2833333333333333,
+        "attack_rate": 0.08333333333333333,
+        "case_detection_at_4": 0.3333333333333333,
+        "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+      }
+    },
+    {
+      "variant": "control",
+      "generation_seed": 44,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000235-943522",
+      "reused": false,
+      "result_sha256": "9f1f4292bf6cfcdc0de4bbd19cd4d0e77a3a1f9446450d2c31139f6d04ea5373",
+      "adapter_sha256": "fcaf58eeeb738e05b2cae6cbe31bfc8b167282e84c9b5d5b05bddaf0ad4e6950",
+      "metrics": {
+        "evaluated_cases": 15,
+        "generated_tests": 60,
+        "valid_tests": 47,
+        "correct_expected": 20,
+        "bug_detecting_tests": 7,
+        "cases_detected": 6,
+        "valid_rate": 0.7833333333333333,
+        "io_accuracy": 0.3333333333333333,
+        "attack_rate": 0.11666666666666667,
+        "case_detection_at_4": 0.4,
+        "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+      }
+    },
+    {
+      "variant": "adaptive",
+      "generation_seed": 44,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036",
+      "reused": false,
+      "result_sha256": "f51ffcdd0783cb4c029c9eac04a92dd68f745c2f0be4c6750fa22babcbec1a0a",
+      "adapter_sha256": "b6a2da08635e850dfa3d8a788ea5db53d41e4fe39720aa437c5b1efd316e8a89",
+      "metrics": {
+        "evaluated_cases": 15,
+        "generated_tests": 60,
+        "valid_tests": 47,
+        "correct_expected": 19,
+        "bug_detecting_tests": 6,
+        "cases_detected": 6,
+        "valid_rate": 0.7833333333333333,
+        "io_accuracy": 0.31666666666666665,
+        "attack_rate": 0.1,
+        "case_detection_at_4": 0.4,
+        "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+      }
+    }
+  ],
+  "summary": {
+    "base": {
+      "valid_tests": {
+        "mean": 35.333333333333336,
+        "sample_sd": 0.5773502691896257
+      },
+      "correct_expected": {
+        "mean": 14.666666666666666,
+        "sample_sd": 2.516611478423583
+      },
+      "bug_detecting_tests": {
+        "mean": 3.6666666666666665,
+        "sample_sd": 0.5773502691896257
+      },
+      "cases_detected": {
+        "mean": 3.3333333333333335,
+        "sample_sd": 0.5773502691896257
+      }
+    },
+    "sft": {
+      "valid_tests": {
+        "mean": 43.333333333333336,
+        "sample_sd": 3.2145502536643185
+      },
+      "correct_expected": {
+        "mean": 19,
+        "sample_sd": 2.6457513110645907
+      },
+      "bug_detecting_tests": {
+        "mean": 5.333333333333333,
+        "sample_sd": 0.5773502691896257
+      },
+      "cases_detected": {
+        "mean": 4,
+        "sample_sd": 1.0
+      }
+    },
+    "control": {
+      "valid_tests": {
+        "mean": 43.333333333333336,
+        "sample_sd": 3.2145502536643185
+      },
+      "correct_expected": {
+        "mean": 20.333333333333332,
+        "sample_sd": 1.5275252316519468
+      },
+      "bug_detecting_tests": {
+        "mean": 5,
+        "sample_sd": 1.7320508075688772
+      },
+      "cases_detected": {
+        "mean": 4,
+        "sample_sd": 1.7320508075688772
+      }
+    },
+    "adaptive": {
+      "valid_tests": {
+        "mean": 43.666666666666664,
+        "sample_sd": 3.0550504633038935
+      },
+      "correct_expected": {
+        "mean": 19,
+        "sample_sd": 3.0
+      },
+      "bug_detecting_tests": {
+        "mean": 5,
+        "sample_sd": 1.0
+      },
+      "cases_detected": {
+        "mean": 4,
+        "sample_sd": 1.7320508075688772
+      }
+    }
+  },
+  "adaptive_minus_control": [
+    {
+      "seed": 42,
+      "valid_tests": 0,
+      "correct_expected": -3,
+      "bug_detecting_tests": 1,
+      "cases_detected": 0
+    },
+    {
+      "seed": 43,
+      "valid_tests": 1,
+      "correct_expected": 0,
+      "bug_detecting_tests": 0,
+      "cases_detected": 0
+    },
+    {
+      "seed": 44,
+      "valid_tests": 0,
+      "correct_expected": -1,
+      "bug_detecting_tests": -1,
+      "cases_detected": 0
+    }
+  ],
+  "training_seeds": 1,
+  "generation_seeds": 3,
+  "model_test_evaluation": false
+}

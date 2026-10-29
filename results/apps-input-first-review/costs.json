@@ -1,0 +1,150 @@
+{
+  "rows": [
+    {
+      "stage": "SFT64 dùng chung",
+      "arm": "shared",
+      "kind": "sft",
+      "seconds": 184.549,
+      "peak_pytorch_allocated_gib": 4.362,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-sft-v2-20261029-143238-169569",
+      "result_sha256": "1b42e2d2be9b48ab765d9e4565ddb36b9a7ba56727fa423b5f9c94c32aeecb26",
+      "measurement": "training_seconds"
+    },
+    {
+      "stage": "Probe Train vòng 1",
+      "arm": "adaptive",
+      "kind": "probe",
+      "seconds": 85.922,
+      "peak_pytorch_allocated_gib": 4.523,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-143558-352883",
+      "result_sha256": "a0684feffa574ecce66565f0547a074163c724f996d2acc7ed1031533c076ce3",
+      "measurement": "elapsed_seconds"
+    },
+    {
+      "stage": "Sinh và lọc code vòng 1",
+      "arm": "adaptive",
+      "kind": "code_generation",
+      "seconds": 379.261,
+      "peak_pytorch_allocated_gib": 4.489,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adversary-20261029-150939-938850",
+      "result_sha256": "9c1f5fec6b81ed71f4956bcff0ff813797ef4d53c034fbb77ce5fe1fff9fe2a1",
+      "measurement": "elapsed_seconds"
+    },
+    {
+      "stage": "GRPO vòng 1",
+      "arm": "control",
+      "kind": "grpo",
+      "seconds": 301.9021,
+      "peak_pytorch_allocated_gib": 4.8,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-grpo-pilot-20261029-151732-864639",
+      "result_sha256": "ce82ae57b0c12467560b8e07025ef36a21cb13082fcc372b89a041f86fd93970",
+      "measurement": "Trainer train_runtime"
+    },
+    {
+      "stage": "Validation vòng 1",
+      "arm": "control",
+      "kind": "evaluation",
+      "seconds": 30.231,
+      "peak_pytorch_allocated_gib": 4.494,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-152250-451718",
+      "result_sha256": "f25fcf4a42879cc5bb21c7857b34cefef7de0ce6a8033ebb120f1823b5a5e646",
+      "measurement": "elapsed_seconds"
+    },
+    {
+      "stage": "GRPO vòng 1",
+      "arm": "adaptive",
+      "kind": "grpo",
+      "seconds": 325.8434,
+      "peak_pytorch_allocated_gib": 4.792,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-grpo-pilot-20261029-152340-897020",
+      "result_sha256": "9c279ba3477bb2e4026c1facc9562d352af57cc668b91019a011d46cd0b22b65",
+      "measurement": "Trainer train_runtime"
+    },
+    {
+      "stage": "Validation vòng 1",
+      "arm": "adaptive",
+      "kind": "evaluation",
+      "seconds": 29.783,
+      "peak_pytorch_allocated_gib": 4.494,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-152932-159407",
+      "result_sha256": "ad3a2b555dd8c63d272d48c4613095997c3fa8a9c27101ab8bd65e64308fcb12",
+      "measurement": "elapsed_seconds"
+    },
+    {
+      "stage": "Probe Train vòng 2",
+      "arm": "adaptive",
+      "kind": "probe",
+      "seconds": 61.231,
+      "peak_pytorch_allocated_gib": 4.523,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-153021-855677",
+      "result_sha256": "c282c148ac819c2deeb527b296fff20c0da673762942ac7bdd16b5045d5fa218",
+      "measurement": "elapsed_seconds"
+    },
+    {
+      "stage": "Sinh và lọc code vòng 2",
+      "arm": "adaptive",
+      "kind": "code_generation",
+      "seconds": 350.58,
+      "peak_pytorch_allocated_gib": 4.464,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adversary-20261029-153135-835430",
+      "result_sha256": "777f3cc7c17717612cc956b900a370fad56f68866087f40d5c75bd37bf59b802",
+      "measurement": "elapsed_seconds"
+    },
+    {
+      "stage": "GRPO vòng 2",
+      "arm": "control",
+      "kind": "grpo",
+      "seconds": 263.8813,
+      "peak_pytorch_allocated_gib": 4.8,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-grpo-pilot-20261029-153745-897502",
+      "result_sha256": "423f48c637c5ebae0597973ebfe12147452e5704d7761c11d2ae7c1ca98427e8",
+      "measurement": "Trainer train_runtime"
+    },
+    {
+      "stage": "Validation vòng 2",
+      "arm": "control",
+      "kind": "evaluation",
+      "seconds": 21.332,
+      "peak_pytorch_allocated_gib": 4.494,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154226-616412",
+      "result_sha256": "c9fcdb44fc3ea82d509fe8d221b9faaa26a362a10ca325c4ac62a28291550dbf",
+      "measurement": "elapsed_seconds"
+    },
+    {
+      "stage": "GRPO vòng 2",
+      "arm": "adaptive",
+      "kind": "grpo",
+      "seconds": 256.0605,
+      "peak_pytorch_allocated_gib": 4.836,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-grpo-pilot-20261029-154304-947738",
+      "result_sha256": "9e32231c246d05ff25a79ed8ea6a22a3aba672975fc2a2ef5ca98f0a4357036e",
+      "measurement": "Trainer train_runtime"
+    },
+    {
+      "stage": "Validation vòng 2",
+      "arm": "adaptive",
+      "kind": "evaluation",
+      "seconds": 20.213,
+      "peak_pytorch_allocated_gib": 4.494,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154738-578998",
+      "result_sha256": "2b52c1660b36036f3d9a44aca929fbbd371138e44a3a80939164cd8bc9558daf",
+      "measurement": "elapsed_seconds"
+    }
+  ],
+  "totals": {
+    "control": {
+      "grpo_seconds": 565.7834,
+      "adaptive_data_seconds": 0,
+      "validation_seconds": 51.563,
+      "max_recorded_allocated_gib": 4.8
+    },
+    "adaptive": {
+      "grpo_seconds": 581.9039,
+      "adaptive_data_seconds": 876.994,
+      "validation_seconds": 49.996,
+      "max_recorded_allocated_gib": 4.836
+    }
+  },
+  "shared_sft_seconds": 184.549,
+  "limits": "Recorded phase runtimes, not total end-to-end or GPU kernel time; model loading, audits, orchestration and gaps are not fully included. Allocated PyTorch VRAM is not total device memory. Same RL budget, unequal total compute."
+}

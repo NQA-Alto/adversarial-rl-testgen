@@ -1,0 +1,5634 @@
+[
+  {
+    "variant": "grpo96",
+    "generation_seed": 42,
+    "case_id": "apps-train-2834/m1",
+    "sample_index": 1,
+    "input": {
+      "p": [
+        2,
+        0
+      ],
+      "q": [
+        0,
+        0
+      ]
+    },
+    "model_expected": [
+      4,
+      0
+    ],
+    "reference_expected": [
+      -2,
+      0
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150214-438503"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 42,
+    "case_id": "apps-train-2834/m3",
+    "sample_index": 0,
+    "input": {
+      "p": [
+        0,
+        2
+      ],
+      "q": [
+        -1,
+        2
+      ]
+    },
+    "model_expected": [
+      -2,
+      0
+    ],
+    "reference_expected": [
+      -2,
+      2
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150214-438503"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 42,
+    "case_id": "apps-train-2834/m3",
+    "sample_index": 1,
+    "input": {
+      "p": [
+        2,
+        0
+      ],
+      "q": [
+        0,
+        2
+      ]
+    },
+    "model_expected": [
+      4,
+      0
+    ],
+    "reference_expected": [
+      -2,
+      4
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150214-438503"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 42,
+    "case_id": "apps-train-2834/m3",
+    "sample_index": 3,
+    "input": {
+      "p": [
+        -1,
+        2
+      ],
+      "q": [
+        0,
+        2
+      ]
+    },
+    "model_expected": [
+      1,
+      4
+    ],
+    "reference_expected": [
+      1,
+      2
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150214-438503"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 0,
+    "input": {
+      "m": 3,
+      "n": 2
+    },
+    "model_expected": 2,
+    "reference_expected": 3,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150214-438503"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 1,
+    "input": {
+      "m": 5,
+      "n": 7
+    },
+    "model_expected": 10,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150214-438503"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 2,
+    "input": {
+      "m": 7,
+      "n": 4
+    },
+    "model_expected": 4,
+    "reference_expected": 7,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150214-438503"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 3,
+    "input": {
+      "m": 7,
+      "n": 10
+    },
+    "model_expected": 14,
+    "reference_expected": 7,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150214-438503"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 0,
+    "input": {
+      "m": 5,
+      "n": 4
+    },
+    "model_expected": 3,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150214-438503"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 1,
+    "input": {
+      "m": 3,
+      "n": 5
+    },
+    "model_expected": 4,
+    "reference_expected": 6,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150214-438503"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 2,
+    "input": {
+      "m": 8,
+      "n": 3
+    },
+    "model_expected": 3,
+    "reference_expected": 0,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150214-438503"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 3,
+    "input": {
+      "m": 5,
+      "n": 6
+    },
+    "model_expected": 6,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150214-438503"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 42,
+    "case_id": "apps-train-2968/m1",
+    "sample_index": 3,
+    "input": {
+      "s": "bb"
+    },
+    "model_expected": "b",
+    "reference_expected": "bb",
+    "equals_buggy_output": true,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150214-438503"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 42,
+    "case_id": "apps-train-2968/m2",
+    "sample_index": 0,
+    "input": {
+      "s": "ba"
+    },
+    "model_expected": "a",
+    "reference_expected": "ba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150214-438503"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 42,
+    "case_id": "apps-train-2968/m2",
+    "sample_index": 3,
+    "input": {
+      "s": "ba"
+    },
+    "model_expected": "a",
+    "reference_expected": "ba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150214-438503"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 42,
+    "case_id": "apps-train-2968/m3",
+    "sample_index": 3,
+    "input": {
+      "s": "bA"
+    },
+    "model_expected": "b",
+    "reference_expected": "bA",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150214-438503"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 0,
+    "input": {
+      "text": "a "
+    },
+    "model_expected": "ab ",
+    "reference_expected": "a ",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150214-438503"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 3,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "ba",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150214-438503"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m2",
+    "sample_index": 0,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "b a",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150214-438503"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 0,
+    "input": {
+      "text": "a "
+    },
+    "model_expected": "ax",
+    "reference_expected": "a ",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150214-438503"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 1,
+    "input": {
+      "text": "bb "
+    },
+    "model_expected": "bbb",
+    "reference_expected": "b b",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150214-438503"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 2,
+    "input": {
+      "text": "aa"
+    },
+    "model_expected": "aab",
+    "reference_expected": "aa",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150214-438503"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 43,
+    "case_id": "apps-train-2834/m3",
+    "sample_index": 0,
+    "input": {
+      "p": [
+        2,
+        -1
+      ],
+      "q": [
+        0,
+        2
+      ]
+    },
+    "model_expected": [
+      -2,
+      -3
+    ],
+    "reference_expected": [
+      -2,
+      5
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150450-904222"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 43,
+    "case_id": "apps-train-2868/m1",
+    "sample_index": 1,
+    "input": {
+      "arr": [
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    "model_expected": false,
+    "reference_expected": true,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150450-904222"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 43,
+    "case_id": "apps-train-2868/m2",
+    "sample_index": 2,
+    "input": {
+      "arr": [
+        0,
+        0,
+        3
+      ]
+    },
+    "model_expected": true,
+    "reference_expected": false,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150450-904222"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 1,
+    "input": {
+      "m": 3,
+      "n": 1
+    },
+    "model_expected": 1,
+    "reference_expected": 0,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150450-904222"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 2,
+    "input": {
+      "m": 5,
+      "n": 2
+    },
+    "model_expected": 2,
+    "reference_expected": 0,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150450-904222"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 1,
+    "input": {
+      "m": 5,
+      "n": 2
+    },
+    "model_expected": 2,
+    "reference_expected": 0,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150450-904222"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 2,
+    "input": {
+      "m": 6,
+      "n": 8
+    },
+    "model_expected": 12,
+    "reference_expected": 6,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150450-904222"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 3,
+    "input": {
+      "m": 5,
+      "n": 7
+    },
+    "model_expected": 8,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150450-904222"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 1,
+    "input": {
+      "m": 3,
+      "n": 1
+    },
+    "model_expected": 3,
+    "reference_expected": 0,
+    "equals_buggy_output": true,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150450-904222"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 2,
+    "input": {
+      "m": 5,
+      "n": 7
+    },
+    "model_expected": 8,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150450-904222"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m1",
+    "sample_index": 0,
+    "input": {
+      "s": "ba"
+    },
+    "model_expected": "a",
+    "reference_expected": "ba",
+    "equals_buggy_output": true,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150450-904222"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m1",
+    "sample_index": 1,
+    "input": {
+      "s": "ba"
+    },
+    "model_expected": "a",
+    "reference_expected": "ba",
+    "equals_buggy_output": true,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150450-904222"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m2",
+    "sample_index": 1,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "ba",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150450-904222"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m2",
+    "sample_index": 3,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "b",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150450-904222"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m3",
+    "sample_index": 0,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "ba",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150450-904222"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m3",
+    "sample_index": 3,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "A",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150450-904222"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 43,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 1,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "aa",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150450-904222"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 43,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 2,
+    "input": {
+      "text": "ba"
+    },
+    "model_expected": "bba",
+    "reference_expected": "ba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150450-904222"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 43,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 0,
+    "input": {
+      "text": "ab "
+    },
+    "model_expected": "baab",
+    "reference_expected": "a b",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150450-904222"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 43,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 2,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "ba",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150450-904222"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 43,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 3,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "ba",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150450-904222"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 44,
+    "case_id": "apps-train-2834/m1",
+    "sample_index": 1,
+    "input": {
+      "p": [
+        -1,
+        2
+      ],
+      "q": [
+        2,
+        0
+      ]
+    },
+    "model_expected": [
+      -5,
+      -2
+    ],
+    "reference_expected": [
+      5,
+      -2
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150715-483136"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 44,
+    "case_id": "apps-train-2834/m1",
+    "sample_index": 2,
+    "input": {
+      "p": [
+        0,
+        2
+      ],
+      "q": [
+        0,
+        0
+      ]
+    },
+    "model_expected": [
+      2,
+      2
+    ],
+    "reference_expected": [
+      0,
+      -2
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150715-483136"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 44,
+    "case_id": "apps-train-2834/m2",
+    "sample_index": 1,
+    "input": {
+      "p": [
+        -1,
+        2
+      ],
+      "q": [
+        2,
+        -1
+      ]
+    },
+    "model_expected": [
+      -3,
+      -5
+    ],
+    "reference_expected": [
+      5,
+      -4
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150715-483136"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 44,
+    "case_id": "apps-train-2834/m2",
+    "sample_index": 2,
+    "input": {
+      "p": [
+        2,
+        0
+      ],
+      "q": [
+        0,
+        2
+      ]
+    },
+    "model_expected": [
+      4,
+      4
+    ],
+    "reference_expected": [
+      -2,
+      4
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150715-483136"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 44,
+    "case_id": "apps-train-2834/m3",
+    "sample_index": 0,
+    "input": {
+      "p": [
+        0,
+        2
+      ],
+      "q": [
+        -1,
+        0
+      ]
+    },
+    "model_expected": [
+      1,
+      2
+    ],
+    "reference_expected": [
+      -2,
+      -2
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150715-483136"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 44,
+    "case_id": "apps-train-2868/m1",
+    "sample_index": 2,
+    "input": {
+      "arr": [
+        3,
+        -2,
+        3
+      ]
+    },
+    "model_expected": true,
+    "reference_expected": false,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150715-483136"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 44,
+    "case_id": "apps-train-2868/m2",
+    "sample_index": 0,
+    "input": {
+      "arr": [
+        0,
+        1,
+        3
+      ]
+    },
+    "model_expected": true,
+    "reference_expected": false,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150715-483136"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 0,
+    "input": {
+      "m": 5,
+      "n": 8
+    },
+    "model_expected": 8,
+    "reference_expected": 10,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150715-483136"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 1,
+    "input": {
+      "m": 6,
+      "n": 4
+    },
+    "model_expected": 4,
+    "reference_expected": 6,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150715-483136"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 2,
+    "input": {
+      "m": 5,
+      "n": 8
+    },
+    "model_expected": 8,
+    "reference_expected": 10,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150715-483136"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 3,
+    "input": {
+      "m": 5,
+      "n": 6
+    },
+    "model_expected": 6,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150715-483136"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 1,
+    "input": {
+      "m": 5,
+      "n": 6
+    },
+    "model_expected": 10,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150715-483136"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 2,
+    "input": {
+      "m": 6,
+      "n": 5
+    },
+    "model_expected": 5,
+    "reference_expected": 6,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150715-483136"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 44,
+    "case_id": "apps-train-2968/m1",
+    "sample_index": 0,
+    "input": {
+      "s": "ba"
+    },
+    "model_expected": "a",
+    "reference_expected": "ba",
+    "equals_buggy_output": true,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150715-483136"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 44,
+    "case_id": "apps-train-2968/m1",
+    "sample_index": 1,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "b",
+    "reference_expected": "ab",
+    "equals_buggy_output": true,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150715-483136"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 44,
+    "case_id": "apps-train-2968/m2",
+    "sample_index": 2,
+    "input": {
+      "s": "aa"
+    },
+    "model_expected": "a",
+    "reference_expected": "aa",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150715-483136"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 44,
+    "case_id": "apps-train-2968/m3",
+    "sample_index": 1,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "b",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150715-483136"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 44,
+    "case_id": "apps-train-2968/m3",
+    "sample_index": 3,
+    "input": {
+      "s": "bA"
+    },
+    "model_expected": "A",
+    "reference_expected": "bA",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150715-483136"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 0,
+    "input": {
+      "text": "ba"
+    },
+    "model_expected": "a b",
+    "reference_expected": "ba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150715-483136"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 1,
+    "input": {
+      "text": "ab "
+    },
+    "model_expected": "abb",
+    "reference_expected": "a b",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150715-483136"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m2",
+    "sample_index": 0,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "ba",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150715-483136"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m2",
+    "sample_index": 2,
+    "input": {
+      "text": "ab "
+    },
+    "model_expected": "ba ",
+    "reference_expected": "a b",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150715-483136"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m2",
+    "sample_index": 3,
+    "input": {
+      "text": "ba"
+    },
+    "model_expected": "aabb",
+    "reference_expected": "ba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150715-483136"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 0,
+    "input": {
+      "text": "aab"
+    },
+    "model_expected": "baa",
+    "reference_expected": "aba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150715-483136"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 1,
+    "input": {
+      "text": "bb"
+    },
+    "model_expected": "b b",
+    "reference_expected": "bb",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150715-483136"
+  },
+  {
+    "variant": "grpo96",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 3,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "a bba",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150715-483136"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 42,
+    "case_id": "apps-train-2834/m1",
+    "sample_index": 1,
+    "input": {
+      "p": [
+        2,
+        0
+      ],
+      "q": [
+        0,
+        0
+      ]
+    },
+    "model_expected": [
+      4,
+      0
+    ],
+    "reference_expected": [
+      -2,
+      0
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261028-145025-399168"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 42,
+    "case_id": "apps-train-2834/m3",
+    "sample_index": 0,
+    "input": {
+      "p": [
+        0,
+        2
+      ],
+      "q": [
+        -1,
+        2
+      ]
+    },
+    "model_expected": [
+      -2,
+      1
+    ],
+    "reference_expected": [
+      -2,
+      2
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261028-145025-399168"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 42,
+    "case_id": "apps-train-2834/m3",
+    "sample_index": 1,
+    "input": {
+      "p": [
+        2,
+        0
+      ],
+      "q": [
+        0,
+        2
+      ]
+    },
+    "model_expected": [
+      4,
+      0
+    ],
+    "reference_expected": [
+      -2,
+      4
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261028-145025-399168"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 0,
+    "input": {
+      "m": 3,
+      "n": 2
+    },
+    "model_expected": 2,
+    "reference_expected": 3,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261028-145025-399168"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 1,
+    "input": {
+      "m": 5,
+      "n": 7
+    },
+    "model_expected": 10,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261028-145025-399168"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 2,
+    "input": {
+      "m": 7,
+      "n": 4
+    },
+    "model_expected": 4,
+    "reference_expected": 7,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261028-145025-399168"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 3,
+    "input": {
+      "m": 3,
+      "n": 4
+    },
+    "model_expected": 6,
+    "reference_expected": 3,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261028-145025-399168"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 0,
+    "input": {
+      "m": 5,
+      "n": 4
+    },
+    "model_expected": 4,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261028-145025-399168"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 1,
+    "input": {
+      "m": 3,
+      "n": 5
+    },
+    "model_expected": 4,
+    "reference_expected": 6,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261028-145025-399168"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 3,
+    "input": {
+      "m": 5,
+      "n": 7
+    },
+    "model_expected": 10,
+    "reference_expected": 5,
+    "equals_buggy_output": true,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261028-145025-399168"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 42,
+    "case_id": "apps-train-2968/m1",
+    "sample_index": 1,
+    "input": {
+      "s": "b"
+    },
+    "model_expected": "a",
+    "reference_expected": "b",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261028-145025-399168"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 42,
+    "case_id": "apps-train-2968/m2",
+    "sample_index": 1,
+    "input": {
+      "s": "b"
+    },
+    "model_expected": "d",
+    "reference_expected": "b",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261028-145025-399168"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 42,
+    "case_id": "apps-train-2968/m3",
+    "sample_index": 1,
+    "input": {
+      "s": "b"
+    },
+    "model_expected": "e",
+    "reference_expected": "b",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261028-145025-399168"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 0,
+    "input": {
+      "text": "a"
+    },
+    "model_expected": "ab",
+    "reference_expected": "a",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261028-145025-399168"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 1,
+    "input": {
+      "text": "ba"
+    },
+    "model_expected": "ab",
+    "reference_expected": "ba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261028-145025-399168"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 3,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "ba",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261028-145025-399168"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m2",
+    "sample_index": 0,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "b a",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261028-145025-399168"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m2",
+    "sample_index": 2,
+    "input": {
+      "text": "a"
+    },
+    "model_expected": "b",
+    "reference_expected": "a",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261028-145025-399168"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 0,
+    "input": {
+      "text": "a"
+    },
+    "model_expected": "aa",
+    "reference_expected": "a",
+    "equals_buggy_output": true,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261028-145025-399168"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 1,
+    "input": {
+      "text": "a "
+    },
+    "model_expected": "axb",
+    "reference_expected": "a ",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261028-145025-399168"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 42,
+    "case_id": "apps-train-2834/m1",
+    "sample_index": 1,
+    "input": {
+      "p": [
+        2,
+        0
+      ],
+      "q": [
+        0,
+        0
+      ]
+    },
+    "model_expected": [
+      4,
+      0
+    ],
+    "reference_expected": [
+      -2,
+      0
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150134-946011"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 42,
+    "case_id": "apps-train-2834/m3",
+    "sample_index": 0,
+    "input": {
+      "p": [
+        0,
+        2
+      ],
+      "q": [
+        -1,
+        2
+      ]
+    },
+    "model_expected": [
+      -2,
+      0
+    ],
+    "reference_expected": [
+      -2,
+      2
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150134-946011"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 42,
+    "case_id": "apps-train-2834/m3",
+    "sample_index": 1,
+    "input": {
+      "p": [
+        2,
+        0
+      ],
+      "q": [
+        0,
+        2
+      ]
+    },
+    "model_expected": [
+      4,
+      0
+    ],
+    "reference_expected": [
+      -2,
+      4
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150134-946011"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 42,
+    "case_id": "apps-train-2834/m3",
+    "sample_index": 3,
+    "input": {
+      "p": [
+        -1,
+        2
+      ],
+      "q": [
+        0,
+        2
+      ]
+    },
+    "model_expected": [
+      1,
+      4
+    ],
+    "reference_expected": [
+      1,
+      2
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150134-946011"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 0,
+    "input": {
+      "m": 3,
+      "n": 2
+    },
+    "model_expected": 2,
+    "reference_expected": 3,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150134-946011"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 1,
+    "input": {
+      "m": 5,
+      "n": 7
+    },
+    "model_expected": 10,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150134-946011"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 2,
+    "input": {
+      "m": 7,
+      "n": 4
+    },
+    "model_expected": 4,
+    "reference_expected": 7,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150134-946011"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 3,
+    "input": {
+      "m": 7,
+      "n": 10
+    },
+    "model_expected": 14,
+    "reference_expected": 7,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150134-946011"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 0,
+    "input": {
+      "m": 5,
+      "n": 4
+    },
+    "model_expected": 3,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150134-946011"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 1,
+    "input": {
+      "m": 3,
+      "n": 5
+    },
+    "model_expected": 4,
+    "reference_expected": 6,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150134-946011"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 2,
+    "input": {
+      "m": 8,
+      "n": 3
+    },
+    "model_expected": 3,
+    "reference_expected": 0,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150134-946011"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 3,
+    "input": {
+      "m": 5,
+      "n": 6
+    },
+    "model_expected": 6,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150134-946011"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 42,
+    "case_id": "apps-train-2968/m1",
+    "sample_index": 3,
+    "input": {
+      "s": "bb"
+    },
+    "model_expected": "b",
+    "reference_expected": "bb",
+    "equals_buggy_output": true,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150134-946011"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 42,
+    "case_id": "apps-train-2968/m2",
+    "sample_index": 0,
+    "input": {
+      "s": "ba"
+    },
+    "model_expected": "a",
+    "reference_expected": "ba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150134-946011"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 42,
+    "case_id": "apps-train-2968/m2",
+    "sample_index": 3,
+    "input": {
+      "s": "ba"
+    },
+    "model_expected": "a",
+    "reference_expected": "ba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150134-946011"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 42,
+    "case_id": "apps-train-2968/m3",
+    "sample_index": 0,
+    "input": {
+      "s": "aa"
+    },
+    "model_expected": "a",
+    "reference_expected": "aa",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150134-946011"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 42,
+    "case_id": "apps-train-2968/m3",
+    "sample_index": 1,
+    "input": {
+      "s": "ba"
+    },
+    "model_expected": "a",
+    "reference_expected": "ba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150134-946011"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 42,
+    "case_id": "apps-train-2968/m3",
+    "sample_index": 3,
+    "input": {
+      "s": "bA"
+    },
+    "model_expected": "b",
+    "reference_expected": "bA",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150134-946011"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 3,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "ba",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150134-946011"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m2",
+    "sample_index": 0,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "b a",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150134-946011"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 0,
+    "input": {
+      "text": "a "
+    },
+    "model_expected": "ax",
+    "reference_expected": "a ",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150134-946011"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 1,
+    "input": {
+      "text": "bb "
+    },
+    "model_expected": "b b b",
+    "reference_expected": "b b",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150134-946011"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 2,
+    "input": {
+      "text": "aa"
+    },
+    "model_expected": "aab",
+    "reference_expected": "aa",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150134-946011"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 42,
+    "case_id": "apps-train-2834/m1",
+    "sample_index": 1,
+    "input": {
+      "p": [
+        2,
+        0
+      ],
+      "q": [
+        0,
+        0
+      ]
+    },
+    "model_expected": [
+      4,
+      0
+    ],
+    "reference_expected": [
+      -2,
+      0
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154226-616412"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 42,
+    "case_id": "apps-train-2834/m2",
+    "sample_index": 1,
+    "input": {
+      "p": [
+        0,
+        0
+      ],
+      "q": [
+        2,
+        2
+      ]
+    },
+    "model_expected": [
+      4,
+      0
+    ],
+    "reference_expected": [
+      4,
+      4
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154226-616412"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 42,
+    "case_id": "apps-train-2834/m3",
+    "sample_index": 0,
+    "input": {
+      "p": [
+        0,
+        2
+      ],
+      "q": [
+        -1,
+        2
+      ]
+    },
+    "model_expected": [
+      -2,
+      0
+    ],
+    "reference_expected": [
+      -2,
+      2
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154226-616412"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 42,
+    "case_id": "apps-train-2834/m3",
+    "sample_index": 1,
+    "input": {
+      "p": [
+        2,
+        0
+      ],
+      "q": [
+        0,
+        2
+      ]
+    },
+    "model_expected": [
+      4,
+      0
+    ],
+    "reference_expected": [
+      -2,
+      4
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154226-616412"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 42,
+    "case_id": "apps-train-2834/m3",
+    "sample_index": 3,
+    "input": {
+      "p": [
+        -1,
+        2
+      ],
+      "q": [
+        0,
+        2
+      ]
+    },
+    "model_expected": [
+      1,
+      4
+    ],
+    "reference_expected": [
+      1,
+      2
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154226-616412"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 0,
+    "input": {
+      "m": 3,
+      "n": 2
+    },
+    "model_expected": 2,
+    "reference_expected": 3,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154226-616412"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 1,
+    "input": {
+      "m": 5,
+      "n": 7
+    },
+    "model_expected": 10,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154226-616412"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 2,
+    "input": {
+      "m": 7,
+      "n": 4
+    },
+    "model_expected": 4,
+    "reference_expected": 7,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154226-616412"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 3,
+    "input": {
+      "m": 7,
+      "n": 10
+    },
+    "model_expected": 14,
+    "reference_expected": 7,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154226-616412"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 0,
+    "input": {
+      "m": 5,
+      "n": 4
+    },
+    "model_expected": 3,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154226-616412"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 1,
+    "input": {
+      "m": 3,
+      "n": 5
+    },
+    "model_expected": 4,
+    "reference_expected": 6,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154226-616412"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 2,
+    "input": {
+      "m": 8,
+      "n": 3
+    },
+    "model_expected": 3,
+    "reference_expected": 0,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154226-616412"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 3,
+    "input": {
+      "m": 5,
+      "n": 6
+    },
+    "model_expected": 6,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154226-616412"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 42,
+    "case_id": "apps-train-2968/m1",
+    "sample_index": 3,
+    "input": {
+      "s": "bb"
+    },
+    "model_expected": "b",
+    "reference_expected": "bb",
+    "equals_buggy_output": true,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154226-616412"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 42,
+    "case_id": "apps-train-2968/m2",
+    "sample_index": 0,
+    "input": {
+      "s": "ba"
+    },
+    "model_expected": "a",
+    "reference_expected": "ba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154226-616412"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 42,
+    "case_id": "apps-train-2968/m2",
+    "sample_index": 3,
+    "input": {
+      "s": "ba"
+    },
+    "model_expected": "a",
+    "reference_expected": "ba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154226-616412"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 42,
+    "case_id": "apps-train-2968/m3",
+    "sample_index": 3,
+    "input": {
+      "s": "bA"
+    },
+    "model_expected": "b",
+    "reference_expected": "bA",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154226-616412"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 3,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "ba",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154226-616412"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m2",
+    "sample_index": 0,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "b a",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154226-616412"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 0,
+    "input": {
+      "text": "a "
+    },
+    "model_expected": "ax",
+    "reference_expected": "a ",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154226-616412"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 1,
+    "input": {
+      "text": "bb "
+    },
+    "model_expected": "bbb",
+    "reference_expected": "b b",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154226-616412"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 2,
+    "input": {
+      "text": "aa"
+    },
+    "model_expected": "aab",
+    "reference_expected": "aa",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154226-616412"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 42,
+    "case_id": "apps-train-2834/m1",
+    "sample_index": 1,
+    "input": {
+      "p": [
+        2,
+        0
+      ],
+      "q": [
+        0,
+        0
+      ]
+    },
+    "model_expected": [
+      4,
+      0
+    ],
+    "reference_expected": [
+      -2,
+      0
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154738-578998"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 42,
+    "case_id": "apps-train-2834/m3",
+    "sample_index": 0,
+    "input": {
+      "p": [
+        0,
+        2
+      ],
+      "q": [
+        -1,
+        2
+      ]
+    },
+    "model_expected": [
+      -2,
+      1
+    ],
+    "reference_expected": [
+      -2,
+      2
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154738-578998"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 42,
+    "case_id": "apps-train-2834/m3",
+    "sample_index": 1,
+    "input": {
+      "p": [
+        2,
+        0
+      ],
+      "q": [
+        0,
+        2
+      ]
+    },
+    "model_expected": [
+      4,
+      0
+    ],
+    "reference_expected": [
+      -2,
+      4
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154738-578998"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 42,
+    "case_id": "apps-train-2834/m3",
+    "sample_index": 3,
+    "input": {
+      "p": [
+        -1,
+        2
+      ],
+      "q": [
+        0,
+        2
+      ]
+    },
+    "model_expected": [
+      1,
+      4
+    ],
+    "reference_expected": [
+      1,
+      2
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154738-578998"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 0,
+    "input": {
+      "m": 3,
+      "n": 2
+    },
+    "model_expected": 2,
+    "reference_expected": 3,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154738-578998"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 1,
+    "input": {
+      "m": 5,
+      "n": 7
+    },
+    "model_expected": 10,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154738-578998"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 2,
+    "input": {
+      "m": 7,
+      "n": 4
+    },
+    "model_expected": 4,
+    "reference_expected": 7,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154738-578998"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 3,
+    "input": {
+      "m": 7,
+      "n": 10
+    },
+    "model_expected": 14,
+    "reference_expected": 7,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154738-578998"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 0,
+    "input": {
+      "m": 5,
+      "n": 4
+    },
+    "model_expected": 3,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154738-578998"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 1,
+    "input": {
+      "m": 3,
+      "n": 5
+    },
+    "model_expected": 4,
+    "reference_expected": 6,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154738-578998"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 2,
+    "input": {
+      "m": 8,
+      "n": 3
+    },
+    "model_expected": 3,
+    "reference_expected": 0,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154738-578998"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 42,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 3,
+    "input": {
+      "m": 5,
+      "n": 6
+    },
+    "model_expected": 6,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154738-578998"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 42,
+    "case_id": "apps-train-2968/m1",
+    "sample_index": 3,
+    "input": {
+      "s": "bb"
+    },
+    "model_expected": "b",
+    "reference_expected": "bb",
+    "equals_buggy_output": true,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154738-578998"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 42,
+    "case_id": "apps-train-2968/m2",
+    "sample_index": 0,
+    "input": {
+      "s": "ba"
+    },
+    "model_expected": "a",
+    "reference_expected": "ba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154738-578998"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 42,
+    "case_id": "apps-train-2968/m2",
+    "sample_index": 3,
+    "input": {
+      "s": "ba"
+    },
+    "model_expected": "a",
+    "reference_expected": "ba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154738-578998"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 42,
+    "case_id": "apps-train-2968/m3",
+    "sample_index": 0,
+    "input": {
+      "s": "aa"
+    },
+    "model_expected": "a",
+    "reference_expected": "aa",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154738-578998"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 42,
+    "case_id": "apps-train-2968/m3",
+    "sample_index": 1,
+    "input": {
+      "s": "ba"
+    },
+    "model_expected": "a",
+    "reference_expected": "ba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154738-578998"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 42,
+    "case_id": "apps-train-2968/m3",
+    "sample_index": 3,
+    "input": {
+      "s": "bA"
+    },
+    "model_expected": "b",
+    "reference_expected": "bA",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154738-578998"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 0,
+    "input": {
+      "text": "a "
+    },
+    "model_expected": "ab ",
+    "reference_expected": "a ",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154738-578998"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 2,
+    "input": {
+      "text": "a"
+    },
+    "model_expected": "aa",
+    "reference_expected": "a",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154738-578998"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 3,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "ba",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154738-578998"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m2",
+    "sample_index": 0,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "b a",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154738-578998"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 0,
+    "input": {
+      "text": "a "
+    },
+    "model_expected": "ax",
+    "reference_expected": "a ",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154738-578998"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 1,
+    "input": {
+      "text": "bb "
+    },
+    "model_expected": "bbb",
+    "reference_expected": "b b",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154738-578998"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 42,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 2,
+    "input": {
+      "text": "aa"
+    },
+    "model_expected": "aab",
+    "reference_expected": "aa",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-154738-578998"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 0,
+    "input": {
+      "m": 5,
+      "n": 6
+    },
+    "model_expected": 6,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135547-788409"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 2,
+    "input": {
+      "m": 5,
+      "n": 2
+    },
+    "model_expected": 2,
+    "reference_expected": 0,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135547-788409"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 0,
+    "input": {
+      "m": 5,
+      "n": 2
+    },
+    "model_expected": 2,
+    "reference_expected": 0,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135547-788409"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 1,
+    "input": {
+      "m": 5,
+      "n": 5
+    },
+    "model_expected": 10,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135547-788409"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 2,
+    "input": {
+      "m": 6,
+      "n": 7
+    },
+    "model_expected": 12,
+    "reference_expected": 6,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135547-788409"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 0,
+    "input": {
+      "m": 5,
+      "n": 4
+    },
+    "model_expected": 4,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135547-788409"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 2,
+    "input": {
+      "m": 5,
+      "n": 7
+    },
+    "model_expected": 8,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135547-788409"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m1",
+    "sample_index": 0,
+    "input": {
+      "s": "ba"
+    },
+    "model_expected": "a",
+    "reference_expected": "ba",
+    "equals_buggy_output": true,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135547-788409"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m1",
+    "sample_index": 1,
+    "input": {
+      "s": "abA"
+    },
+    "model_expected": "ab",
+    "reference_expected": "b",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135547-788409"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m2",
+    "sample_index": 1,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "ba",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135547-788409"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m2",
+    "sample_index": 2,
+    "input": {
+      "s": "b"
+    },
+    "model_expected": "e",
+    "reference_expected": "b",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135547-788409"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m2",
+    "sample_index": 3,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "b",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135547-788409"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m3",
+    "sample_index": 3,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "b",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135547-788409"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 43,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 0,
+    "input": {
+      "text": "b "
+    },
+    "model_expected": "b t ",
+    "reference_expected": "b ",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135547-788409"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 43,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 2,
+    "input": {
+      "text": "ba"
+    },
+    "model_expected": "bba",
+    "reference_expected": "ba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135547-788409"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 43,
+    "case_id": "apps-train-3014/m2",
+    "sample_index": 0,
+    "input": {
+      "text": "ab "
+    },
+    "model_expected": "b a",
+    "reference_expected": "a b",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135547-788409"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 43,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 0,
+    "input": {
+      "text": "ab "
+    },
+    "model_expected": "baab",
+    "reference_expected": "a b",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135547-788409"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 43,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 2,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "ba",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135547-788409"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 43,
+    "case_id": "apps-train-2834/m2",
+    "sample_index": 1,
+    "input": {
+      "p": [
+        2,
+        0
+      ],
+      "q": [
+        0,
+        2
+      ]
+    },
+    "model_expected": [
+      0,
+      -4
+    ],
+    "reference_expected": [
+      -2,
+      4
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150415-895699"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 43,
+    "case_id": "apps-train-2868/m1",
+    "sample_index": 1,
+    "input": {
+      "arr": [
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    "model_expected": false,
+    "reference_expected": true,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150415-895699"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 43,
+    "case_id": "apps-train-2868/m2",
+    "sample_index": 2,
+    "input": {
+      "arr": [
+        0,
+        0,
+        3,
+        3
+      ]
+    },
+    "model_expected": true,
+    "reference_expected": false,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150415-895699"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 1,
+    "input": {
+      "m": 3,
+      "n": 1
+    },
+    "model_expected": 1,
+    "reference_expected": 0,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150415-895699"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 2,
+    "input": {
+      "m": 5,
+      "n": 2
+    },
+    "model_expected": 2,
+    "reference_expected": 0,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150415-895699"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 1,
+    "input": {
+      "m": 5,
+      "n": 2
+    },
+    "model_expected": 2,
+    "reference_expected": 0,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150415-895699"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 2,
+    "input": {
+      "m": 6,
+      "n": 8
+    },
+    "model_expected": 12,
+    "reference_expected": 6,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150415-895699"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 3,
+    "input": {
+      "m": 5,
+      "n": 7
+    },
+    "model_expected": 8,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150415-895699"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 1,
+    "input": {
+      "m": 3,
+      "n": 1
+    },
+    "model_expected": 3,
+    "reference_expected": 0,
+    "equals_buggy_output": true,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150415-895699"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 2,
+    "input": {
+      "m": 5,
+      "n": 7
+    },
+    "model_expected": 8,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150415-895699"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m1",
+    "sample_index": 0,
+    "input": {
+      "s": "ba"
+    },
+    "model_expected": "a",
+    "reference_expected": "ba",
+    "equals_buggy_output": true,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150415-895699"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m2",
+    "sample_index": 1,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "ba",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150415-895699"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m2",
+    "sample_index": 3,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "b",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150415-895699"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m3",
+    "sample_index": 0,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "ba",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150415-895699"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m3",
+    "sample_index": 3,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "A",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150415-895699"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 43,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 0,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "ba",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150415-895699"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 43,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 1,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "aa",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150415-895699"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 43,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 2,
+    "input": {
+      "text": "ba"
+    },
+    "model_expected": "bba",
+    "reference_expected": "ba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150415-895699"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 43,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 0,
+    "input": {
+      "text": "ab "
+    },
+    "model_expected": "baab",
+    "reference_expected": "a b",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150415-895699"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 43,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 2,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "ba",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150415-895699"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 43,
+    "case_id": "apps-train-2868/m1",
+    "sample_index": 1,
+    "input": {
+      "arr": [
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    "model_expected": false,
+    "reference_expected": true,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000104-341566"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 43,
+    "case_id": "apps-train-2868/m2",
+    "sample_index": 2,
+    "input": {
+      "arr": [
+        0,
+        0,
+        3
+      ]
+    },
+    "model_expected": true,
+    "reference_expected": false,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000104-341566"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 1,
+    "input": {
+      "m": 3,
+      "n": 1
+    },
+    "model_expected": 1,
+    "reference_expected": 0,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000104-341566"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 2,
+    "input": {
+      "m": 5,
+      "n": 2
+    },
+    "model_expected": 2,
+    "reference_expected": 0,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000104-341566"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 1,
+    "input": {
+      "m": 5,
+      "n": 2
+    },
+    "model_expected": 2,
+    "reference_expected": 0,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000104-341566"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 2,
+    "input": {
+      "m": 6,
+      "n": 8
+    },
+    "model_expected": 12,
+    "reference_expected": 6,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000104-341566"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 3,
+    "input": {
+      "m": 5,
+      "n": 7
+    },
+    "model_expected": 8,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000104-341566"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 1,
+    "input": {
+      "m": 3,
+      "n": 1
+    },
+    "model_expected": 3,
+    "reference_expected": 0,
+    "equals_buggy_output": true,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000104-341566"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 2,
+    "input": {
+      "m": 5,
+      "n": 7
+    },
+    "model_expected": 8,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000104-341566"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m1",
+    "sample_index": 0,
+    "input": {
+      "s": "ba"
+    },
+    "model_expected": "a",
+    "reference_expected": "ba",
+    "equals_buggy_output": true,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000104-341566"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m1",
+    "sample_index": 1,
+    "input": {
+      "s": "ba"
+    },
+    "model_expected": "a",
+    "reference_expected": "ba",
+    "equals_buggy_output": true,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000104-341566"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m2",
+    "sample_index": 1,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "b",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000104-341566"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m2",
+    "sample_index": 3,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "b",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000104-341566"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m3",
+    "sample_index": 0,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "ba",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000104-341566"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m3",
+    "sample_index": 3,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "A",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000104-341566"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 43,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 0,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "ba",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000104-341566"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 43,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 1,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "aa",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000104-341566"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 43,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 2,
+    "input": {
+      "text": "ba"
+    },
+    "model_expected": "bba",
+    "reference_expected": "ba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000104-341566"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 43,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 0,
+    "input": {
+      "text": "ab "
+    },
+    "model_expected": "baab",
+    "reference_expected": "a b",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000104-341566"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 43,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 2,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "ba",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000104-341566"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 43,
+    "case_id": "apps-train-2834/m3",
+    "sample_index": 0,
+    "input": {
+      "p": [
+        2,
+        -1
+      ],
+      "q": [
+        0,
+        2
+      ]
+    },
+    "model_expected": [
+      -2,
+      -3
+    ],
+    "reference_expected": [
+      -2,
+      5
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000152-699688"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 43,
+    "case_id": "apps-train-2868/m1",
+    "sample_index": 1,
+    "input": {
+      "arr": [
+        0,
+        0,
+        0,
+        1
+      ]
+    },
+    "model_expected": false,
+    "reference_expected": true,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000152-699688"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 43,
+    "case_id": "apps-train-2868/m2",
+    "sample_index": 2,
+    "input": {
+      "arr": [
+        0,
+        0,
+        3
+      ]
+    },
+    "model_expected": true,
+    "reference_expected": false,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000152-699688"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 1,
+    "input": {
+      "m": 3,
+      "n": 1
+    },
+    "model_expected": 1,
+    "reference_expected": 0,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000152-699688"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 2,
+    "input": {
+      "m": 5,
+      "n": 2
+    },
+    "model_expected": 2,
+    "reference_expected": 0,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000152-699688"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 1,
+    "input": {
+      "m": 5,
+      "n": 2
+    },
+    "model_expected": 2,
+    "reference_expected": 0,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000152-699688"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 2,
+    "input": {
+      "m": 6,
+      "n": 8
+    },
+    "model_expected": 12,
+    "reference_expected": 6,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000152-699688"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 3,
+    "input": {
+      "m": 5,
+      "n": 7
+    },
+    "model_expected": 8,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000152-699688"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 1,
+    "input": {
+      "m": 3,
+      "n": 1
+    },
+    "model_expected": 3,
+    "reference_expected": 0,
+    "equals_buggy_output": true,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000152-699688"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 43,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 2,
+    "input": {
+      "m": 5,
+      "n": 7
+    },
+    "model_expected": 8,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000152-699688"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m1",
+    "sample_index": 0,
+    "input": {
+      "s": "ba"
+    },
+    "model_expected": "a",
+    "reference_expected": "ba",
+    "equals_buggy_output": true,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000152-699688"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m1",
+    "sample_index": 1,
+    "input": {
+      "s": "ba"
+    },
+    "model_expected": "a",
+    "reference_expected": "ba",
+    "equals_buggy_output": true,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000152-699688"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m2",
+    "sample_index": 1,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "b",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000152-699688"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m2",
+    "sample_index": 3,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "b",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000152-699688"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m3",
+    "sample_index": 0,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "ba",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000152-699688"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 43,
+    "case_id": "apps-train-2968/m3",
+    "sample_index": 3,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "A",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000152-699688"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 43,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 0,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "ba",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000152-699688"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 43,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 1,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "aa",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000152-699688"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 43,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 2,
+    "input": {
+      "text": "ba"
+    },
+    "model_expected": "bba",
+    "reference_expected": "ba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000152-699688"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 43,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 0,
+    "input": {
+      "text": "ab "
+    },
+    "model_expected": "baab",
+    "reference_expected": "a b",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000152-699688"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 43,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 2,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "ba",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000152-699688"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 44,
+    "case_id": "apps-train-2834/m2",
+    "sample_index": 1,
+    "input": {
+      "p": [
+        -1,
+        2
+      ],
+      "q": [
+        2,
+        -1
+      ]
+    },
+    "model_expected": [
+      3,
+      -3
+    ],
+    "reference_expected": [
+      5,
+      -4
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135851-953625"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 44,
+    "case_id": "apps-train-2834/m3",
+    "sample_index": 0,
+    "input": {
+      "p": [
+        0,
+        2
+      ],
+      "q": [
+        -1,
+        0
+      ]
+    },
+    "model_expected": [
+      1,
+      4
+    ],
+    "reference_expected": [
+      -2,
+      -2
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135851-953625"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 44,
+    "case_id": "apps-train-2868/m2",
+    "sample_index": 0,
+    "input": {
+      "arr": [
+        0,
+        1,
+        3
+      ]
+    },
+    "model_expected": true,
+    "reference_expected": false,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135851-953625"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 0,
+    "input": {
+      "m": 5,
+      "n": 8
+    },
+    "model_expected": 8,
+    "reference_expected": 10,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135851-953625"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 1,
+    "input": {
+      "m": 5,
+      "n": 4
+    },
+    "model_expected": 4,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135851-953625"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 2,
+    "input": {
+      "m": 5,
+      "n": 8
+    },
+    "model_expected": 8,
+    "reference_expected": 10,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135851-953625"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 3,
+    "input": {
+      "m": 5,
+      "n": 6
+    },
+    "model_expected": 6,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135851-953625"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 0,
+    "input": {
+      "m": 5,
+      "n": 4
+    },
+    "model_expected": 4,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135851-953625"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 2,
+    "input": {
+      "m": 6,
+      "n": 5
+    },
+    "model_expected": 5,
+    "reference_expected": 6,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135851-953625"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 0,
+    "input": {
+      "m": 3,
+      "n": 5
+    },
+    "model_expected": 5,
+    "reference_expected": 6,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135851-953625"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 2,
+    "input": {
+      "m": 5,
+      "n": 4
+    },
+    "model_expected": 4,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135851-953625"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 44,
+    "case_id": "apps-train-2968/m1",
+    "sample_index": 0,
+    "input": {
+      "s": "ba"
+    },
+    "model_expected": "a",
+    "reference_expected": "ba",
+    "equals_buggy_output": true,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135851-953625"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 44,
+    "case_id": "apps-train-2968/m1",
+    "sample_index": 1,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "b",
+    "reference_expected": "ab",
+    "equals_buggy_output": true,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135851-953625"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 44,
+    "case_id": "apps-train-2968/m2",
+    "sample_index": 2,
+    "input": {
+      "s": "aa"
+    },
+    "model_expected": "a",
+    "reference_expected": "aa",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135851-953625"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 44,
+    "case_id": "apps-train-2968/m3",
+    "sample_index": 1,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "b",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135851-953625"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 44,
+    "case_id": "apps-train-2968/m3",
+    "sample_index": 3,
+    "input": {
+      "s": "b"
+    },
+    "model_expected": "ba",
+    "reference_expected": "b",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135851-953625"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 0,
+    "input": {
+      "text": "ba"
+    },
+    "model_expected": "a b",
+    "reference_expected": "ba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135851-953625"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 1,
+    "input": {
+      "text": "ab "
+    },
+    "model_expected": "abb",
+    "reference_expected": "a b",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135851-953625"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m2",
+    "sample_index": 0,
+    "input": {
+      "text": "b"
+    },
+    "model_expected": "bb",
+    "reference_expected": "b",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135851-953625"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m2",
+    "sample_index": 1,
+    "input": {
+      "text": "ab "
+    },
+    "model_expected": "b a",
+    "reference_expected": "a b",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135851-953625"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m2",
+    "sample_index": 3,
+    "input": {
+      "text": "ba"
+    },
+    "model_expected": "aabb",
+    "reference_expected": "ba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135851-953625"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 0,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "ba",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135851-953625"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 1,
+    "input": {
+      "text": "bb"
+    },
+    "model_expected": "b b",
+    "reference_expected": "bb",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135851-953625"
+  },
+  {
+    "variant": "base",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 3,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "bb",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-baseline-validation-20261029-135851-953625"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-2834/m1",
+    "sample_index": 1,
+    "input": {
+      "p": [
+        -1,
+        2
+      ],
+      "q": [
+        2,
+        0
+      ]
+    },
+    "model_expected": [
+      1,
+      -2
+    ],
+    "reference_expected": [
+      5,
+      -2
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-2834/m1",
+    "sample_index": 2,
+    "input": {
+      "p": [
+        0,
+        2
+      ],
+      "q": [
+        0,
+        0
+      ]
+    },
+    "model_expected": [
+      2,
+      2
+    ],
+    "reference_expected": [
+      0,
+      -2
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-2834/m2",
+    "sample_index": 1,
+    "input": {
+      "p": [
+        -1,
+        2
+      ],
+      "q": [
+        2,
+        -1
+      ]
+    },
+    "model_expected": [
+      -3,
+      -5
+    ],
+    "reference_expected": [
+      5,
+      -4
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-2834/m2",
+    "sample_index": 2,
+    "input": {
+      "p": [
+        2,
+        0
+      ],
+      "q": [
+        0,
+        2
+      ]
+    },
+    "model_expected": [
+      4,
+      4
+    ],
+    "reference_expected": [
+      -2,
+      4
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-2834/m3",
+    "sample_index": 0,
+    "input": {
+      "p": [
+        0,
+        2
+      ],
+      "q": [
+        -1,
+        0
+      ]
+    },
+    "model_expected": [
+      1,
+      2
+    ],
+    "reference_expected": [
+      -2,
+      -2
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-2834/m3",
+    "sample_index": 1,
+    "input": {
+      "p": [
+        2,
+        2
+      ],
+      "q": [
+        2,
+        2
+      ]
+    },
+    "model_expected": [
+      2,
+      4
+    ],
+    "reference_expected": [
+      2,
+      2
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-2868/m1",
+    "sample_index": 2,
+    "input": {
+      "arr": [
+        3,
+        -2,
+        3
+      ]
+    },
+    "model_expected": true,
+    "reference_expected": false,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-2868/m2",
+    "sample_index": 0,
+    "input": {
+      "arr": [
+        0,
+        1,
+        3
+      ]
+    },
+    "model_expected": true,
+    "reference_expected": false,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 0,
+    "input": {
+      "m": 5,
+      "n": 8
+    },
+    "model_expected": 8,
+    "reference_expected": 10,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 1,
+    "input": {
+      "m": 6,
+      "n": 4
+    },
+    "model_expected": 4,
+    "reference_expected": 6,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 2,
+    "input": {
+      "m": 5,
+      "n": 8
+    },
+    "model_expected": 8,
+    "reference_expected": 10,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 3,
+    "input": {
+      "m": 5,
+      "n": 6
+    },
+    "model_expected": 6,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 1,
+    "input": {
+      "m": 5,
+      "n": 6
+    },
+    "model_expected": 10,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 2,
+    "input": {
+      "m": 6,
+      "n": 5
+    },
+    "model_expected": 5,
+    "reference_expected": 6,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 2,
+    "input": {
+      "m": 5,
+      "n": 4
+    },
+    "model_expected": 4,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 3,
+    "input": {
+      "m": 5,
+      "n": 1
+    },
+    "model_expected": 1,
+    "reference_expected": 0,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-2968/m1",
+    "sample_index": 0,
+    "input": {
+      "s": "ba"
+    },
+    "model_expected": "a",
+    "reference_expected": "ba",
+    "equals_buggy_output": true,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-2968/m1",
+    "sample_index": 1,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "b",
+    "reference_expected": "ab",
+    "equals_buggy_output": true,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-2968/m2",
+    "sample_index": 2,
+    "input": {
+      "s": "aa"
+    },
+    "model_expected": "a",
+    "reference_expected": "aa",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-2968/m3",
+    "sample_index": 1,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "b",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-2968/m3",
+    "sample_index": 3,
+    "input": {
+      "s": "bA"
+    },
+    "model_expected": "A",
+    "reference_expected": "bA",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 0,
+    "input": {
+      "text": "ba"
+    },
+    "model_expected": "aabb",
+    "reference_expected": "ba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 1,
+    "input": {
+      "text": "ab "
+    },
+    "model_expected": "abb",
+    "reference_expected": "a b",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 3,
+    "input": {
+      "text": "aa"
+    },
+    "model_expected": "a",
+    "reference_expected": "aa",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m2",
+    "sample_index": 0,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "ba",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m2",
+    "sample_index": 2,
+    "input": {
+      "text": "ab "
+    },
+    "model_expected": "ba ",
+    "reference_expected": "a b",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m2",
+    "sample_index": 3,
+    "input": {
+      "text": "ba"
+    },
+    "model_expected": "aabb",
+    "reference_expected": "ba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 0,
+    "input": {
+      "text": "aab"
+    },
+    "model_expected": "baa",
+    "reference_expected": "aba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 1,
+    "input": {
+      "text": "bb"
+    },
+    "model_expected": "b b",
+    "reference_expected": "bb",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "sft",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 3,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "bb",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-150642-620244"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 44,
+    "case_id": "apps-train-2834/m1",
+    "sample_index": 1,
+    "input": {
+      "p": [
+        -1,
+        2
+      ],
+      "q": [
+        2,
+        0
+      ]
+    },
+    "model_expected": [
+      -5,
+      -2
+    ],
+    "reference_expected": [
+      5,
+      -2
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000235-943522"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 44,
+    "case_id": "apps-train-2834/m1",
+    "sample_index": 2,
+    "input": {
+      "p": [
+        0,
+        2
+      ],
+      "q": [
+        0,
+        0
+      ]
+    },
+    "model_expected": [
+      2,
+      2
+    ],
+    "reference_expected": [
+      0,
+      -2
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000235-943522"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 44,
+    "case_id": "apps-train-2834/m2",
+    "sample_index": 1,
+    "input": {
+      "p": [
+        -1,
+        2
+      ],
+      "q": [
+        2,
+        -1
+      ]
+    },
+    "model_expected": [
+      -3,
+      -5
+    ],
+    "reference_expected": [
+      5,
+      -4
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000235-943522"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 44,
+    "case_id": "apps-train-2834/m2",
+    "sample_index": 2,
+    "input": {
+      "p": [
+        2,
+        0
+      ],
+      "q": [
+        0,
+        2
+      ]
+    },
+    "model_expected": [
+      4,
+      4
+    ],
+    "reference_expected": [
+      -2,
+      4
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000235-943522"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 44,
+    "case_id": "apps-train-2834/m3",
+    "sample_index": 0,
+    "input": {
+      "p": [
+        0,
+        2
+      ],
+      "q": [
+        -1,
+        0
+      ]
+    },
+    "model_expected": [
+      1,
+      2
+    ],
+    "reference_expected": [
+      -2,
+      -2
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000235-943522"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 44,
+    "case_id": "apps-train-2868/m2",
+    "sample_index": 0,
+    "input": {
+      "arr": [
+        0,
+        1,
+        3
+      ]
+    },
+    "model_expected": true,
+    "reference_expected": false,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000235-943522"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 0,
+    "input": {
+      "m": 5,
+      "n": 8
+    },
+    "model_expected": 8,
+    "reference_expected": 10,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000235-943522"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 1,
+    "input": {
+      "m": 6,
+      "n": 4
+    },
+    "model_expected": 4,
+    "reference_expected": 6,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000235-943522"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 2,
+    "input": {
+      "m": 6,
+      "n": 8
+    },
+    "model_expected": 8,
+    "reference_expected": 6,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000235-943522"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 3,
+    "input": {
+      "m": 5,
+      "n": 6
+    },
+    "model_expected": 6,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000235-943522"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 1,
+    "input": {
+      "m": 5,
+      "n": 6
+    },
+    "model_expected": 10,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000235-943522"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 2,
+    "input": {
+      "m": 6,
+      "n": 5
+    },
+    "model_expected": 5,
+    "reference_expected": 6,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000235-943522"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 3,
+    "input": {
+      "m": 5,
+      "n": 1
+    },
+    "model_expected": 1,
+    "reference_expected": 0,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000235-943522"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 44,
+    "case_id": "apps-train-2968/m1",
+    "sample_index": 0,
+    "input": {
+      "s": "ba"
+    },
+    "model_expected": "a",
+    "reference_expected": "ba",
+    "equals_buggy_output": true,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000235-943522"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 44,
+    "case_id": "apps-train-2968/m1",
+    "sample_index": 1,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "b",
+    "reference_expected": "ab",
+    "equals_buggy_output": true,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000235-943522"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 44,
+    "case_id": "apps-train-2968/m2",
+    "sample_index": 2,
+    "input": {
+      "s": "aa"
+    },
+    "model_expected": "a",
+    "reference_expected": "aa",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000235-943522"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 44,
+    "case_id": "apps-train-2968/m3",
+    "sample_index": 1,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "b",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000235-943522"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 44,
+    "case_id": "apps-train-2968/m3",
+    "sample_index": 3,
+    "input": {
+      "s": "bA"
+    },
+    "model_expected": "A",
+    "reference_expected": "bA",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000235-943522"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 0,
+    "input": {
+      "text": "ba"
+    },
+    "model_expected": "aabb",
+    "reference_expected": "ba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000235-943522"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 1,
+    "input": {
+      "text": "ab "
+    },
+    "model_expected": "abb",
+    "reference_expected": "a b",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000235-943522"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 3,
+    "input": {
+      "text": "aa"
+    },
+    "model_expected": "a",
+    "reference_expected": "aa",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000235-943522"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m2",
+    "sample_index": 0,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "ba",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000235-943522"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m2",
+    "sample_index": 2,
+    "input": {
+      "text": "ab "
+    },
+    "model_expected": "ba ",
+    "reference_expected": "a b",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000235-943522"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m2",
+    "sample_index": 3,
+    "input": {
+      "text": "ba"
+    },
+    "model_expected": "aabb",
+    "reference_expected": "ba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000235-943522"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 0,
+    "input": {
+      "text": "aab"
+    },
+    "model_expected": "baa",
+    "reference_expected": "aba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000235-943522"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 1,
+    "input": {
+      "text": "bb"
+    },
+    "model_expected": "b b",
+    "reference_expected": "bb",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000235-943522"
+  },
+  {
+    "variant": "control",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 3,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "ba",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000235-943522"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 44,
+    "case_id": "apps-train-2834/m1",
+    "sample_index": 1,
+    "input": {
+      "p": [
+        -1,
+        2
+      ],
+      "q": [
+        2,
+        0
+      ]
+    },
+    "model_expected": [
+      -5,
+      -2
+    ],
+    "reference_expected": [
+      5,
+      -2
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 44,
+    "case_id": "apps-train-2834/m1",
+    "sample_index": 2,
+    "input": {
+      "p": [
+        0,
+        2
+      ],
+      "q": [
+        0,
+        0
+      ]
+    },
+    "model_expected": [
+      2,
+      2
+    ],
+    "reference_expected": [
+      0,
+      -2
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 44,
+    "case_id": "apps-train-2834/m2",
+    "sample_index": 1,
+    "input": {
+      "p": [
+        -1,
+        2
+      ],
+      "q": [
+        2,
+        -1
+      ]
+    },
+    "model_expected": [
+      -3,
+      -5
+    ],
+    "reference_expected": [
+      5,
+      -4
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 44,
+    "case_id": "apps-train-2834/m2",
+    "sample_index": 2,
+    "input": {
+      "p": [
+        2,
+        0
+      ],
+      "q": [
+        0,
+        2
+      ]
+    },
+    "model_expected": [
+      4,
+      4
+    ],
+    "reference_expected": [
+      -2,
+      4
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 44,
+    "case_id": "apps-train-2834/m3",
+    "sample_index": 0,
+    "input": {
+      "p": [
+        0,
+        2
+      ],
+      "q": [
+        -1,
+        0
+      ]
+    },
+    "model_expected": [
+      1,
+      2
+    ],
+    "reference_expected": [
+      -2,
+      -2
+    ],
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 44,
+    "case_id": "apps-train-2868/m2",
+    "sample_index": 0,
+    "input": {
+      "arr": [
+        0,
+        1,
+        3
+      ]
+    },
+    "model_expected": true,
+    "reference_expected": false,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 0,
+    "input": {
+      "m": 5,
+      "n": 8
+    },
+    "model_expected": 8,
+    "reference_expected": 10,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 1,
+    "input": {
+      "m": 5,
+      "n": 4
+    },
+    "model_expected": 4,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 2,
+    "input": {
+      "m": 5,
+      "n": 8
+    },
+    "model_expected": 8,
+    "reference_expected": 10,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m1",
+    "sample_index": 3,
+    "input": {
+      "m": 5,
+      "n": 6
+    },
+    "model_expected": 6,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 1,
+    "input": {
+      "m": 5,
+      "n": 6
+    },
+    "model_expected": 10,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m2",
+    "sample_index": 2,
+    "input": {
+      "m": 6,
+      "n": 5
+    },
+    "model_expected": 5,
+    "reference_expected": 6,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 2,
+    "input": {
+      "m": 5,
+      "n": 3
+    },
+    "model_expected": 3,
+    "reference_expected": 5,
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 44,
+    "case_id": "apps-train-2947/m3",
+    "sample_index": 3,
+    "input": {
+      "m": 5,
+      "n": 1
+    },
+    "model_expected": 1,
+    "reference_expected": 0,
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 44,
+    "case_id": "apps-train-2968/m1",
+    "sample_index": 0,
+    "input": {
+      "s": "ba"
+    },
+    "model_expected": "a",
+    "reference_expected": "ba",
+    "equals_buggy_output": true,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 44,
+    "case_id": "apps-train-2968/m1",
+    "sample_index": 1,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "b",
+    "reference_expected": "ab",
+    "equals_buggy_output": true,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 44,
+    "case_id": "apps-train-2968/m2",
+    "sample_index": 2,
+    "input": {
+      "s": "aa"
+    },
+    "model_expected": "a",
+    "reference_expected": "aa",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 44,
+    "case_id": "apps-train-2968/m3",
+    "sample_index": 1,
+    "input": {
+      "s": "ab"
+    },
+    "model_expected": "b",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 44,
+    "case_id": "apps-train-2968/m3",
+    "sample_index": 3,
+    "input": {
+      "s": "bA"
+    },
+    "model_expected": "A",
+    "reference_expected": "bA",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 0,
+    "input": {
+      "text": "ba"
+    },
+    "model_expected": "aabb",
+    "reference_expected": "ba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 1,
+    "input": {
+      "text": "ab "
+    },
+    "model_expected": "abb",
+    "reference_expected": "a b",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m1",
+    "sample_index": 3,
+    "input": {
+      "text": "aa"
+    },
+    "model_expected": "a",
+    "reference_expected": "aa",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m2",
+    "sample_index": 0,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "ba",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m2",
+    "sample_index": 2,
+    "input": {
+      "text": "ab "
+    },
+    "model_expected": "ba ",
+    "reference_expected": "a b",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m2",
+    "sample_index": 3,
+    "input": {
+      "text": "ba"
+    },
+    "model_expected": "aabb",
+    "reference_expected": "ba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 0,
+    "input": {
+      "text": "aab"
+    },
+    "model_expected": "baa",
+    "reference_expected": "aba",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 1,
+    "input": {
+      "text": "bb"
+    },
+    "model_expected": "b b",
+    "reference_expected": "bb",
+    "equals_buggy_output": false,
+    "input_exposes_bug": false,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036"
+  },
+  {
+    "variant": "adaptive",
+    "generation_seed": 44,
+    "case_id": "apps-train-3014/m3",
+    "sample_index": 3,
+    "input": {
+      "text": "ab"
+    },
+    "model_expected": "bb",
+    "reference_expected": "ab",
+    "equals_buggy_output": false,
+    "input_exposes_bug": true,
+    "run": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-000305-512036"
+  }
+]

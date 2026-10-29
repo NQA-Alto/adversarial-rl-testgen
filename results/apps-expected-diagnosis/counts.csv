@@ -1,0 +1,6 @@
+variant,samples,invalid_or_truncated,correct_expected,wrong_expected,wrong_python_type,wrong_equals_buggy_output,input_exposes_bug_but_expected_wrong,bug_detected,correct_without_bug
+grpo96,180,49,62,69,0,6,36,17,45
+base,180,74,44,62,0,5,29,11,33
+sft,180,50,57,73,0,5,35,16,41
+control,180,50,61,69,0,6,36,15,46
+adaptive,180,49,57,74,0,6,38,15,42

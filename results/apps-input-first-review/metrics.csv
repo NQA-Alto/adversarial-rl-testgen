@@ -1,0 +1,13 @@
+variant,generation_seed,valid_tests,correct_expected,bug_detecting_tests,cases_detected
+base,42,35,15,4,3
+sft,42,41,18,6,3
+control,42,41,19,4,3
+adaptive,42,41,16,5,3
+base,43,35,17,3,3
+sft,43,42,22,5,4
+control,43,42,22,4,3
+adaptive,43,43,22,4,3
+base,44,36,12,4,4
+sft,44,47,17,5,5
+control,44,47,20,7,6
+adaptive,44,47,19,6,6
