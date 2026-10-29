@@ -10,6 +10,7 @@ def check():
         ("reward_wrapper", "python.exe", ["python.exe", "scripts/apps_reward_trial.py"], True),
         ("seed_wrapper", "python.exe", ["python.exe", "scripts/apps_reward_seed_probe.py"], True),
         ("adversarial_review", "python.exe", ["python.exe", "scripts/apps_adversarial_review.py"], True),
+        ("lora_trial", "python.exe", ["python.exe", "scripts/apps_lora_trial.py"], True),
         ("completion_wrapper", "python.exe", ["python.exe", "C:/a/finish_apps_reward_trial.py"], False),
         ("prefixed_script", "python.exe", ["python.exe", "C:/a/archive_apps_model_runner.py"], False),
         ("dashboard", "python.exe", ["python.exe", "scripts/ui_dashboard.py"], False),

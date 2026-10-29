@@ -1,0 +1,70 @@
+{
+  "target_path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-sft-v2-20261028-145103-496784\\targets.jsonl",
+  "target_sha256": "b8979173342b327a32d80e2bff9b4209fac73233286421f79cb49756a8558188",
+  "supervised_targets": 319,
+  "first_field_in_targets": {
+    "expected": 319
+  },
+  "target_example": "{\"expected\":true,\"input\":{\"distance_to_pump\":4,\"fuel_left\":4,\"mpg\":1}}",
+  "validation_first_field": {
+    "base": {
+      "input": {
+        "samples": 155,
+        "valid": 106,
+        "correct_expected": 44,
+        "bug_detected": 11
+      },
+      "parse_error": {
+        "samples": 25,
+        "valid": 0,
+        "correct_expected": 0,
+        "bug_detected": 0
+      }
+    },
+    "sft": {
+      "expected": {
+        "samples": 177,
+        "valid": 129,
+        "correct_expected": 35,
+        "bug_detected": 11
+      },
+      "parse_error": {
+        "samples": 3,
+        "valid": 0,
+        "correct_expected": 0,
+        "bug_detected": 0
+      }
+    },
+    "control": {
+      "expected": {
+        "samples": 176,
+        "valid": 128,
+        "correct_expected": 32,
+        "bug_detected": 9
+      },
+      "parse_error": {
+        "samples": 4,
+        "valid": 0,
+        "correct_expected": 0,
+        "bug_detected": 0
+      }
+    },
+    "adaptive": {
+      "expected": {
+        "samples": 176,
+        "valid": 127,
+        "correct_expected": 33,
+        "bug_detected": 10
+      },
+      "parse_error": {
+        "samples": 4,
+        "valid": 0,
+        "correct_expected": 0,
+        "bug_detected": 0
+      }
+    }
+  },
+  "evaluations_per_variant": 3,
+  "model_test_evaluation": false,
+  "interpretation": "Observed order shift, not a causal demonstration that ordering alone explains low accuracy. Proposed experiment changes only top-level training-target field order; strict JSON scoring is order invariant."
+}

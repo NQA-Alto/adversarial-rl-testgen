@@ -1,0 +1,133 @@
+{
+  "dataset_id": "apps-intro-call-v2-eb69b8869857",
+  "split": "validation",
+  "split_sha256": "d275394b4985cf8e4e9142885fe297b125ff4b33c4201933bb1c041bf3215c06",
+  "rows": [
+    {
+      "case_id": "apps-train-2834/m1",
+      "source_id": 2834,
+      "domain_inputs": 81,
+      "bug_exposing_inputs": 54,
+      "uniform_input_attack_probability": 0.6666666666666666,
+      "uniform_oracle_case_detection_at_4": 0.9876543209876543
+    },
+    {
+      "case_id": "apps-train-2834/m2",
+      "source_id": 2834,
+      "domain_inputs": 81,
+      "bug_exposing_inputs": 54,
+      "uniform_input_attack_probability": 0.6666666666666666,
+      "uniform_oracle_case_detection_at_4": 0.9876543209876543
+    },
+    {
+      "case_id": "apps-train-2834/m3",
+      "source_id": 2834,
+      "domain_inputs": 81,
+      "bug_exposing_inputs": 54,
+      "uniform_input_attack_probability": 0.6666666666666666,
+      "uniform_oracle_case_detection_at_4": 0.9876543209876543
+    },
+    {
+      "case_id": "apps-train-2868/m1",
+      "source_id": 2868,
+      "domain_inputs": 341,
+      "bug_exposing_inputs": 1,
+      "uniform_input_attack_probability": 0.002932551319648094,
+      "uniform_oracle_case_detection_at_4": 0.011678706939271422
+    },
+    {
+      "case_id": "apps-train-2868/m2",
+      "source_id": 2868,
+      "domain_inputs": 341,
+      "bug_exposing_inputs": 22,
+      "uniform_input_attack_probability": 0.06451612903225806,
+      "uniform_oracle_case_detection_at_4": 0.23414735560967193
+    },
+    {
+      "case_id": "apps-train-2868/m3",
+      "source_id": 2868,
+      "domain_inputs": 341,
+      "bug_exposing_inputs": 232,
+      "uniform_input_attack_probability": 0.6803519061583577,
+      "uniform_oracle_case_detection_at_4": 0.9895602890137215
+    },
+    {
+      "case_id": "apps-train-2947/m1",
+      "source_id": 2947,
+      "domain_inputs": 72,
+      "bug_exposing_inputs": 7,
+      "uniform_input_attack_probability": 0.09722222222222222,
+      "uniform_oracle_case_detection_at_4": 0.3357624227799687
+    },
+    {
+      "case_id": "apps-train-2947/m2",
+      "source_id": 2947,
+      "domain_inputs": 72,
+      "bug_exposing_inputs": 51,
+      "uniform_input_attack_probability": 0.7083333333333334,
+      "uniform_oracle_case_detection_at_4": 0.9927631896219136
+    },
+    {
+      "case_id": "apps-train-2947/m3",
+      "source_id": 2947,
+      "domain_inputs": 72,
+      "bug_exposing_inputs": 49,
+      "uniform_input_attack_probability": 0.6805555555555556,
+      "uniform_oracle_case_detection_at_4": 0.9895868683675316
+    },
+    {
+      "case_id": "apps-train-2968/m1",
+      "source_id": 2968,
+      "domain_inputs": 363,
+      "bug_exposing_inputs": 360,
+      "uniform_input_attack_probability": 0.9917355371900827,
+      "uniform_oracle_case_detection_at_4": 0.9999999953349262
+    },
+    {
+      "case_id": "apps-train-2968/m2",
+      "source_id": 2968,
+      "domain_inputs": 363,
+      "bug_exposing_inputs": 270,
+      "uniform_input_attack_probability": 0.743801652892562,
+      "uniform_oracle_case_detection_at_4": 0.9956917063772133
+    },
+    {
+      "case_id": "apps-train-2968/m3",
+      "source_id": 2968,
+      "domain_inputs": 363,
+      "bug_exposing_inputs": 351,
+      "uniform_input_attack_probability": 0.9669421487603306,
+      "uniform_oracle_case_detection_at_4": 0.9999988057411067
+    },
+    {
+      "case_id": "apps-train-3014/m1",
+      "source_id": 3014,
+      "domain_inputs": 364,
+      "bug_exposing_inputs": 360,
+      "uniform_input_attack_probability": 0.989010989010989,
+      "uniform_oracle_case_detection_at_4": 0.9999999854174179
+    },
+    {
+      "case_id": "apps-train-3014/m2",
+      "source_id": 3014,
+      "domain_inputs": 364,
+      "bug_exposing_inputs": 324,
+      "uniform_input_attack_probability": 0.8901098901098901,
+      "uniform_oracle_case_detection_at_4": 0.999854174178823
+    },
+    {
+      "case_id": "apps-train-3014/m3",
+      "source_id": 3014,
+      "domain_inputs": 364,
+      "bug_exposing_inputs": 351,
+      "uniform_input_attack_probability": 0.9642857142857143,
+      "uniform_oracle_case_detection_at_4": 0.9999983730737193
+    }
+  ],
+  "expected_detected_cases_with_oracle": 12.512004835418248,
+  "assumptions": "Four independent uniform draws WITH replacement in each declared finite domain; every expected answer supplied by a perfect reference oracle. Analytic diagnostic only, not model-generated tests or measured performance.",
+  "limitations": "Oracle supplies information unavailable to the test-generator policy. Not a fair end-to-end baseline, not official APPS, and not a result on Test.",
+  "source_sha256": "6144e96f9d4bc4fb5e3128a0c9a92980bfc65d049ccfe6bda379bf5f6b1ae5e5",
+  "model_loaded": false,
+  "model_test_evaluation": false
+}

@@ -34,7 +34,7 @@ def build_examples(seed=42):
     return rows, cases, manifest
 
 
-def train(folder, steps, seed, prompt_version, checkpoint_steps=(), reference_adapter=None):
+def train(folder, steps, seed, prompt_version, checkpoint_steps=(), reference_adapter=None, lora_profile="attention-qv-v1"):
     import torch
     from peft.utils import get_peft_model_state_dict
     from check_lora_update import completion_loss
@@ -48,6 +48,8 @@ def train(folder, steps, seed, prompt_version, checkpoint_steps=(), reference_ad
     path.write_text("".join(canonical(row) + "\n" for row in rows), encoding="utf-8", newline="\n")
     config = {"steps": steps, "gradient_accumulation": 4, "learning_rate": 5e-5, "seed": seed,
               "prompt_version": prompt_version, "max_total_tokens": 1664, "max_target_tokens": 96}
+    if lora_profile != "attention-qv-v1":
+        config["lora_profile"] = lora_profile
     if checkpoint_steps:
         config["checkpoint_steps"] = sorted(checkpoint_steps)
     result = {"status": "started", "method": "SFT_NOT_RL", "source_hashes": source, "configuration": config,
@@ -57,9 +59,13 @@ def train(folder, steps, seed, prompt_version, checkpoint_steps=(), reference_ad
     write(folder / "plan.json", result)
     write(folder / "result.json", result)
     torch.manual_seed(seed)
-    model, tokenizer, eos = load_model(train=True)
+    model, tokenizer, eos = load_model(train=True, lora_profile=lora_profile)
+    from apps_lora import coverage
+    result["lora_coverage"] = coverage(lora_profile)
     result["gpu"] = torch.cuda.get_device_name(0)
     result["trainable_parameters"] = sum(value.numel() for value in model.parameters() if value.requires_grad)
+    if result["trainable_parameters"] != result["lora_coverage"]["trainable_parameters"]:
+        raise RuntimeError("Live LoRA count differs from checkpoint coverage audit")
     initial = {name: value.detach().cpu().clone() for name, value in get_peft_model_state_dict(model).items()}
     if not all(torch.count_nonzero(value).item() == 0 for name, value in initial.items() if "lora_B" in name):
         raise RuntimeError("SFT adapter must start fresh")
@@ -156,6 +162,8 @@ if __name__ == "__main__":
     parser.add_argument("--steps", type=int, default=64)
     parser.add_argument("--checkpoint-steps", type=int, nargs="*", default=[])
     parser.add_argument("--reference-adapter", type=Path)
+    from apps_lora import PROFILES
+    parser.add_argument("--lora-profile", choices=tuple(PROFILES), default="attention-qv-v1")
     args = parser.parse_args()
     if not 1 <= args.steps <= 256 or any(not 1 <= step <= args.steps for step in args.checkpoint_steps):
         parser.error("SFT steps must be 1..256 and checkpoint steps must be within that budget")
@@ -167,7 +175,7 @@ if __name__ == "__main__":
     folder = run_folder("sft-v2")
     print("EVIDENCE:", folder, flush=True)
     try:
-        train(folder, args.steps, 42, "apps-call-v2", args.checkpoint_steps, args.reference_adapter)
+        train(folder, args.steps, 42, "apps-call-v2", args.checkpoint_steps, args.reference_adapter, args.lora_profile)
     except Exception as error:
         result = read(folder / "result.json") if (folder / "result.json").exists() else {}
         result.update(status="failed", error=repr(error))

@@ -1,0 +1,418 @@
+{
+  "status": "stopped_for_protocol_review",
+  "evidence_root": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-lora-coverage-trial-20261029-141204-932567",
+  "result_sha256": "d1134d417172464dbdda029ec6f26d6ac23cd0725fea7d5538781bd93cd0c43a",
+  "completed_sft": {
+    "attention-qv-v1": {
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-sft-v2-20261029-141301-018558",
+      "result_sha256": "164e84a6d976a1a25273281241e897a3b0f70efa19324da7c5bd87ac2a89d8d6",
+      "trainable_parameters": 208896,
+      "optimizer_steps": 64,
+      "coverage": {
+        "profile": "attention-qv-v1",
+        "rank": 4,
+        "alpha": 8,
+        "target_modules": "model\\.language_model\\.layers\\.\\d+\\.self_attn\\.(q_proj|v_proj)",
+        "transformer_blocks": 24,
+        "covered_blocks": [
+          3,
+          7,
+          11,
+          15,
+          19,
+          23
+        ],
+        "target_module_count": 12,
+        "adapter_tensor_count": 24,
+        "trainable_parameters": 208896,
+        "targets": [
+          {
+            "module": "model.language_model.layers.11.self_attn.q_proj",
+            "shape": [
+              4096,
+              2048
+            ],
+            "lora_parameters_rank4": 24576
+          },
+          {
+            "module": "model.language_model.layers.11.self_attn.v_proj",
+            "shape": [
+              512,
+              2048
+            ],
+            "lora_parameters_rank4": 10240
+          },
+          {
+            "module": "model.language_model.layers.15.self_attn.q_proj",
+            "shape": [
+              4096,
+              2048
+            ],
+            "lora_parameters_rank4": 24576
+          },
+          {
+            "module": "model.language_model.layers.15.self_attn.v_proj",
+            "shape": [
+              512,
+              2048
+            ],
+            "lora_parameters_rank4": 10240
+          },
+          {
+            "module": "model.language_model.layers.19.self_attn.q_proj",
+            "shape": [
+              4096,
+              2048
+            ],
+            "lora_parameters_rank4": 24576
+          },
+          {
+            "module": "model.language_model.layers.19.self_attn.v_proj",
+            "shape": [
+              512,
+              2048
+            ],
+            "lora_parameters_rank4": 10240
+          },
+          {
+            "module": "model.language_model.layers.23.self_attn.q_proj",
+            "shape": [
+              4096,
+              2048
+            ],
+            "lora_parameters_rank4": 24576
+          },
+          {
+            "module": "model.language_model.layers.23.self_attn.v_proj",
+            "shape": [
+              512,
+              2048
+            ],
+            "lora_parameters_rank4": 10240
+          },
+          {
+            "module": "model.language_model.layers.3.self_attn.q_proj",
+            "shape": [
+              4096,
+              2048
+            ],
+            "lora_parameters_rank4": 24576
+          },
+          {
+            "module": "model.language_model.layers.3.self_attn.v_proj",
+            "shape": [
+              512,
+              2048
+            ],
+            "lora_parameters_rank4": 10240
+          },
+          {
+            "module": "model.language_model.layers.7.self_attn.q_proj",
+            "shape": [
+              4096,
+              2048
+            ],
+            "lora_parameters_rank4": 24576
+          },
+          {
+            "module": "model.language_model.layers.7.self_attn.v_proj",
+            "shape": [
+              512,
+              2048
+            ],
+            "lora_parameters_rank4": 10240
+          }
+        ]
+      }
+    },
+    "hybrid-qkv-v1": {
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-sft-v2-20261029-141623-190269",
+      "result_sha256": "5c1b8ccedb088c120ce94f2aff032a7f3b7be028e04e1733665b5cc1de1d4513",
+      "trainable_parameters": 798720,
+      "optimizer_steps": 64,
+      "coverage": {
+        "profile": "hybrid-qkv-v1",
+        "rank": 4,
+        "alpha": 8,
+        "target_modules": "model\\.language_model\\.layers\\.\\d+\\.(self_attn\\.(q_proj|v_proj)|linear_attn\\.in_proj_qkv)",
+        "transformer_blocks": 24,
+        "covered_blocks": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20,
+          21,
+          22,
+          23
+        ],
+        "target_module_count": 30,
+        "adapter_tensor_count": 60,
+        "trainable_parameters": 798720,
+        "targets": [
+          {
+            "module": "model.language_model.layers.0.linear_attn.in_proj_qkv",
+            "shape": [
+              6144,
+              2048
+            ],
+            "lora_parameters_rank4": 32768
+          },
+          {
+            "module": "model.language_model.layers.1.linear_attn.in_proj_qkv",
+            "shape": [
+              6144,
+              2048
+            ],
+            "lora_parameters_rank4": 32768
+          },
+          {
+            "module": "model.language_model.layers.10.linear_attn.in_proj_qkv",
+            "shape": [
+              6144,
+              2048
+            ],
+            "lora_parameters_rank4": 32768
+          },
+          {
+            "module": "model.language_model.layers.11.self_attn.q_proj",
+            "shape": [
+              4096,
+              2048
+            ],
+            "lora_parameters_rank4": 24576
+          },
+          {
+            "module": "model.language_model.layers.11.self_attn.v_proj",
+            "shape": [
+              512,
+              2048
+            ],
+            "lora_parameters_rank4": 10240
+          },
+          {
+            "module": "model.language_model.layers.12.linear_attn.in_proj_qkv",
+            "shape": [
+              6144,
+              2048
+            ],
+            "lora_parameters_rank4": 32768
+          },
+          {
+            "module": "model.language_model.layers.13.linear_attn.in_proj_qkv",
+            "shape": [
+              6144,
+              2048
+            ],
+            "lora_parameters_rank4": 32768
+          },
+          {
+            "module": "model.language_model.layers.14.linear_attn.in_proj_qkv",
+            "shape": [
+              6144,
+              2048
+            ],
+            "lora_parameters_rank4": 32768
+          },
+          {
+            "module": "model.language_model.layers.15.self_attn.q_proj",
+            "shape": [
+              4096,
+              2048
+            ],
+            "lora_parameters_rank4": 24576
+          },
+          {
+            "module": "model.language_model.layers.15.self_attn.v_proj",
+            "shape": [
+              512,
+              2048
+            ],
+            "lora_parameters_rank4": 10240
+          },
+          {
+            "module": "model.language_model.layers.16.linear_attn.in_proj_qkv",
+            "shape": [
+              6144,
+              2048
+            ],
+            "lora_parameters_rank4": 32768
+          },
+          {
+            "module": "model.language_model.layers.17.linear_attn.in_proj_qkv",
+            "shape": [
+              6144,
+              2048
+            ],
+            "lora_parameters_rank4": 32768
+          },
+          {
+            "module": "model.language_model.layers.18.linear_attn.in_proj_qkv",
+            "shape": [
+              6144,
+              2048
+            ],
+            "lora_parameters_rank4": 32768
+          },
+          {
+            "module": "model.language_model.layers.19.self_attn.q_proj",
+            "shape": [
+              4096,
+              2048
+            ],
+            "lora_parameters_rank4": 24576
+          },
+          {
+            "module": "model.language_model.layers.19.self_attn.v_proj",
+            "shape": [
+              512,
+              2048
+            ],
+            "lora_parameters_rank4": 10240
+          },
+          {
+            "module": "model.language_model.layers.2.linear_attn.in_proj_qkv",
+            "shape": [
+              6144,
+              2048
+            ],
+            "lora_parameters_rank4": 32768
+          },
+          {
+            "module": "model.language_model.layers.20.linear_attn.in_proj_qkv",
+            "shape": [
+              6144,
+              2048
+            ],
+            "lora_parameters_rank4": 32768
+          },
+          {
+            "module": "model.language_model.layers.21.linear_attn.in_proj_qkv",
+            "shape": [
+              6144,
+              2048
+            ],
+            "lora_parameters_rank4": 32768
+          },
+          {
+            "module": "model.language_model.layers.22.linear_attn.in_proj_qkv",
+            "shape": [
+              6144,
+              2048
+            ],
+            "lora_parameters_rank4": 32768
+          },
+          {
+            "module": "model.language_model.layers.23.self_attn.q_proj",
+            "shape": [
+              4096,
+              2048
+            ],
+            "lora_parameters_rank4": 24576
+          },
+          {
+            "module": "model.language_model.layers.23.self_attn.v_proj",
+            "shape": [
+              512,
+              2048
+            ],
+            "lora_parameters_rank4": 10240
+          },
+          {
+            "module": "model.language_model.layers.3.self_attn.q_proj",
+            "shape": [
+              4096,
+              2048
+            ],
+            "lora_parameters_rank4": 24576
+          },
+          {
+            "module": "model.language_model.layers.3.self_attn.v_proj",
+            "shape": [
+              512,
+              2048
+            ],
+            "lora_parameters_rank4": 10240
+          },
+          {
+            "module": "model.language_model.layers.4.linear_attn.in_proj_qkv",
+            "shape": [
+              6144,
+              2048
+            ],
+            "lora_parameters_rank4": 32768
+          },
+          {
+            "module": "model.language_model.layers.5.linear_attn.in_proj_qkv",
+            "shape": [
+              6144,
+              2048
+            ],
+            "lora_parameters_rank4": 32768
+          },
+          {
+            "module": "model.language_model.layers.6.linear_attn.in_proj_qkv",
+            "shape": [
+              6144,
+              2048
+            ],
+            "lora_parameters_rank4": 32768
+          },
+          {
+            "module": "model.language_model.layers.7.self_attn.q_proj",
+            "shape": [
+              4096,
+              2048
+            ],
+            "lora_parameters_rank4": 24576
+          },
+          {
+            "module": "model.language_model.layers.7.self_attn.v_proj",
+            "shape": [
+              512,
+              2048
+            ],
+            "lora_parameters_rank4": 10240
+          },
+          {
+            "module": "model.language_model.layers.8.linear_attn.in_proj_qkv",
+            "shape": [
+              6144,
+              2048
+            ],
+            "lora_parameters_rank4": 32768
+          },
+          {
+            "module": "model.language_model.layers.9.linear_attn.in_proj_qkv",
+            "shape": [
+              6144,
+              2048
+            ],
+            "lora_parameters_rank4": 32768
+          }
+        ]
+      }
+    }
+  },
+  "completed_validation_runs": 0,
+  "stop_reason": "Independent label-order diagnostic found all 319 historical SFT targets serialize expected before input; prioritize a separate controlled input-first trial before spending further compute on coverage. No new Validation outcome was inspected.",
+  "partial_grpo_excluded": true,
+  "quality_comparison_available": false,
+  "model_test_evaluation": false
+}

@@ -28,18 +28,18 @@ def run_folder(label):
 
 
 def freeze_sources(folder):
-    names = ("apps_core.py", "apps_profiles.py", "apps_model_runner.py", "restricted_python.py", "local_model_loader.py", "train_static_grpo.py", "check_lora_update.py", "apps_curriculum.py", "apps_output_contracts.py", "apps_rewards.py")
+    names = ("apps_core.py", "apps_profiles.py", "apps_model_runner.py", "restricted_python.py", "local_model_loader.py", "train_static_grpo.py", "check_lora_update.py", "apps_curriculum.py", "apps_output_contracts.py", "apps_rewards.py", "apps_lora.py")
     (folder / "source").mkdir()
     for name in names:
         shutil.copy2(Path(__file__).with_name(name), folder / "source" / name)
     return {name: digest(Path(__file__).with_name(name)) for name in names}
 
 
-def load_model(adapter=None, train=False):
+def load_model(adapter=None, train=False, lora_profile="attention-qv-v1"):
     import torch
     from transformers import AutoTokenizer
     from peft import LoraConfig, PeftModel, TaskType, get_peft_model
-    from check_lora_update import TARGET_MODULES
+    from apps_lora import PROFILES
 
     path = ASSETS / "models/Qwen3.5-2B"
     if not torch.cuda.is_available() or not torch.cuda.is_bf16_supported():
@@ -53,7 +53,7 @@ def load_model(adapter=None, train=False):
         model = PeftModel.from_pretrained(base, adapter, is_trainable=train, local_files_only=True)
     elif train:
         model = get_peft_model(base, LoraConfig(task_type=TaskType.CAUSAL_LM, r=4, lora_alpha=8,
-                              lora_dropout=0, bias="none", target_modules=TARGET_MODULES))
+                              lora_dropout=0, bias="none", target_modules=PROFILES[lora_profile]))
     else:
         model = base
     if not train:
