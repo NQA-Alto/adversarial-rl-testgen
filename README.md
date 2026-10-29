@@ -10,6 +10,8 @@ Nhánh `apps-introductory` đang dùng dữ liệu APPS. Đã chạy SFT, GRPO c
 
 [Roadmap APPS hiện tại](docs/APPS_PROGRESS.md) · [Phân tích lỗi](results/apps-error-analysis) · [Các phép thử tinh chỉnh](results/apps-tuning) · [EDA và pipeline](results/apps-data-profile)
 
+[Tiến độ toàn đề tài](docs/PROJECT_STATUS.md): ước lượng khoảng 70% toàn bộ công việc, khoảng 90% phần triển khai cốt lõi. Các tỷ lệ phục vụ điều phối, không phải điểm chấm hoặc mức cải thiện của model. Báo cáo, video và kiểm chứng cài lại chưa hoàn tất.
+
 Hai nhánh GRPO cuối phát hiện cùng hai code; nhánh đối kháng mất tám cơ hội vì expected sai. Đã thử thinking và hai cách diễn đạt hợp đồng đầu ra trên Train; các ứng viên chưa qua tiêu chí nên giữ prompt v2 và checkpoint hiện tại. Đây là các phép thử suy luận, không phải lượt RL mới. Test vẫn được giữ lại.
 
 ## Kiểm chứng ngân sách SFT
@@ -143,3 +145,11 @@ $project = 'D:/DA/DoAn_TTNT_De19/adversarial-rl-testgen'
 Phiên bản thư viện của lượt đánh giá/GRPO nằm trong result. Môi trường train và giao diện có requirements riêng. Model, môi trường Python, cache, log lớn và adapter không đưa vào Git. Clone repo chưa tự tải model hay tái lập toàn bộ môi trường; script còn phụ thuộc đường dẫn D:.
 
 Năm bài Validation và một seed chưa đủ kết luận ổn định. Miền hữu hạn, test tham chiếu và hai lời giải nguồn giúp kiểm tra dữ liệu, không chứng minh khả năng tổng quát trên APPS. Chưa xác nhận model nền có từng gặp bài công khai này khi tiền huấn luyện hay không. Bản sao lưu trước chuyển đổi ở `D:/DA/TTNT_Backups/De19-before-APPS-20261028-112210`.
+
+## Biến động lấy mẫu của chính nhánh đối kháng
+
+Đã kiểm tra Qwen gốc, SFT64 và hai checkpoint GRPO cuối với seed sinh test 42/43/44; mỗi lượt 60 test trên 15 code Validation. Sáu lượt mới và sáu kết quả cũ được chấm lại/đối chiếu; cùng prompt, cách lấy mẫu và bộ chấm. Đây là **một seed huấn luyện, ba seed sinh test**, không phải ba lượt train độc lập.
+
+Code phát hiện trung bình ± SD: Qwen gốc 3.33 ± 0.58/15; SFT64 3.33 ± 1.53/15; cố định 2.67 ± 1.15/15; đối kháng 3.00 ± 1.73/15. Không có bằng chứng từ phép kiểm tra nhỏ này để tuyên bố đối kháng tốt hơn; SD chỉ mô tả biến động lấy mẫu.
+
+[Bảng và biểu đồ đầy đủ](results/apps-adversarial-review/README.md). Có thống kê thời gian GRPO, probe Train, sinh/lọc code và bộ nhớ; hai nhánh ngang ngân sách RL, không ngang tổng chi phí. [Tiến độ toàn đề tài](docs/PROJECT_STATUS.md).

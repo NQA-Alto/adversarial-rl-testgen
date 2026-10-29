@@ -1,0 +1,14 @@
+stage,arm,kind,seconds,peak_pytorch_allocated_gib,path,result_sha256,measurement
+SFT64 dùng chung,shared,sft,186.095,4.362,D:\DA\TTNT_De19_Assets\evidence\apps-sft-v2-20261028-145103-496784,be2bab7cfeba0825793229e18078abfca72e3ae8780dadc7bf1ee70856d474a3,training_seconds
+Probe Train vòng 1,adaptive,probe,57.264,4.523,D:\DA\TTNT_De19_Assets\evidence\apps-adapter-validation-20261028-155601-910485,f480bed9482949adf3d67e5db0197ea6b0f2a84c24cbbf05e97317cede8d6dae,elapsed_seconds
+Sinh và lọc code vòng 1,adaptive,code_generation,148.055,4.464,D:\DA\TTNT_De19_Assets\evidence\apps-adversary-20261028-160208-467069,edb93cca92b12e260f211e7052bb8c9f4a2e24b1ba516e947405897734e8b1bf,elapsed_seconds
+GRPO vòng 1,control,grpo,205.6885,4.836,D:\DA\TTNT_De19_Assets\evidence\apps-grpo-pilot-20261028-160548-378647,994bee6a7f05dabe3c91e7a2735d2820db1fb1efec2e3a61858724a31d4f3d6d,Trainer train_runtime
+Validation vòng 1,control,evaluation,21.428,4.494,D:\DA\TTNT_De19_Assets\evidence\apps-adapter-validation-20261028-160928-376991,9ed9e3c0478c4bc4856d49ade1147cee4177ead222dfa0a4a75d12201277c61c,elapsed_seconds
+GRPO vòng 1,adaptive,grpo,262.9781,4.808,D:\DA\TTNT_De19_Assets\evidence\apps-grpo-pilot-20261028-161000-332407,5a98d5564f7a1a1d6cb08c6c6469acb3b824c1ae0ebcf0a8c02a258e9d70ba3b,Trainer train_runtime
+Validation vòng 1,adaptive,evaluation,19.968,4.494,D:\DA\TTNT_De19_Assets\evidence\apps-adapter-validation-20261028-161436-353146,0dd5189fddcec501ef9a8aa558ac835b1e201eb920d4fcd0ccd99f8afe5ce103,elapsed_seconds
+Probe Train vòng 2,adaptive,probe,81.758,4.523,D:\DA\TTNT_De19_Assets\evidence\apps-adapter-validation-20261028-161513-740526,3417b815fda23beba9924edf0c9f9bb805136f7fa98eb4737de514109c017381,elapsed_seconds
+Sinh và lọc code vòng 2,adaptive,code_generation,367.976,4.496,D:\DA\TTNT_De19_Assets\evidence\apps-adversary-20261028-161649-610271,754679dc331f65a1bead87248e312fdb8ccbbd938ae0df05efd37fa9dc958a29,elapsed_seconds
+GRPO vòng 2,control,grpo,316.8161,4.791,D:\DA\TTNT_De19_Assets\evidence\apps-grpo-pilot-20261028-162317-284683,2d66385cea2b0ba54c65894d36e08d4379668f781bab90dcc2b009939b15dac1,Trainer train_runtime
+Validation vòng 2,control,evaluation,23.209,4.494,D:\DA\TTNT_De19_Assets\evidence\apps-adapter-validation-20261028-162847-767818,a6a0cba2acf2a04bf16c15770901dd6859325f8b98155a6047098fe1996932b4,elapsed_seconds
+GRPO vòng 2,adaptive,grpo,271.6463,4.978,D:\DA\TTNT_De19_Assets\evidence\apps-grpo-pilot-20261028-162924-967971,59ff3e5332a0824159e372bef7bb3efd662bed28c48896bb1b1111cce1dad9f0,Trainer train_runtime
+Validation vòng 2,adaptive,evaluation,21.2,4.494,D:\DA\TTNT_De19_Assets\evidence\apps-adapter-validation-20261028-163412-580046,e84e76d861c099438c0f59360b97d9afad9df4a4e05a71090bd00d5ca636b7f6,elapsed_seconds

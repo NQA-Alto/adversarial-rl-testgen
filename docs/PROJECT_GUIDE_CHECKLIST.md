@@ -23,3 +23,9 @@ Trước khi chốt bản nộp, cần kiểm tra khả năng chạy lại và p
 Đã bổ sung ablation tỷ trọng reward GRPO theo hướng tr.22: hai nhánh cùng parent, dữ liệu, prompt và ngân sách; kế hoạch ghi trước đánh giá. Bộ chấm/metric chính giữ nguyên, reward học có phiên bản riêng. Từng rollout và adapter được kiểm tra lại; trường hợp không đạt tiêu chí tiếp tục được lưu.
 
 Kiểm tra thêm ba seed sinh test được lên kế hoạch trước Validation mới và giữ toàn bộ kết quả. Đây không thay thế nhiều seed huấn luyện. Test vẫn chưa dùng; đóng gói, video và báo cáo cuối tiếp tục theo ưu tiên trước đó của người dùng.
+
+## Kiểm tra lấy mẫu và thống kê chi phí ngày 29/10/2026
+
+Đã giữ đủ 12 kết quả của bốn checkpoint trên ba seed sinh test; chấm lại mẫu thô, đối chiếu prompt/seed/cấu hình và giữ Test. Đã thống kê riêng thời gian học, tạo dữ liệu đối kháng và chấm Validation. Các số thời gian chỉ bao quát pha đã ghi, chưa phải thời gian toàn quy trình.
+
+Phần nhiều seed huấn luyện vẫn là giới hạn, không đánh dấu hoàn tất. Đã lập [ước lượng tiến độ toàn đề tài](PROJECT_STATUS.md) khoảng 70%, với các hạng mục đánh giá cuối, demo, cài lại và báo cáo/slide còn riêng. Đây không phải tỷ lệ điểm chấm.

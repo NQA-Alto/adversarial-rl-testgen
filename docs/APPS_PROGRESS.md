@@ -15,7 +15,7 @@ Mốc cập nhật: 29/10/2026. Đây là nhật ký triển khai và thực ngh
 | Đánh giá Validation | Đã có so sánh có kiểm soát | Cùng checkpoint SFT ban đầu, seed, thứ tự bài và ngân sách. Kết quả cuối: cố định 2/15 code, đối kháng 2/15; SFT 3/15. Chưa có bằng chứng cải thiện. |
 | Phân tích lỗi | Đã bổ sung | Hai nhánh phát hiện cùng hai code; 48/60 đầu ra trùng. Nhánh đối kháng có 11 input tiềm năng bắt lỗi nhưng mất 8 cơ hội vì expected sai. Đây là chẩn đoán bằng oracle, không cộng vào thành tích của model. |
 | Thử nghiệm tinh chỉnh | Đã kiểm chứng, chưa chọn ứng viên mới | Thinking bị dừng sớm: 20 mẫu đã lưu đều hết trần 768 token. Prompt v3 chỉ 2/164 test Train hợp lệ; v4 đạt 109/164 hợp lệ, 34 expected đúng và 13 test bắt lỗi, chưa qua tiêu chí so với v2. Không chấm thêm Validation/Test; giữ checkpoint và prompt hiện tại. |
-| Độ ổn định APPS | Chưa đủ | Hiện một seed huấn luyện. Ba seed và biểu đồ 10/18 trước đây thuộc dữ liệu nội bộ, không chuyển kết quả đó sang APPS. |
+| Độ ổn định APPS | Đã kiểm tra lấy mẫu; còn giới hạn seed train | Bốn checkpoint chính đã được kiểm tra với seed sinh 42/43/44. Vẫn chỉ có một seed huấn luyện mỗi phương pháp; không chuyển kết quả dữ liệu nội bộ cũ sang APPS. |
 | Đánh giá Test cuối | Chưa làm | Chỉ mở sau khi chốt phương pháp, cấu hình và quy tắc chọn checkpoint; không dùng Test để chỉnh thiết kế. |
 | Demo | Đã có, chưa chốt bản bảo vệ | Gradio, kết quả lưu và suy luận local; TensorBoard. Cần chọn ví dụ giải thích được, gồm thất bại, và quay video dự phòng khoảng hai phút. |
 | GitHub | Đang duy trì | Nhánh apps-introductory có commit theo dữ liệu, thuật toán, thực nghiệm và kết quả. Không đưa weights, dữ liệu thô hay log lớn lên Git. |
@@ -30,11 +30,11 @@ Guide yêu cầu giữ Test đến cuối, lưu cả lần thất bại, có bas
 
 ## Công việc tiếp theo
 
-1. Đã kiểm chứng ngân sách SFT. Ứng viên 256 bước chưa đủ tiêu chí bổ sung. Đã kiểm chứng tiếp cách cân bằng reward theo ATGen với hai lượt GRPO 96 bước và các seed sinh test bổ sung; xem mục kết quả cuối tài liệu.
-2. Chấm SFT mới tách biệt với RL, rồi mới cân nhắc lặp lại hai nhánh GRPO từ checkpoint phù hợp; không sửa output khi chấm.
-3. Các hướng suy luận/định dạng vừa thử chưa qua tiêu chí. Nếu thử tiếp phải lưu phiên bản và mốc đối chứng; không đổi số liệu cũ hay dùng Test để lựa chọn.
-4. Kiểm tra độ ổn định của cấu hình APPS đã chọn; hoàn thiện EDA, pipeline, phân tích chi phí và phần đối chiếu ATGen.
-5. Chốt cấu hình, đánh giá Test cuối; hoàn thiện video demo và nội dung bảo vệ. Đóng gói và báo cáo thực hiện sau theo yêu cầu người dùng.
+1. Đọc toàn bộ kiểm chứng SFT, reward và biến động lấy mẫu của chính hai nhánh đối kháng/cố định. Giữ kết luận chưa có lợi ích đối kháng được chứng minh; không tự nâng ứng viên chưa đạt tiêu chí.
+2. Chốt nhu cầu và ngân sách kiểm tra nhiều seed huấn luyện. Nếu làm, lên kế hoạch cùng các nhánh và báo cáo mọi seed; không dùng seed lấy mẫu để thay thế.
+3. Đóng băng cấu hình, thước đo và quy tắc chọn checkpoint; đánh giá Test giữ lại sau khi chốt.
+4. Hoàn thiện ví dụ demo gồm thành công và thất bại, kiểm thử luồng trình diễn và quay video dự phòng.
+5. Khi đến giai đoạn bàn giao mới xử lý môi trường mới, báo cáo và slide theo ưu tiên người dùng. Xem docs/PROJECT_STATUS.md để biết phần hoàn thành và phần còn lại.
 
 ## Tài liệu và kết quả
 
@@ -79,3 +79,11 @@ Chữ đậm là giá trị cao nhất từng cột, kể cả khi hòa. Mẫu s
 [Bảng, hình và phân tích](../results/apps-reward-ablation/README.md) · [Kế hoạch thử nghiệm](APPS_REWARD_EXPERIMENT.md). Test phát triển và Test chính thức vẫn được giữ lại.
 
 Đã kiểm tra thêm seed sinh 42/43/44 trên ba checkpoint cố định. Code phát hiện trung bình của nhánh hiện tại: 3.33 ± 1.53/15; chia đều: 3.67 ± 1.53/15. Đây là một seed huấn luyện và ba seed lấy mẫu; SD mô tả biến động, không phải khoảng tin cậy. [Toàn bộ chín lượt chấm](../results/apps-reward-ablation/SAMPLING.md).
+
+## Kiểm chứng bổ sung hai nhánh đối kháng và chi phí
+
+Đã kiểm tra Qwen gốc, SFT64 và hai checkpoint GRPO cuối với seed sinh test 42/43/44; mỗi lượt 60 test trên 15 code Validation. Sáu lượt mới và sáu kết quả cũ được chấm lại/đối chiếu; cùng prompt, cách lấy mẫu và bộ chấm. Đây là **một seed huấn luyện, ba seed sinh test**, không phải ba lượt train độc lập.
+
+Code phát hiện trung bình ± SD: Qwen gốc 3.33 ± 0.58/15; SFT64 3.33 ± 1.53/15; cố định 2.67 ± 1.15/15; đối kháng 3.00 ± 1.73/15. Không có bằng chứng từ phép kiểm tra nhỏ này để tuyên bố đối kháng tốt hơn; SD chỉ mô tả biến động lấy mẫu.
+
+[Bảng từng seed, biểu đồ và chi phí](../results/apps-adversarial-review/README.md). Checkpoint đang dùng và tập Test không thay đổi.

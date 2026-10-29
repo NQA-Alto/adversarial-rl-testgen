@@ -1,0 +1,11 @@
+{
+  "status": "passed",
+  "evaluation_runs": 12,
+  "new_evaluations": 6,
+  "generated_samples_rechecked": 720,
+  "cost_phases": 13,
+  "figure_visually_reviewed": true,
+  "active_checkpoint_unchanged": true,
+  "new_training": false,
+  "model_test_evaluation": false
+}
