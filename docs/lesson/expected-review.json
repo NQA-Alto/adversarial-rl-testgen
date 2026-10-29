@@ -1,0 +1,12 @@
+{
+  "date": "2026-10-30",
+  "browser": "IAB localhost preview",
+  "section": "c24",
+  "sections": 24,
+  "all_embedded_images_loaded": true,
+  "horizontal_overflow": false,
+  "viewport_width": 1265,
+  "screenshot": "results/apps-expected-diagnosis/lesson.jpg",
+  "html_sha256": "48dbc8e8ebf322784dfb53f19a128758d00e76515701029442a9957ff0441eec",
+  "model_test_evaluation": false
+}

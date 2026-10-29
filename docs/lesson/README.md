@@ -2,7 +2,7 @@
 
 File dành để đọc và chia sẻ: `../BAI_GIANG_DO_AN_TTNT.html`. Đây là một file HTML tự chứa: CSS, JavaScript, sơ đồ SVG và ảnh đều được nhúng sẵn. Mở bằng trình duyệt; không cần chạy Python, model hoặc Gradio để đọc tài liệu.
 
-Bốn file `01-…` đến `04-…` chứa nội dung biên soạn. `tensorboard.png` là ảnh giao diện thật chụp ngày 29/10/2026. Các bảng và hai hình kết quả khác lấy từ thư mục results; chỉ đọc Train/Validation đã có, không mở nội dung Test.
+Năm file `01-…` đến `05-…` chứa nội dung biên soạn. `tensorboard.png` là ảnh giao diện thật chụp ngày 29/10/2026. Mục24 cập nhật ngày30/10 giải thích expected sai, hình điểm đối xứng và kết quả input-first. Các bảng/hình kết quả lấy từ thư mục results; chỉ đọc Train/Validation đã có, không mở nội dung Test.
 
 Để dựng lại trên bản cài hiện tại, chạy Python với `scripts/build_project_lesson.py`. Script kiểm tra dataset và số liệu của ví dụ trước khi dựng, rồi ghi build-manifest.json. Nếu kết quả hoặc cấu hình thay đổi, phải rà lại cả phần diễn giải bằng lời, không chỉ cập nhật bảng.
 

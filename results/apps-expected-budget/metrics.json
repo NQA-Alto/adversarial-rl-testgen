@@ -1,0 +1,87 @@
+{
+  "root": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-expected-budget-trial-20261030-000324-270571",
+  "trial_result_sha256": "648c33fbe7378bcf29526ac8007ae21658d875c587c45e066bc486501277b41b",
+  "plan": {
+    "recorded_at": "2026-10-29T17:03:24.379636+00:00",
+    "hypothesis": "Input-first SFT64 sees only 256 of 319 target examples. A fixed 256-step supervised warmup may improve expected accuracy; it can also overfit.",
+    "only_change": "SFT budget 64 to 256 steps. Same fresh base, rank-4 attention-qv-v1 LoRA, 319 Train targets in input-first order, seed42, LR5e-5, four examples per update. Retain step64 for replay, never select intermediate checkpoints on Validation.",
+    "baseline_sft": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-sft-v2-20261029-143238-169569",
+    "baseline_sft_result_sha256": "1b42e2d2be9b48ab765d9e4565ddb36b9a7ba56727fa423b5f9c94c32aeecb26",
+    "baseline_probe": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261029-143558-352883",
+    "baseline_probe_result_sha256": "a0684feffa574ecce66565f0547a074163c724f996d2acc7ed1031533c076ce3",
+    "train_gate": {
+      "expected_gain_min": 8,
+      "valid_drop_max": 0,
+      "bug_tests_drop_max": 0,
+      "cases_drop_max": 0,
+      "replay_relative_l2_max": 0.001
+    },
+    "if_train_gate_passes": "Fresh 96-step GRPO from final SFT256, same legacy-v1 reward, seed42 and prompt-v2. Then and only then evaluate both final checkpoints on all three Validation seeds42/43/44, reusing all SFT64 and SFT64+GRPO96 controls from the completed order trial.",
+    "if_gate_fails": "Stop without new Validation or Test evaluation. Preserve failed candidate and raw outputs. No automatic retry, checkpoint search or larger budget.",
+    "validation_eligibility": "At final GRPO, sum expected counts across three seeds >= SFT64+GRPO96 total +9; valid, bug-test and detected-case totals must not decrease. Every seed and SFT result remains reported even when gate fails.",
+    "budget": {
+      "sft_steps": 256,
+      "grpo_steps": 96,
+      "samples_per_group": 4,
+      "max_completion_tokens": 96,
+      "validation_seeds": [
+        42,
+        43,
+        44
+      ]
+    },
+    "limits": "Exploratory follow-up after earlier Validation results; one training seed, repeated use of only five Validation problems risks selection overfitting. This is a bounded attempt, not a guarantee of improvement. Test remains sealed.",
+    "source_hashes": {
+      "apps_expected_trial.py": "914a65e4800ccc796848c209ec15042ad1f61e533954356a29b2789b6ccf6da7",
+      "apps_sft.py": "33e7059ecdaf50f39024fc8fffcd40a669e568021bff0b7a551f8a8c4a513203",
+      "apps_model_runner.py": "f4d9277be033a5a2330a6b21397ea6b5d64677765d3a9058f957c0c3ed878077",
+      "apps_core.py": "8852daf15c5a8e021a1594d44704a61c8bd2ac675c38565eea175f3c1c79cd33",
+      "apps_lora.py": "a7b149d708d39890e5dd1aa6403bf507c9af5b480be114aa5035baae49bba672",
+      "apps_round.py": "626355c0339629aa7307cec11bebbe3d137f14e80d85af24d3ad3d5ce92cd0ee",
+      "apps_rewards.py": "5f236334aa49cf424153a9df1039f694ebf7fc44d58a140741cca29dbe7641a2",
+      "apps_curriculum.py": "9f53830ed4316cf121418ea50c3f0a5f191373a1f37958c990caed9ba0e47109",
+      "apps_profiles.py": "b63ba5a9c1e6319d34925969fd16c438efc887bbdb7c7a40c93bcbb5e35bdf93",
+      "restricted_python.py": "542fd37b7ed73225fd2105922845155615e241b246b039e7ccce7fc840967111",
+      "local_model_loader.py": "339d647aa8b2d123cb9972654b9244a0aeb57aa8a02e173bac0f4abfcfa2221a",
+      "train_static_grpo.py": "42d2d34ce7f1a7a86184a984106e49988d31a07c1f2d19018acee8f57421a36c",
+      "check_lora_update.py": "b57d4606fd72f14f653290fbd9252269d4b753eb75dc945ba9752a12bbfdec7d",
+      "audit_apps_run.py": "f7ce9fb53d0a1ebf0060b5388021221b5ef10791d0e7ebf689fd0530dafe1dab"
+    },
+    "state_sha256": "6fbf0ffa6a6e1b3d805b1d5e69d1c76361496b1d203b108ba66e2ba6536df376",
+    "active_config_sha256": "f0143afbedd075c7613637941b5074670309580f28036290c7200b45ea2f94f2",
+    "model_test_evaluation": false
+  },
+  "result": {
+    "status": "stopped_at_replay_gate",
+    "plan_sha256": "e38ee2532f78b484b351c4f93a79b702694585fc9263971e2c253294f888c520",
+    "model_test_evaluation": false,
+    "error": "RuntimeError('Stage failed: sft256')",
+    "training": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-sft-v2-20261030-000401-318956",
+    "stop_reason": "Predeclared replay tolerance exceeded; early futility stop",
+    "partial_grpo_excluded": true,
+    "validation_runs": [],
+    "active_checkpoint_unchanged": true,
+    "completed_optimizer_steps_before_stop": 116
+  },
+  "replay_diagnosis": {
+    "same_target_hash": true,
+    "same_training_order": true,
+    "changed_frozen_source": {},
+    "first_differing_loss_step": 2,
+    "first_loss_old_new": [
+      0.8305671811103821,
+      0.8305671811103821
+    ],
+    "max_loss_difference_first64": 0.007841691374778748,
+    "replay": {
+      "reference_adapter": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-sft-v2-20261029-143238-169569\\adapter",
+      "exact_tensor_match": false,
+      "relative_l2_difference": 0.0026859162758281763,
+      "max_absolute_difference": 0.0004368601366877556
+    },
+    "completed_optimizer_steps_before_stop": 116,
+    "cause": "not established; identical targets/order and matching shared sources do not guarantee deterministic CUDA replay"
+  },
+  "quality_evaluated": false,
+  "model_test_evaluation": false
+}

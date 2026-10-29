@@ -85,7 +85,13 @@ def saved(identity):
     current = state()
     cards = []
     variants = [("baseline_validation", "Qwen gốc")]
-    if current.get("adversarial_validation"):
+    if current.get("demo_selection"):
+        chosen = current["demo_selection"]
+        if chosen["validation_key"] != "baseline_validation":
+            variants.append((chosen["validation_key"], chosen["label"]))
+        if chosen["validation_key"] != "adversarial_validation" and current.get("adversarial_validation"):
+            variants.append(("adversarial_validation", "GRPO đối kháng · 2 vòng"))
+    elif current.get("adversarial_validation"):
         variants += [("paired_control_validation", "GRPO cố định · 2 vòng"),
                      ("adversarial_validation", "GRPO đối kháng · 2 vòng")]
     elif current.get("sft_validation"):
@@ -135,7 +141,7 @@ def gpu_busy(ignore_pid=None):
             if process.pid in ignored:
                 continue
             if (process.info["name"] or "").lower().startswith("python") and any(
-                    Path(str(value)).name in ("apps_model_runner.py", "apps_sft.py", "apps_round.py", "apps_adversary.py", "apps_adversarial_round.py", "apps_reasoning_probe.py", "apps_prompt_trial.py", "apps_sft_budget_trial.py", "apps_sft_paired_control.py", "apps_reward_trial.py", "apps_reward_seed_probe.py", "apps_adversarial_review.py", "apps_lora_trial.py", "apps_order_trial.py", "apps_final_evaluate.py", "apps_expected_trial.py") for value in process.info["cmdline"] or []):
+                    Path(str(value)).name in ("apps_model_runner.py", "apps_sft.py", "apps_round.py", "apps_adversary.py", "apps_adversarial_round.py", "apps_reasoning_probe.py", "apps_prompt_trial.py", "apps_sft_budget_trial.py", "apps_sft_paired_control.py", "apps_reward_trial.py", "apps_reward_seed_probe.py", "apps_adversarial_review.py", "apps_lora_trial.py", "apps_order_trial.py", "apps_final_evaluate.py", "apps_expected_trial.py", "apps_shared_budget_trial.py") for value in process.info["cmdline"] or []):
                 return True
         except (psutil.AccessDenied, psutil.NoSuchProcess):
             pass
@@ -172,6 +178,19 @@ def target_order_table():
             rows.append([label + " · " + stage.upper(), *(f'{m[field]["mean"]:.2f} ± {m[field]["sample_sd"]:.2f}'
                          for field in ("valid_tests", "correct_expected", "bug_detecting_tests", "cases_detected"))])
     return rows
+
+
+def input_first_review_table():
+    path = PROJECT / "results/apps-input-first-review/metrics.json"
+    if not path.exists():
+        return []
+    report = read(path)
+    if digest(Path(report["folder"]) / "result.json") != report["result_sha256"]:
+        raise ValueError("Input-first review evidence changed")
+    labels = {"base": "Qwen gốc", "sft": "SFT64 input-first", "control": "GRPO cố định · 2 vòng", "adaptive": "GRPO đối kháng · 2 vòng"}
+    return [[labels[name]] + [f'{values[f]["mean"]:.2f} ± {values[f]["sample_sd"]:.2f}' for f in
+                             ("valid_tests", "correct_expected", "bug_detecting_tests", "cases_detected")]
+            for name, values in report["summary"].items()]
 
 
 def training_plot(folder):
@@ -276,7 +295,7 @@ def build_ui():
             gr.Markdown("#### Kết quả đã lưu")
             comparison = gr.HTML(saved(identity))
             with gr.Accordion("Chạy trực tiếp trên máy", open=False):
-                variants = ["Qwen gốc", "Sau SFT", "GRPO cố định · 2 vòng", "GRPO đối kháng · 2 vòng"] if state().get("adversarial_validation") else ["Qwen gốc", "Sau SFT", "Sau SFT + GRPO"] if state().get("sft_training") else ["Qwen gốc", "Sau GRPO pilot"]
+                variants = ["Qwen gốc", "Sau SFT", "GRPO cố định · 96 bước liền", "GRPO cố định · 2 vòng", "GRPO đối kháng · 2 vòng"] if state().get("adversarial_validation") else ["Qwen gốc", "Sau SFT", "Sau SFT + GRPO"] if state().get("sft_training") else ["Qwen gốc", "Sau GRPO pilot"]
                 if state().get("sft_budget_training"):
                     variants.insert(2, "SFT 256 bước · kiểm chứng")
                 variant = gr.Radio(variants, value="Qwen gốc", label="Phiên bản")
@@ -306,6 +325,15 @@ def build_ui():
                     gr.Markdown("Cùng input/expected và ngân sách học, khác thứ tự hai trường trong nhãn SFT. Trung bình ± SD của ba seed sinh test; một seed huấn luyện.")
                     gr.Dataframe(value=target_order_table(), headers=["Nhánh", "Hợp lệ /60", "Expected đúng /60", "Test bắt lỗi /60", "Code phát hiện /15"], interactive=False)
                     gr.Image(str(PROJECT / "results/apps-target-order/comparison.png"), show_label=False, interactive=False)
+            if (PROJECT / "results/apps-input-first-review/metrics.json").exists():
+                with gr.Accordion("Đối kháng từ nhãn input-first", open=False):
+                    gr.Markdown("Cùng SFT64 cha, hai nhánh cùng 2 × 48 bước GRPO. Trung bình ± SD qua ba seed sinh; một seed train.")
+                    gr.Dataframe(value=input_first_review_table(), headers=["Checkpoint", "Hợp lệ /60", "Expected đúng /60", "Test bắt lỗi /60", "Code phát hiện /15"], interactive=False)
+                    gr.Image(str(PROJECT / "results/apps-input-first-review/sampling.png"), show_label=False, interactive=False)
+            if (PROJECT / "results/apps-expected-diagnosis/analysis.json").exists():
+                with gr.Accordion("Expected sai ở đâu?", open=False):
+                    gr.Image(str(PROJECT / "results/apps-expected-diagnosis/expected-errors.png"), show_label=False, interactive=False)
+                    gr.Markdown("GRPO96 input-first: 36/180 input làm lộ lỗi nhưng expected sai. Đáp án tham chiếu chỉ dùng để chấm; đầu ra model được giữ nguyên.")
         with gr.Tab("Dữ liệu"):
             gr.Dataframe(value=[[name, spec["problems"], spec["cases"]] for name, spec in manifest["splits"].items()], headers=["Tập phát triển", "Bài APPS", "Code lỗi"], interactive=False)
             gr.Markdown("Nguồn: **codeparrot/apps**, nhãn Introductory. Tập con dùng bài dạng gọi hàm và miền input hữu hạn được ghi rõ. Code lỗi được tạo bằng thay đổi AST từ lời giải nguồn, không phải code lỗi có sẵn của APPS.\n\nTrain/Validation/Test phát triển được chia theo bài trong **APPS Train**. Tập Test chính thức của APPS chưa tải, chưa đánh giá. Test phát triển chưa được model đánh giá.\n\nHai lời giải nguồn phải qua test gốc và đồng ý trên toàn bộ miền input thực nghiệm. Bài không đạt bộ lọc được ghi lý do loại.")

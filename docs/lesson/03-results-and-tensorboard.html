@@ -11,7 +11,7 @@ __OUTCOMES__
 <p>Trong 60 mẫu: 15 không hợp lệ; 30 hợp lệ nhưng expected sai; 10 expected đúng mà chưa bắt lỗi; 5 bắt lỗi. Bốn nhóm này loại trừ nhau và cộng đúng 60.</p>
 <h3>Điểm đang nghẽn ở đâu?</h3><p>Model phải vừa tuân thủ hợp đồng input, vừa suy ra expected, vừa chọn input chạm lỗi. Một lượt có input tiềm năng nhưng expected sai sẽ không dùng được. Phân tích trước đó ở nhánh đối kháng cho thấy 11 input có tiềm năng bắt lỗi, nhưng mất 8 cơ hội vì expected sai. Đó là chẩn đoán, không được cộng 11 vào chỉ số thành công.</p></section>
 
-<section id="c14"><h2>14. Kết quả hiện tại nói được gì?</h2>
+<section id="c14"><h2>14. Kết quả mốc28–29/10 nói được gì?</h2>
 <p>Có nhiều phép thử, cần phân biệt mục đích của từng bảng. Đừng chọn hàng cao nhất từ các bảng khác điều kiện rồi gọi đó là phép so sánh công bằng.</p>
 <h3>A. Hai vòng curriculum đối kháng</h3><p>Hai nhánh cùng bắt đầu từ SFT64, đều học hai vòng × 48 bước và đều khởi tạo lại optimizer giữa vòng. Khác biệt chủ đích là code Train có được làm mới bằng adversary hay không. Bảng dưới dùng seed sinh 42.</p>__ADAPTIVE_TABLE__
 <p>Nhánh đối kháng đã chạy và cập nhật tham số thật, nhưng cuối lượt chỉ phát hiện 2/15 code, bằng đối chứng và thấp hơn mốc SFT 3/15. <strong>Chưa có bằng chứng tăng khả năng tìm lỗi nhờ đối kháng ở phép thử này.</strong> Không chọn lại vòng đầu chỉ vì điểm đẹp hơn khi kế hoạch đã chốt mốc cuối.</p>

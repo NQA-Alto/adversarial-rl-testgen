@@ -27,3 +27,13 @@ Nếu qua, học GRPO96 từ SFT256 với reward legacy-v1. Chỉ khi hoàn tấ
 Chỉ có một seed huấn luyện và năm bài nguồn Validation. Đây là thử nghiệm bổ sung sau khi đã nhìn nhiều kết quả Validation; nguy cơ chọn quá khớp Validation tăng theo số lần thử. Giới hạn một lần thử ngân sách này và giữ Test đến sau khi chốt lựa chọn. Không dùng Test để tìm cấu hình tốt hơn rồi đánh giá lại dưới nhãn cuối.
 
 Project Guide tr.16 yêu cầu chia tập trước và chỉ dùng Test cuối; tr.22 yêu cầu phân tích mẫu sai, so baseline và giải thích chênh lệch với bài báo. Bài toán oracle expected vẫn là khó khăn của sinh test bằng model nhỏ; tăng thời lượng học có thể giúp nhưng không bảo đảm suy luận đúng ở bài chưa học.
+
+## Cập nhật giao thức sau chốt replay
+
+Lượt đầu đã dừng sau116 bước vì replay64 relative L2 =0,002685916, vượt ngưỡng0,001 ghi trước. Không hoàn tất256 bước, không có Train probe/GRPO/Validation mới. Nhãn, thứ tự ví dụ và mã dùng chung trùng hash; nguyên nhân số học cụ thể chưa được xác định. [Biên bản dừng](../results/apps-expected-budget/README.md).
+
+Phép thử mới tách riêng: lấy checkpoint64 và cuối256 từ **cùng một lượt học**, nên model khởi đầu và64 bước đầu là chung theo cách xây dựng. Không dựa vào việc tái lập chính xác adapter lịch sử và không dùng phần116 bước dở làm ứng viên256. Chỉ chạy SFT trong phép thử này; nếu qua điều kiện Train thì chấm đủ sáu lượt Validation của hai checkpoint với seed sinh42/43/44. RL tiếp theo chỉ được cân nhắc sau kết quả này.
+
+Điều kiện Train và Validation giữ nguyên mức tăng expected và yêu cầu không giảm các số đếm còn lại; kế hoạch mới ghi trước khi chạy. Không nới chốt replay của lượt cũ hoặc đổi trạng thái lượt cũ thành thành công.
+
+Tài liệu [PyTorch về deterministic algorithms](https://docs.pytorch.org/docs/stable/generated/torch.use_deterministic_algorithms.html) mô tả chế độ chọn thuật toán xác định và các giới hạn của nó. Đây là cơ sở giải thích vì sao chỉ ghi seed chưa đủ để hứa mọi tensor sẽ giống tuyệt đối; không phải bằng chứng xác định nguyên nhân của độ lệch quan sát trong đồ án.
