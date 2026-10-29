@@ -57,17 +57,26 @@ def main(args):
     os.environ.update(PYTHONUTF8="1", PYTHONDONTWRITEBYTECODE="1", PYTHONUNBUFFERED="1", HF_HUB_OFFLINE="1",
                       HF_HOME=str(ASSETS / "cache/huggingface"), TEMP=str(ASSETS / "temp"), TMP=str(ASSETS / "temp"))
     previous = read(PROJECT / "APPS_STATE.json")
+    state_hash = digest(PROJECT / "APPS_STATE.json")
+    active_hash = digest(PROJECT / "configs/active-dataset.json")
     write(root / "previous-state.json", previous)
     cases, manifest = load_cases("train")
-    parent = Path(previous["sft_training"]["adapter_path"])
-    parent_validation = Path(previous["sft_validation"]["path"])
-    for key in ("sft_training", "sft_validation"):
-        if digest(Path(previous[key]["path"]) / "result.json") != previous[key]["result_sha256"]:
+    parent_records = {key: previous[key] for key in ("sft_training", "sft_validation")}
+    if args.parent_training:
+        parent_records = {"sft_training": record(args.parent_training, True), "sft_validation": record(args.parent_validation)}
+    parent = Path(parent_records["sft_training"]["adapter_path"])
+    parent_validation = Path(parent_records["sft_validation"]["path"])
+    for key in parent_records:
+        if digest(Path(parent_records[key]["path"]) / "result.json") != parent_records[key]["result_sha256"]:
             raise ValueError("Parent evidence changed")
+        audit(Path(parent_records[key]["path"]))
+    parent_info = read(parent_validation / "result.json")
+    if parent_info["adapter_sha256"] != digest(parent / "adapter_model.safetensors") or parent_info["seed"] != 42 or parent_info["split"] != "validation":
+        raise ValueError("Parent Validation does not match this exact adapter and seed")
     source = root / "source"
     source.mkdir()
     names = ("apps_core.py", "apps_model_runner.py", "apps_adversary.py", "apps_adversarial_round.py", "apps_curriculum.py",
-             "audit_apps_run.py", "apps_profiles.py", "restricted_python.py", "local_model_loader.py", "train_static_grpo.py", "check_lora_update.py", "apps_round.py")
+             "audit_apps_run.py", "apps_profiles.py", "restricted_python.py", "local_model_loader.py", "train_static_grpo.py", "check_lora_update.py", "apps_round.py", "apps_lora.py", "apps_rewards.py")
     hashes = {}
     for name in names:
         shutil.copy2(Path(__file__).with_name(name), source / name)
@@ -76,6 +85,8 @@ def main(args):
             "rounds": 2, "steps_per_round_per_arm": args.steps_per_round, "seed": 42,
             "samples_per_problem": 16, "prompt_version": "apps-call-v2", "source_hashes": hashes,
             "parent_adapter_sha256": digest(parent / "adapter_model.safetensors"),
+            "parent_sft_training": parent_records["sft_training"]["path"], "parent_sft_validation": str(parent_validation),
+            "publish": not args.no_publish,
             "control": "Curated static code, same 41 case slots, two optimizer restarts",
             "adaptive": "Refresh locally sampled code between rounds, replace only original cases caught by the current policy",
             "adversary": "Frozen original local Qwen3.5-2B; samples correct solutions then filters naturally incorrect solutions",
@@ -144,10 +155,14 @@ def main(args):
                       total_steps_per_arm=2 * args.steps_per_round,
                       adversarial_generated_test_exposures=sum(stage["arms"]["adaptive"]["adversarial_generated_test_exposures"] for stage in result["rounds"]))
         write(root / "result.json", result)
-        write(PROJECT / "APPS_STATE.json", state)
-        config = read(PROJECT / "configs/active-dataset.json")
-        config.update(stage="sft-and-adaptive-grpo", grpo_start="sft", adversary_refresh="per-round")
-        write(PROJECT / "configs/active-dataset.json", config)
+        if args.no_publish:
+            if digest(PROJECT / "APPS_STATE.json") != state_hash or digest(PROJECT / "configs/active-dataset.json") != active_hash:
+                raise ValueError("Active experiment changed during research comparison")
+        else:
+            write(PROJECT / "APPS_STATE.json", state)
+            config = read(PROJECT / "configs/active-dataset.json")
+            config.update(stage="sft-and-adaptive-grpo", grpo_start="sft", adversary_refresh="per-round")
+            write(PROJECT / "configs/active-dataset.json", config)
         print("ADAPTIVE ROUNDS COMPLETED:", canonical({arm: stage["metrics"] for arm, stage in result["rounds"][-1]["arms"].items()}), flush=True)
     except BaseException as error:
         result.update(status="failed", error=repr(error))
@@ -161,7 +176,12 @@ if __name__ == "__main__":
     parser.add_argument("--initial-probe", type=Path, required=True)
     parser.add_argument("--initial-pool", type=Path, required=True)
     parser.add_argument("--steps-per-round", type=int, default=48)
+    parser.add_argument("--parent-training", type=Path)
+    parser.add_argument("--parent-validation", type=Path)
+    parser.add_argument("--no-publish", action="store_true")
     args = parser.parse_args()
     if not 1 <= args.steps_per_round <= 96:
         parser.error("Each round must use 1..96 optimizer steps")
+    if bool(args.parent_training) != bool(args.parent_validation) or args.parent_training and not args.no_publish:
+        parser.error("Research parent requires both parent paths and --no-publish")
     main(args)

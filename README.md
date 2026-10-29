@@ -153,3 +153,22 @@ Năm bài Validation và một seed chưa đủ kết luận ổn định. Miề
 Code phát hiện trung bình ± SD: Qwen gốc 3.33 ± 0.58/15; SFT64 3.33 ± 1.53/15; cố định 2.67 ± 1.15/15; đối kháng 3.00 ± 1.73/15. Không có bằng chứng từ phép kiểm tra nhỏ này để tuyên bố đối kháng tốt hơn; SD chỉ mô tả biến động lấy mẫu.
 
 [Bảng và biểu đồ đầy đủ](results/apps-adversarial-review/README.md). Có thống kê thời gian GRPO, probe Train, sinh/lọc code và bộ nhớ; hai nhánh ngang ngân sách RL, không ngang tổng chi phí. [Tiến độ toàn đề tài](docs/PROJECT_STATUS.md).
+
+## Kiểm chứng thứ tự nhãn SFT
+
+Đã kiểm chứng riêng thứ tự hai trường trong target SFT. Cấu hình cũ dạy expected trước input; cấu hình mới dạy input trước expected. Giữ nguyên 319 cặp nhãn, profile LoRA, thứ tự ví dụ, prompt, parser, reward và ngân sách. Đối chứng SFT64 được giữ từ lượt đã hoàn tất; hai GRPO96 chạy mới đầy đủ.
+
+| Nhãn SFT | Mốc | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện /15 |
+|---|---|---:|---:|---:|---:|
+| Expected trước | SFT | 41.00 | 11.33 | 3.67 | 3.33 |
+| Expected trước | GRPO | 43.33 | 12.00 | 3.67 | 3.33 |
+| Input trước | SFT | 43.33 | 19.00 | 5.33 | 4.00 |
+| Input trước | GRPO | 43.67 | 20.67 | 5.67 | 4.33 |
+
+Trung bình trên ba seed sinh test 42/43/44, một seed huấn luyện. Qua tiêu chí đặt trước để cân nhắc thử đối kháng tiếp: **True**. Phần lớn mức tăng thuộc thay đổi target SFT; tác động thêm của GRPO còn nhỏ. Đây không phải phép so sánh đối kháng mới.
+
+Expected tăng ở cả năm bài nguồn, nhưng số test bắt lỗi tăng tập trung ở bài làm tròn APPS 2947. Không kết luận cải thiện đồng đều mọi loại lỗi. Các output sai/bị cắt vẫn ở mẫu số.
+
+Phép thử mở rộng LoRA đã dừng trước Validation mới để ưu tiên vấn đề nhãn; không tính GRPO dở thành kết quả hoàn chỉnh. Đang thực hiện kế hoạch đối kháng có điều kiện từ adapter input-first mới; chưa thay checkpoint demo hoặc dùng Test.
+
+[Bảng, hình, từng seed và từng bài](results/apps-target-order/README.md) · [Kế hoạch](docs/APPS_TARGET_ORDER_EXPERIMENT.md).

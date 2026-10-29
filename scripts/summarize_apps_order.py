@@ -62,20 +62,33 @@ def summarize(root):
                         possible = "buggy_error" in sample or canonical(sample["gold_output"]) != canonical(sample.get("buggy_output"))
                         counts["input_only_opportunity"] += int(possible)
                         counts["lost_due_to_expected"] += int(possible and not sample["correct_expected"])
-                per_case.append({"order":order,"stage":stage,"generation_seed":seed,"case_id":prediction["case_id"],"bug_tests":case_hits,"case_detected":int(case_hits>0)})
+                per_case.append({"order":order,"stage":stage,"generation_seed":seed,"source_id":prediction["source_id"],"case_id":prediction["case_id"],
+                                 "valid_tests":sum(s["valid_format"] for s in prediction["samples"]),
+                                 "correct_expected":sum(s["correct_expected"] for s in prediction["samples"]),"bug_tests":case_hits,"case_detected":int(case_hits>0)})
             failures.append({"order":order,"stage":stage,"generation_seed":seed,**dict(counts)})
     summaries = {order:{stage:{field:{"mean":statistics.mean(indexed[order,stage,k][field] for k in plan["generation_seeds"]),
                                     "sample_sd":statistics.stdev(indexed[order,stage,k][field] for k in plan["generation_seeds"])} for field in FIELDS} for stage in ("sft","grpo")} for order in plan["arms"]}
-    old, new = (summaries[order]["grpo"] for order in plan["arms"])
-    eligible = new["correct_expected"]["mean"] >= old["correct_expected"]["mean"] + 3 and all(new[f]["mean"] >= old[f]["mean"] for f in ("valid_tests","bug_detecting_tests","cases_detected"))
+    totals = {order:{f:sum(indexed[order,"grpo",k][f] for k in plan["generation_seeds"]) for f in FIELDS} for order in plan["arms"]}
+    old, new = (totals[order] for order in plan["arms"])
+    eligible = new["correct_expected"] >= old["correct_expected"] + 3 * len(plan["generation_seeds"]) and all(new[f] >= old[f] for f in ("valid_tests","bug_detecting_tests","cases_detected"))
     deltas = [{"stage":s,"generation_seed":k,**{f:indexed["input-first-v1",s,k][f]-indexed["sorted-v1",s,k][f] for f in FIELDS}} for s in ("sft","grpo") for k in plan["generation_seeds"]]
     rl_deltas = {order:{f:summaries[order]["grpo"][f]["mean"]-summaries[order]["sft"][f]["mean"] for f in FIELDS} for order in plan["arms"]}
     output = PROJECT / "results/apps-target-order"
     output.mkdir(parents=True,exist_ok=True)
+    problem_groups = {}
+    for row in per_case:
+        key = row["order"], row["stage"], row["generation_seed"], row["source_id"]
+        group = problem_groups.setdefault(key, {"order":key[0],"stage":key[1],"generation_seed":key[2],"source_id":key[3],
+                                               "generated_tests":0,"cases":0,"valid_tests":0,"correct_expected":0,"bug_tests":0,"cases_detected":0})
+        group["generated_tests"] += 4
+        group["cases"] += 1
+        for field in ("valid_tests","correct_expected","bug_tests"):
+            group[field] += row[field]
+        group["cases_detected"] += row["case_detected"]
     write(output / "metrics.json", {"root":str(root),"trial_result_sha256":digest(root / "result.json"),"plan":plan,"runs":result["arms"],"summary":summaries,
                                     "input_first_minus_sorted":deltas,"grpo_minus_sft_by_order":rl_deltas,"eligible_for_adaptive_followup":eligible,
                                     "training_seeds":1,"sampling_seeds":3,"model_test_evaluation":False})
-    for filename, rows in (("metrics.csv",table),("errors.csv",failures),("per-case.csv",per_case),("costs.csv",costs),("paired-deltas.csv",deltas)):
+    for filename, rows in (("metrics.csv",table),("errors.csv",failures),("per-case.csv",per_case),("per-problem.csv",list(problem_groups.values())),("costs.csv",costs),("paired-deltas.csv",deltas)):
         with (output / filename).open("w",encoding="utf-8",newline="") as stream:
             writer = csv.DictWriter(stream,fieldnames=list(dict.fromkeys(key for row in rows for key in row)))
             writer.writeheader()
@@ -102,7 +115,7 @@ def summarize(root):
     for order in plan["arms"]:
         lines.append("| " + LABELS[order] + " | " + " | ".join(f'{rl_deltas[order][f]:+.2f}' for f in FIELDS) + " |")
     lines += ["", f'Đủ tiêu chí đặt trước để cân nhắc thử đối kháng tiếp: **{eligible}**. Tiêu chí ở mốc GRPO là expected đúng trung bình tăng ít nhất 3/60, các trung bình hợp lệ/test bắt lỗi/code phát hiện không giảm. Ngưỡng sàng lọc không phải kiểm định ý nghĩa thống kê; không tự thay checkpoint chính.', "",
-              "## Phân tích và chi phí", "", "errors.csv giữ đủ phân loại lỗi và thứ tự trường model thực sự sinh. Cột input-only chỉ chẩn đoán các cơ hội bị mất do expected sai, không dùng oracle để sửa điểm model. per-case.csv giữ ID từng code phát hiện để kiểm tra các nhánh có bắt cùng lỗi hay không.", "",
+              "## Phân tích và chi phí", "", "errors.csv giữ đủ phân loại lỗi và thứ tự trường model thực sự sinh. Cột input-only chỉ chẩn đoán các cơ hội bị mất do expected sai, không dùng oracle để sửa điểm model. per-case.csv giữ ID từng code phát hiện; per-problem.csv gom theo bài nguồn để xem mức tăng có chỉ tập trung vào một bài hay không. Ba mutant cùng đề không phải ba bài độc lập.", "",
               "costs.csv ghi thời gian pha và đỉnh PyTorch cấp phát. SFT bao gồm probe sau học/lưu adapter; GRPO dùng Trainer train_runtime. Chưa tính đầy đủ thời gian nạp model, audit và điều phối, không gọi là tổng chi phí toàn quy trình.", "",
               "## Giới hạn và nguồn", "", "Năm bài Validation, miền hữu hạn và một seed huấn luyện. Nondeterminism CUDA chưa được loại trừ. Kết quả tốt nếu có vẫn cần phép so sánh đối kháng mới và đánh giá Test cuối sau khi đóng băng thiết kế.", "",
               "Thứ tự nhãn là điều chỉnh triển khai của đồ án. Không coi nó là thành phần nguyên bản hoặc kết quả tái lập [ATGen](https://arxiv.org/html/2510.14635v1). Test phát triển và Test chính thức chưa được model đánh giá.", "",
@@ -116,7 +129,8 @@ def summarize(root):
         items = [summaries[o][s][field] for o in plan["arms"] for s in ("sft","grpo")]
         bars = ax.bar(range(4),[m["mean"] for m in items],yerr=[m["sample_sd"] for m in items],capsize=4,color=("#b5b7a9","#869481","#7c9b9a","#38654e"))
         for bar,item in zip(bars,items,strict=True):
-            ax.annotate(f'{item["mean"]:.2f}',(bar.get_x()+bar.get_width()/2,item["mean"]),xytext=(0,11),textcoords="offset points",ha="center",fontsize=9)
+            ax.annotate(f'{item["mean"]:.2f}',(bar.get_x()+bar.get_width()/2,item["mean"]+item["sample_sd"]),xytext=(0,6),textcoords="offset points",ha="center",fontsize=9,
+                        fontweight="bold" if item["mean"] == max(m["mean"] for m in items) else "normal")
         ax.set(xticks=range(4),xticklabels=[LABELS[o]+"\n"+s.upper() for o in plan["arms"] for s in ("sft","grpo")],title=title,ylabel=f'Số lượng /{maximum}',ylim=(0,maximum))
         ax.tick_params(axis="x",labelsize=8)
         ax.grid(axis="y",alpha=.15)

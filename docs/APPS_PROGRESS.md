@@ -14,7 +14,7 @@ Mốc cập nhật: 29/10/2026. Đây là nhật ký triển khai và thực ngh
 | Curriculum đối kháng | Đã chạy hai vòng | Sinh 128 và 192 code; lọc 7 và 14 code, tổng 20 hành vi khác nhau. Thay 6 và 9 vị trí Train; model sinh 72 test khi gặp code đối kháng. |
 | Đánh giá Validation | Đã có so sánh có kiểm soát | Cùng checkpoint SFT ban đầu, seed, thứ tự bài và ngân sách. Kết quả cuối: cố định 2/15 code, đối kháng 2/15; SFT 3/15. Chưa có bằng chứng cải thiện. |
 | Phân tích lỗi | Đã bổ sung | Hai nhánh phát hiện cùng hai code; 48/60 đầu ra trùng. Nhánh đối kháng có 11 input tiềm năng bắt lỗi nhưng mất 8 cơ hội vì expected sai. Đây là chẩn đoán bằng oracle, không cộng vào thành tích của model. |
-| Thử nghiệm tinh chỉnh | Đã kiểm chứng, chưa chọn ứng viên mới | Thinking bị dừng sớm: 20 mẫu đã lưu đều hết trần 768 token. Prompt v3 chỉ 2/164 test Train hợp lệ; v4 đạt 109/164 hợp lệ, 34 expected đúng và 13 test bắt lỗi, chưa qua tiêu chí so với v2. Không chấm thêm Validation/Test; giữ checkpoint và prompt hiện tại. |
+| Thử nghiệm tinh chỉnh | Có ứng viên thứ tự nhãn input-first | Thinking bị dừng sớm: 20 mẫu đã lưu đều hết trần 768 token. Prompt v3 chỉ 2/164 test Train hợp lệ; v4 đạt 109/164 hợp lệ, 34 expected đúng và 13 test bắt lỗi, chưa qua tiêu chí so với v2. Không chấm thêm Validation/Test; giữ checkpoint và prompt hiện tại. |
 | Độ ổn định APPS | Đã kiểm tra lấy mẫu; còn giới hạn seed train | Bốn checkpoint chính đã được kiểm tra với seed sinh 42/43/44. Vẫn chỉ có một seed huấn luyện mỗi phương pháp; không chuyển kết quả dữ liệu nội bộ cũ sang APPS. |
 | Đánh giá Test cuối | Chưa làm | Chỉ mở sau khi chốt phương pháp, cấu hình và quy tắc chọn checkpoint; không dùng Test để chỉnh thiết kế. |
 | Demo | Đã có, chưa chốt bản bảo vệ | Gradio, kết quả lưu và suy luận local; TensorBoard. Cần chọn ví dụ giải thích được, gồm thất bại, và quay video dự phòng khoảng hai phút. |
@@ -87,3 +87,22 @@ Chữ đậm là giá trị cao nhất từng cột, kể cả khi hòa. Mẫu s
 Code phát hiện trung bình ± SD: Qwen gốc 3.33 ± 0.58/15; SFT64 3.33 ± 1.53/15; cố định 2.67 ± 1.15/15; đối kháng 3.00 ± 1.73/15. Không có bằng chứng từ phép kiểm tra nhỏ này để tuyên bố đối kháng tốt hơn; SD chỉ mô tả biến động lấy mẫu.
 
 [Bảng từng seed, biểu đồ và chi phí](../results/apps-adversarial-review/README.md). Checkpoint đang dùng và tập Test không thay đổi.
+
+## Kiểm chứng thứ tự nhãn SFT
+
+Đã kiểm chứng riêng thứ tự hai trường trong target SFT. Cấu hình cũ dạy expected trước input; cấu hình mới dạy input trước expected. Giữ nguyên 319 cặp nhãn, profile LoRA, thứ tự ví dụ, prompt, parser, reward và ngân sách. Đối chứng SFT64 được giữ từ lượt đã hoàn tất; hai GRPO96 chạy mới đầy đủ.
+
+| Nhãn SFT | Mốc | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện /15 |
+|---|---|---:|---:|---:|---:|
+| Expected trước | SFT | 41.00 | 11.33 | 3.67 | 3.33 |
+| Expected trước | GRPO | 43.33 | 12.00 | 3.67 | 3.33 |
+| Input trước | SFT | 43.33 | 19.00 | 5.33 | 4.00 |
+| Input trước | GRPO | 43.67 | 20.67 | 5.67 | 4.33 |
+
+Trung bình trên ba seed sinh test 42/43/44, một seed huấn luyện. Qua tiêu chí đặt trước để cân nhắc thử đối kháng tiếp: **True**. Phần lớn mức tăng thuộc thay đổi target SFT; tác động thêm của GRPO còn nhỏ. Đây không phải phép so sánh đối kháng mới.
+
+Expected tăng ở cả năm bài nguồn, nhưng số test bắt lỗi tăng tập trung ở bài làm tròn APPS 2947. Không kết luận cải thiện đồng đều mọi loại lỗi. Các output sai/bị cắt vẫn ở mẫu số.
+
+Phép thử mở rộng LoRA đã dừng trước Validation mới để ưu tiên vấn đề nhãn; không tính GRPO dở thành kết quả hoàn chỉnh. Đang thực hiện kế hoạch đối kháng có điều kiện từ adapter input-first mới; chưa thay checkpoint demo hoặc dùng Test.
+
+[Bảng, hình và phân tích](../results/apps-target-order/README.md).

@@ -23,12 +23,24 @@ def records(path):
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
-def execute():
+def execute(comparison=None, sft_sampling=None, output=None):
     if gpu_busy(ignore_pid=os.getpid()):
         raise RuntimeError("Another project GPU job is active")
     os.environ.update(PYTHONUTF8="1", PYTHONDONTWRITEBYTECODE="1", PYTHONUNBUFFERED="1", HF_HUB_OFFLINE="1",
                       HF_HOME=str(ASSETS / "cache/huggingface"), TEMP=str(ASSETS / "temp"), TMP=str(ASSETS / "temp"))
     state = read(PROJECT / "APPS_STATE.json")
+    active_state = dict(state)
+    if comparison:
+        from apps_adversarial_round import record
+        compared = read(comparison / "result.json")
+        if compared["status"] != "completed" or not compared["comparison_prompt_and_seed_match"]:
+            raise ValueError("Completed matched research comparison required")
+        state["adversarial_round_path"] = str(comparison)
+        state["sft_training"] = record(Path(compared["plan"]["parent_sft_training"]), True)
+        state["sft_validation"] = record(Path(compared["plan"]["parent_sft_validation"]))
+        for arm, prefix in (("control", "paired_control"), ("adaptive", "adversarial")):
+            for stage in ("training", "validation"):
+                state[prefix + "_" + stage] = compared["rounds"][-1]["arms"][arm][stage]
     root = run_folder("adversarial-review")
     print("EVIDENCE:", root, flush=True)
     variants = {}
@@ -42,29 +54,53 @@ def execute():
         variants[name] = {"adapter": adapter["adapter_path"] if adapter else None,
                           "adapter_sha256": adapter["adapter_sha256"] if adapter else None,
                           "reuse": {"42": evaluated["path"]}}
-    previous = read(PROJECT / "results/apps-reward-ablation/sampling-metrics.json")
-    for row in previous["sampling_result"]["runs"]:
-        if row["variant"] == "SFT64_parent" and row["generation_seed"] in (43, 44):
-            if row["adapter_sha256"] != variants["sft"]["adapter_sha256"] or digest(Path(row["path"]) / "result.json") != row["result_sha256"]:
-                raise ValueError("Reused SFT sampling evidence changed")
+    if comparison:
+        previous = read(sft_sampling)
+        if digest(Path(previous["root"]) / "result.json") != previous["trial_result_sha256"]:
+            raise ValueError("SFT sampling trial changed")
+        arm = previous["runs"]["input-first-v1"]
+        if Path(arm["sft"]).resolve() != Path(state["sft_training"]["path"]).resolve():
+            raise ValueError("SFT sampling does not match this research parent")
+        reuse = [row for row in arm["evaluations"] if row["stage"] == "sft"]
+        for row in reuse:
+            folder = Path(row["path"])
+            if digest(folder / "result.json") != row["result_sha256"] or read(folder / "result.json")["adapter_sha256"] != variants["sft"]["adapter_sha256"]:
+                raise ValueError("Reused research SFT evaluation changed")
             variants["sft"]["reuse"][str(row["generation_seed"])] = row["path"]
+        for row in read(PROJECT / "results/apps-adversarial-review/metrics.json")["runs"]:
+            if row["variant"] == "base":
+                if digest(Path(row["path"]) / "result.json") != row["result_sha256"]:
+                    raise ValueError("Reused base evaluation changed")
+                variants["base"]["reuse"][str(row["generation_seed"])] = row["path"]
+    else:
+        previous = read(PROJECT / "results/apps-reward-ablation/sampling-metrics.json")
+        for row in previous["sampling_result"]["runs"]:
+            if row["variant"] == "SFT64_parent" and row["generation_seed"] in (43, 44):
+                if row["adapter_sha256"] != variants["sft"]["adapter_sha256"] or digest(Path(row["path"]) / "result.json") != row["result_sha256"]:
+                    raise ValueError("Reused SFT sampling evidence changed")
+                variants["sft"]["reuse"][str(row["generation_seed"])] = row["path"]
     source = root / "source"
     source.mkdir()
     hashes = {}
-    for name in ("apps_adversarial_review.py", "apps_model_runner.py", "apps_core.py", "apps_profiles.py", "restricted_python.py", "audit_apps_run.py", "apps_round.py"):
+    for name in ("apps_adversarial_review.py", "apps_model_runner.py", "apps_core.py", "apps_profiles.py", "restricted_python.py", "audit_apps_run.py", "apps_round.py", "apps_adversarial_round.py", "apps_lora.py"):
         shutil.copy2(Path(__file__).with_name(name), source / name)
         hashes[name] = digest(source / name)
     plan = {"recorded_at": datetime.now(timezone.utc).isoformat(), "purpose": "Descriptive sampling robustness of the actual final adversarial and matched static checkpoints",
             "dataset_id": state["dataset_id"], "generation_seeds": [42, 43, 44], "variants": variants,
             "prompt_version": "apps-call-v2", "split": "validation", "tests_per_case": 4, "max_new_tokens": 96,
             "selection": "Report all 12 variant/seed combinations. No retraining, checkpoint replacement or favorable seed selection.",
-            "timing": "Supplementary plan after inspecting original seed42 results, before any new control/adaptive seed43/44 result. Reuse six already known baseline/SFT/control/adaptive evaluations; six new evaluations.",
+            "timing": "Final seed42 results known; supplementary seeds planned before their new control/adaptive evaluations. Conditional research follow-up, when used, was documented before target-order Validation.",
+            "reused_evaluations": sum(len(item["reuse"]) for item in variants.values()),
+            "research_comparison": str(comparison) if comparison else None,
+            "comparison_result_sha256": digest(comparison / "result.json") if comparison else None,
+            "summary_output": str(output) if output else None,
             "limits": "One training trajectory per method; sampling seeds are not training replicates. Five Validation problems, 15 mutant programs. Descriptive SD, not significance or confidence intervals.",
             "source_hashes": hashes, "state_sha256": digest(PROJECT / "APPS_STATE.json"),
             "active_config_sha256": digest(PROJECT / "configs/active-dataset.json"),
             "adaptive_round": state["adversarial_round_path"], "model_test_evaluation": False}
     write(root / "plan.json", plan)
     write(root / "previous-state.json", state)
+    write(root / "active-state-before.json", active_state)
     result = {"status": "running", "plan_sha256": digest(root / "plan.json"), "runs": [], "model_test_evaluation": False}
     write(root / "result.json", result)
     runner = [str(ASSETS / "env/Scripts/python.exe"), "-B", str(PROJECT / "scripts/apps_model_runner.py")]
@@ -102,7 +138,7 @@ def execute():
             raise ValueError("Active experiment changed during review")
         result.update(status="completed", active_checkpoint_unchanged=True, training_seeds=1, sampling_seeds=3)
         write(root / "result.json", result)
-        summarize(root)
+        summarize(root, output)
     except BaseException as error:
         result.update(status="failed", error=repr(error))
         write(root / "result.json", result)
@@ -140,7 +176,7 @@ def cost_rows(root):
     return output
 
 
-def summarize(root):
+def summarize(root, output=None):
     result, plan = read(root / "result.json"), read(root / "plan.json")
     if result["status"] != "completed" or digest(root / "plan.json") != result["plan_sha256"]:
         raise ValueError("Completed review with original plan required")
@@ -164,7 +200,7 @@ def summarize(root):
                     "adaptive_data_seconds": sum(row["seconds"] for row in costs if row["arm"] == arm and row["kind"] in ("probe", "code_generation")),
                     "validation_seconds": sum(row["seconds"] for row in costs if row["arm"] == arm and row["kind"] == "evaluation"),
                     "max_recorded_allocated_gib": max(row["peak_pytorch_allocated_gib"] for row in costs if row["arm"] == arm)} for arm in ("control", "adaptive")}
-    output = PROJECT / "results/apps-adversarial-review"
+    output = Path(output or plan.get("summary_output") or PROJECT / "results/apps-adversarial-review")
     output.mkdir(parents=True, exist_ok=True)
     write(output / "metrics.json", {"folder": str(root), "plan": plan, "result_sha256": digest(root / "result.json"),
                                    "runs": result["runs"], "summary": summary, "adaptive_minus_control": paired,
@@ -177,7 +213,7 @@ def summarize(root):
             writer.writeheader()
             writer.writerows(rows)
     lines = ["# Kiểm tra lấy mẫu của hai nhánh đối kháng và cố định", "",
-             "Cùng checkpoint SFT64, hai nhánh GRPO cuối sau 2 vòng × 48 bước, so với Qwen gốc. Ba seed sinh test 42/43/44, mỗi lượt 15 code Validation × 4 test. Kế hoạch bổ sung được ghi sau khi đã biết kết quả seed 42, trước sáu lượt suy luận mới. Sáu kết quả cũ được tái sử dụng có kiểm tra hash.", "",
+             f'Cùng checkpoint SFT64, hai nhánh GRPO cuối sau 2 vòng × 48 bước, so với Qwen gốc. Ba seed sinh test 42/43/44, mỗi lượt 15 code Validation × 4 test. Dùng lại {sum(row["reused"] for row in result["runs"])} lượt đã có, chạy mới {sum(not row["reused"] for row in result["runs"])} lượt; mọi kết quả tái sử dụng đều được kiểm tra hash. Kế hoạch và thời điểm được ghi rõ trong metrics.json.', "",
              "**Đây là một seed huấn luyện và ba seed sinh test.** Không phải ba lần train độc lập. Không đổi checkpoint, prompt, tập dữ liệu hoặc trọng số; Test vẫn chưa dùng.", "",
              "| Phiên bản | Seed sinh | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện /15 |", "|---|---:|---:|---:|---:|---:|"]
     for row in result["runs"]:
@@ -223,5 +259,10 @@ if __name__ == "__main__":
     sys.stdout.reconfigure(encoding="utf-8")
     parser = argparse.ArgumentParser()
     parser.add_argument("--summarize", type=Path)
+    parser.add_argument("--comparison", type=Path)
+    parser.add_argument("--sft-sampling", type=Path)
+    parser.add_argument("--output", type=Path)
     args = parser.parse_args()
-    summarize(args.summarize) if args.summarize else execute()
+    if not args.summarize and (args.comparison or args.sft_sampling) and not (args.comparison and args.sft_sampling and args.output):
+        parser.error("Research comparison requires --comparison, --sft-sampling and a separate --output")
+    summarize(args.summarize, args.output) if args.summarize else execute(args.comparison, args.sft_sampling, args.output)

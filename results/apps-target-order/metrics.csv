@@ -1,0 +1,13 @@
+order,stage,generation_seed,valid_tests,correct_expected,bug_detecting_tests,cases_detected
+sorted-v1,sft,42,39,14,5,4
+sorted-v1,grpo,42,43,14,4,3
+sorted-v1,sft,43,40,11,2,2
+sorted-v1,grpo,43,40,13,2,2
+sorted-v1,sft,44,44,9,4,4
+sorted-v1,grpo,44,47,9,5,5
+input-first-v1,sft,42,41,18,6,3
+input-first-v1,grpo,42,40,18,4,3
+input-first-v1,sft,43,42,22,5,4
+input-first-v1,grpo,43,44,23,5,4
+input-first-v1,sft,44,47,17,5,5
+input-first-v1,grpo,44,47,21,8,6

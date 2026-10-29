@@ -29,3 +29,7 @@ Kiểm tra thêm ba seed sinh test được lên kế hoạch trước Validatio
 Đã giữ đủ 12 kết quả của bốn checkpoint trên ba seed sinh test; chấm lại mẫu thô, đối chiếu prompt/seed/cấu hình và giữ Test. Đã thống kê riêng thời gian học, tạo dữ liệu đối kháng và chấm Validation. Các số thời gian chỉ bao quát pha đã ghi, chưa phải thời gian toàn quy trình.
 
 Phần nhiều seed huấn luyện vẫn là giới hạn, không đánh dấu hoàn tất. Đã lập [ước lượng tiến độ toàn đề tài](PROJECT_STATUS.md) khoảng 70%, với các hạng mục đánh giá cuối, demo, cài lại và báo cáo/slide còn riêng. Đây không phải tỷ lệ điểm chấm.
+
+## Rà biểu diễn nhãn ngày 29/10/2026
+
+Giữ đủ 12 lượt Validation và phân tích theo năm bài nguồn, tách hiệu ứng thứ tự nhãn SFT khỏi RL. Kế hoạch có tiêu chí trước kết quả; target mới giữ nguyên ngữ nghĩa, parser/metric không đổi. Lượt LoRA dừng sớm có ghi nguyên nhân và bằng chứng thiếu; không trình bày như so sánh hoàn chỉnh. Test vẫn giữ lại.

@@ -1,0 +1,5 @@
+order,stage,seconds,peak_pytorch_allocated_gib,optimizer_steps
+sorted-v1,sft,181.649,4.362,64
+sorted-v1,grpo,605.5348,4.836,96
+input-first-v1,sft,184.549,4.362,64
+input-first-v1,grpo,723.2603,4.8,96

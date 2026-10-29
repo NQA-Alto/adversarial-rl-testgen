@@ -93,3 +93,9 @@ Chữ đậm là giá trị cao nhất từng cột, kể cả khi hòa. Mẫu s
 Code phát hiện trung bình ± SD: Qwen gốc 3.33 ± 0.58/15; SFT64 3.33 ± 1.53/15; cố định 2.67 ± 1.15/15; đối kháng 3.00 ± 1.73/15. Không có bằng chứng từ phép kiểm tra nhỏ này để tuyên bố đối kháng tốt hơn; SD chỉ mô tả biến động lấy mẫu.
 
 Đã tách chi phí probe/sinh/lọc code khỏi thời gian GRPO, phù hợp với việc nêu giới hạn ngân sách so sánh. Đây là kiểm tra triển khai theo lô của đồ án, chưa phải tái lập nhiều seed train hoặc benchmark của ATGen. [Bằng chứng](../results/apps-adversarial-review/README.md).
+
+## Điều chỉnh biểu diễn target SFT
+
+Đã phát hiện canonical JSON đặt expected trước input trong nhãn SFT; chẩn đoán cho thấy thứ tự đầu ra model thay đổi theo nhãn. Phép so sánh chỉ đổi thứ tự hai trường, không đổi semantic label hoặc cách chấm. Cấu hình input-first qua tiêu chí sàng lọc trên ba seed lấy mẫu.
+
+Đây là điều chỉnh triển khai SFT của đồ án, không phải thành phần nguyên bản của ATGen hoặc bằng chứng lợi ích đối kháng. Phải chạy lại đối chứng/curriculum từ cùng warmup mới; không nối số liệu hai warmup thành một chuỗi cải thiện. [Kết quả](../results/apps-target-order/README.md) và [kế hoạch tiếp theo](APPS_INPUT_FIRST_ADAPTIVE_PLAN.md).

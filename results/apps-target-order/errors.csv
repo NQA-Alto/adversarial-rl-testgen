@@ -1,0 +1,13 @@
+order,stage,generation_seed,invalid_or_truncated,first_expected,wrong_expected,input_only_opportunity,lost_due_to_expected,correct_no_bug,bug_detected,first_parse_error,first_input
+sorted-v1,sft,42,21,60,25,12,7,9,5,,
+sorted-v1,grpo,42,17,60,29,14,10,10,4,,
+sorted-v1,sft,43,20,58,29,13,11,9,2,2,
+sorted-v1,grpo,43,20,57,27,13,11,11,2,3,
+sorted-v1,sft,44,16,58,35,18,14,5,4,2,
+sorted-v1,grpo,44,13,60,38,20,15,4,5,,
+input-first-v1,sft,42,19,,23,17,11,12,6,2,58
+input-first-v1,grpo,42,20,,22,16,12,14,4,3,57
+input-first-v1,sft,43,18,,20,16,11,17,5,4,56
+input-first-v1,grpo,43,16,,21,18,13,18,5,2,58
+input-first-v1,sft,44,13,,30,18,13,12,5,1,59
+input-first-v1,grpo,44,13,,26,19,11,13,8,,60

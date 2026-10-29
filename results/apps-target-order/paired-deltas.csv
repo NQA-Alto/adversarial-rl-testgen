@@ -1,0 +1,7 @@
+stage,generation_seed,valid_tests,correct_expected,bug_detecting_tests,cases_detected
+sft,42,2,4,1,-1
+sft,43,2,11,3,2
+sft,44,3,8,1,1
+grpo,42,-3,4,0,0
+grpo,43,4,10,3,2
+grpo,44,0,12,3,1

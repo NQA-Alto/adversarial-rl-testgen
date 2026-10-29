@@ -10,13 +10,15 @@ from apps_model_runner import PROJECT
 from audit_apps_run import audit
 
 
-def summarize(folder):
+def summarize(folder, output=None):
     result = read(folder / "result.json")
     if result["status"] != "completed" or not result["comparison_prompt_and_seed_match"]:
         raise ValueError("A completed matched comparison is required")
     previous = read(folder / "previous-state.json")
     runs = [("base", "Qwen gốc", Path(previous["baseline_validation"]["path"])),
-            ("sft", "SFT", Path(previous["sft_validation"]["path"]))]
+            ("sft", "SFT", Path(result["plan"].get("parent_sft_validation", previous["sft_validation"]["path"])))]
+    if output is None and result["plan"].get("parent_sft_validation", previous["sft_validation"]["path"]) != previous["sft_validation"]["path"]:
+        raise ValueError("Research-parent comparison requires a separate --output directory")
     final = result["rounds"][-1]["arms"]
     runs += [(arm, label, Path(final[arm]["validation"]["path"])) for arm, label in
              (("control", "SFT + GRPO cố định"), ("adaptive", "SFT + GRPO đối kháng"))]
@@ -73,7 +75,7 @@ def summarize(folder):
                                   "accepted_code_examples": accepted[:2]})
         seen_behaviors.update(behaviors)
     summary["distinct_accepted_behaviors_across_rounds"] = len(seen_behaviors)
-    output = PROJECT / "results/apps-adversarial"
+    output = Path(output) if output else PROJECT / "results/apps-adversarial"
     output.mkdir(exist_ok=True, parents=True)
     write(output / "metrics.json", summary)
     for filename, header, data in (
@@ -140,4 +142,6 @@ def summarize(folder):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("folder", type=Path)
-    summarize(parser.parse_args().folder)
+    parser.add_argument("--output", type=Path)
+    args = parser.parse_args()
+    summarize(args.folder, args.output)

@@ -59,3 +59,9 @@ SFT khác ở chỗ được cung cấp đáp án mục tiêu đúng và học �
 Hai profile được tách riêng khỏi bộ chấm đánh giá: legacy-v1 dùng trọng số định dạng/expected/attack là 0,1/0,2/0,7; equal-v1 dùng 1/3 cho mỗi thành phần. Trần reward đều bằng 1, nhưng các mức giữa khác nhau. Mọi profile vẫn chỉ thưởng attack nếu expected đúng.
 
 Phép so sánh reward giữ cùng checkpoint SFT64, dữ liệu và 96 bước/nhánh, không đồng thời làm mới code đối kháng. Xem [kế hoạch kiểm chứng](APPS_REWARD_EXPERIMENT.md). Đây là thử riêng một thành phần của phương pháp; kết quả phải tách khỏi so sánh curriculum adaptive.
+
+## Thứ tự trường trong completion SFT
+
+Định dạng sorted-v1 lịch sử sắp xếp khóa nên dạy expected rồi input. Cấu hình thử input-first-v1 chỉ đảo hai trường ngoài cùng, giữ nguyên giá trị và thứ tự khóa bên trong input. Tham số CLI: --target-order input-first-v1. Mặc định lịch sử vẫn giữ để các lượt cũ có thể đối chiếu; chưa tự thay cấu hình demo.
+
+Tất cả 319 cặp nhãn và byte định dạng cũ đã được kiểm tra. [Phép so sánh mới](../results/apps-target-order/README.md) cho thấy expected trung bình tăng, nhưng phần lớn thay đổi thuộc SFT. Không gọi cả mức tăng đó là lợi ích thêm của GRPO hay adversary.

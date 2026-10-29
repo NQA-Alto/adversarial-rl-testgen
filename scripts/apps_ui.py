@@ -158,6 +158,22 @@ def reward_metric_table():
     return rows
 
 
+def target_order_table():
+    path = PROJECT / "results/apps-target-order/metrics.json"
+    if not path.exists():
+        return []
+    report = read(path)
+    if digest(Path(report["root"]) / "result.json") != report["trial_result_sha256"]:
+        raise ValueError("Saved target-order experiment changed")
+    rows = []
+    for order, label in (("sorted-v1", "Expected trước"), ("input-first-v1", "Input trước")):
+        for stage in ("sft", "grpo"):
+            m = report["summary"][order][stage]
+            rows.append([label + " · " + stage.upper(), *(f'{m[field]["mean"]:.2f} ± {m[field]["sample_sd"]:.2f}'
+                         for field in ("valid_tests", "correct_expected", "bug_detecting_tests", "cases_detected"))])
+    return rows
+
+
 def training_plot(folder):
     import matplotlib
     matplotlib.use("Agg")
@@ -285,6 +301,11 @@ def build_ui():
                     if picture.exists():
                         gr.Markdown("Ba seed sinh test 42/43/44 trên cùng checkpoint; chỉ có một seed huấn luyện. Toàn bộ kết quả được giữ, không chọn seed thuận lợi.")
                         gr.Image(str(picture), show_label=False, interactive=False)
+            if (PROJECT / "results/apps-target-order/metrics.json").exists():
+                with gr.Accordion("Thứ tự nhãn SFT", open=False):
+                    gr.Markdown("Cùng input/expected và ngân sách học, khác thứ tự hai trường trong nhãn SFT. Trung bình ± SD của ba seed sinh test; một seed huấn luyện.")
+                    gr.Dataframe(value=target_order_table(), headers=["Nhánh", "Hợp lệ /60", "Expected đúng /60", "Test bắt lỗi /60", "Code phát hiện /15"], interactive=False)
+                    gr.Image(str(PROJECT / "results/apps-target-order/comparison.png"), show_label=False, interactive=False)
         with gr.Tab("Dữ liệu"):
             gr.Dataframe(value=[[name, spec["problems"], spec["cases"]] for name, spec in manifest["splits"].items()], headers=["Tập phát triển", "Bài APPS", "Code lỗi"], interactive=False)
             gr.Markdown("Nguồn: **codeparrot/apps**, nhãn Introductory. Tập con dùng bài dạng gọi hàm và miền input hữu hạn được ghi rõ. Code lỗi được tạo bằng thay đổi AST từ lời giải nguồn, không phải code lỗi có sẵn của APPS.\n\nTrain/Validation/Test phát triển được chia theo bài trong **APPS Train**. Tập Test chính thức của APPS chưa tải, chưa đánh giá. Test phát triển chưa được model đánh giá.\n\nHai lời giải nguồn phải qua test gốc và đồng ý trên toàn bộ miền input thực nghiệm. Bài không đạt bộ lọc được ghi lý do loại.")
