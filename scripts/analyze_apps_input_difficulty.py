@@ -3,6 +3,7 @@ import csv
 from apps_core import all_inputs, canonical, digest, load_cases, valid_input, write
 from apps_model_runner import PROJECT
 from restricted_python import RestrictedCodeError, RestrictedFunction
+from result_docs import write_result_readme
 
 
 def analyze():
@@ -41,16 +42,7 @@ def analyze():
         writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
         writer.writeheader()
         writer.writerows(rows)
-    lines = ["# Độ khó của việc chọn input trong miền hữu hạn", "", "Đây là chẩn đoán bằng chương trình tham chiếu trên Validation, không gọi hay huấn luyện model. Vét cạn tất cả input đã khai báo cho từng mutant để đếm bao nhiêu input có thể làm lộ lỗi.", "",
-             "Với p là tỷ lệ input làm lộ lỗi, bốn lần chọn đều ngẫu nhiên độc lập, có hoàn lại, sẽ có xác suất phát hiện code là 1 − (1 − p)^4. Phép tính giả sử đáp án expected luôn do oracle hoàn hảo cung cấp.", "",
-             "| Code | Input trong miền | Input làm lộ lỗi | Tỷ lệ input làm lộ lỗi | Xác suất phát hiện với 4 input + oracle |", "|---|---:|---:|---:|---:|"]
-    for row in rows:
-        lines.append(f'| {row["case_id"]} | {row["domain_inputs"]} | {row["bug_exposing_inputs"]} | {row["uniform_input_attack_probability"]*100:.2f}% | {row["uniform_oracle_case_detection_at_4"]*100:.2f}% |')
-    lines += ["", f'Tổng số code kỳ vọng được phát hiện theo giả định trên: **{report["expected_detected_cases_with_oracle"]:.2f}/15**. Đây là kỳ vọng tính bằng công thức, không phải số code của một lượt sinh test thực tế.', "",
-              "## Cách dùng chẩn đoán", "", "Nếu nhiều input trong miền đã làm lộ lỗi mà model vẫn có ít test dùng được, cần xem expected sai và input không hợp lệ trước khi chỉ tăng mức đối kháng. Kết quả này không chứng minh riêng nguyên nhân nào, vì model có thể lấy mẫu input khác phân bố đều và bốn completion có thể trùng nhau.", "",
-              "Oracle biết lời giải đúng, còn model trong đồ án phải tự dự đoán expected từ đề. Vì vậy không dùng con số này để tuyên bố thuật toán ngẫu nhiên tốt hơn model trong cùng điều kiện, không thay expected do model sinh bằng đáp án oracle để tăng điểm. Đây cũng không phải trần tối ưu của mọi phương pháp chọn input.", "",
-              "Miền input nhỏ và mutant AST là giới hạn của dataset đồ án; kết quả không suy rộng sang toàn bộ APPS. Tập Test phát triển chưa được model đánh giá. Chạy lại bằng scripts/analyze_apps_input_difficulty.py."]
-    (output / "README.md").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+    write_result_readme((output / 'README.md').parent)
     print({"output": str(output), "validation_codes": len(rows), "finite_inputs_checked": sum(row["domain_inputs"] for row in rows), "oracle_diagnostic_expected_cases": report["expected_detected_cases_with_oracle"], "model_test_evaluation": False})
 
 

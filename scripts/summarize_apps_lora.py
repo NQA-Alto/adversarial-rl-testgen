@@ -8,6 +8,7 @@ from pathlib import Path
 from apps_core import canonical, digest, read, write
 from apps_model_runner import PROJECT
 from audit_apps_run import audit
+from result_docs import write_result_readme
 
 
 FIELDS = ("valid_tests", "correct_expected", "bug_detecting_tests", "cases_detected")
@@ -86,35 +87,7 @@ def summarize(root):
             writer = csv.DictWriter(stream, fieldnames=fields)
             writer.writeheader()
             writer.writerows(rows)
-    lines = ["# Kiểm chứng phạm vi LoRA trên Qwen3.5-2B", "", "Hai nhánh mới cùng bắt đầu từ model gốc, SFT64 rồi GRPO cố định96. Cùng dữ liệu, prompt, rank4, thứ tự mẫu và seed học42; khác phạm vi đặt LoRA. Cấu hình cũ vẫn giữ làm mặc định.", "",
-             "Đây là phép thử lựa chọn phạm vi adapter trước khi cân nhắc curriculum đối kháng. Không gọi kết quả của phép thử này là lợi ích đối kháng hoặc gộp lợi ích SFT thành lợi ích RL. Tập Test chưa được model đánh giá.", "",
-             "| Profile | Khối có LoRA /24 | Projection được gắn LoRA | Tham số được học |", "|---|---:|---:|---:|", "| attention-qv-v1 | 6 | 12 | 208.896 |", "| hybrid-qkv-v1 | 24 | 30 | 798.720 |", "",
-             "LoRA 24 khối bổ sung in_proj_qkv ở 18 khối linear attention; vẫn giữ q/v ở sáu khối full attention. Không gắn vào vision, embedding hoặc MLP. Toàn bộ trọng số nền đóng băng. Các projection LoRA được chọn đều phải có tensor B thay đổi sau SFT; gradient, số tham số và bản lưu được kiểm tra.", "",
-             "## Toàn bộ kết quả Validation", "", "| Phạm vi LoRA | Mốc | Seed sinh | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện /15 |", "|---|---|---:|---:|---:|---:|---:|"]
-    for row in table:
-        lines.append("| " + LABELS[row["profile"]] + " | " + row["stage"].upper() + " | " + str(row["generation_seed"]) + " | " + " | ".join(str(row[field]) for field in FIELDS) + " |")
-    lines += ["", "## Trung bình ± độ lệch chuẩn mẫu", "", "| Phạm vi LoRA | Mốc | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện /15 |", "|---|---|---:|---:|---:|---:|"]
-    for profile in plan["arms"]:
-        for stage in ("sft", "grpo"):
-            values = []
-            for field in FIELDS:
-                m = summary[profile][stage][field]
-                text = f'{m["mean"]:.2f} ± {m["sample_sd"]:.2f}'
-                maximum = max(summary[p][s][field]["mean"] for p in plan["arms"] for s in ("sft", "grpo"))
-                values.append("**" + text + "**" if m["mean"] == maximum else text)
-            lines.append("| " + LABELS[profile] + " | " + stage.upper() + " | " + " | ".join(values) + " |")
-    lines += ["", "Giá trị trung bình cao nhất in đậm, kể cả khi hòa. Một seed train và ba seed lấy mẫu; SD là biến động đầu ra trên cùng checkpoint, không phải khoảng tin cậy hoặc nhiều lượt học độc lập.", "", "![So sánh các mốc](comparison.png)", "", "Hình 1. Các chỉ số Validation; mẫu sai/bị cắt vẫn trong mẫu số. Thanh sai số là SD của ba seed sinh test.", "",
-              "## Đọc đúng tác động", "", "So cùng mốc giữa hai profile để xem ảnh hưởng phạm vi LoRA. So SFT và GRPO trong từng profile để xem tác động thêm của RL. Không trộn hai phép so sánh.", "",
-              f'Qua tiêu chí đặt trước để cân nhắc thử curriculum đối kháng tiếp: **{eligible}**. Tiêu chí: expected đúng trung bình tăng ít nhất 3/60 ở mốc GRPO, đồng thời các trung bình hợp lệ, test bắt lỗi và code phát hiện không giảm. Đây là ngưỡng sàng lọc thực nghiệm, không phải kiểm định ý nghĩa thống kê. Không tự thay checkpoint chính.', "",
-              "## Thời gian và bộ nhớ", "", "| Profile | Mốc | Thời gian pha (giây) | Đỉnh PyTorch cấp phát (GiB) | Bước học |", "|---|---|---:|---:|---:|"]
-    for row in costs:
-        lines.append(f'| {LABELS[row["profile"]]} | {row["stage"].upper()} | {row["seconds"]:.1f} | {row["peak_pytorch_allocated_gib"]:.3f} | {row["steps"]} |')
-    lines += ["", "SFT dùng training_seconds, có probe sau học và lưu adapter; GRPO dùng Trainer train_runtime. Chưa bao gồm đầy đủ nạp model, audit và điều phối. Đây không phải tổng thời gian toàn quy trình hoặc tổng VRAM thiết bị.", "",
-              "## Phân tích expected", "", "errors.csv phân loại đủ 60 đầu ra mỗi lượt và ghi số input có thể bắt lỗi nhưng bị mất vì expected sai. Các cột input-only là chẩn đoán bằng reference; không sửa expected của model để cộng vào điểm chính. error-examples.json giữ ví dụ theo thứ tự cố định, không chọn mẫu đẹp nhất.", "",
-              "## Liên hệ nguồn và giới hạn", "", "[ATGen](https://arxiv.org/html/2510.14635v1) đặt đồng thời mục tiêu đáp án đúng và phát hiện lỗi. Kiểm chứng phạm vi LoRA trên kiến trúc Qwen3.5 là điều chỉnh triển khai của đồ án, không phải thành phần hay thí nghiệm được khẳng định là nguyên bản của bài báo. Project Guide tr.16/22 yêu cầu giữ Test đến cuối, có baseline và phân tích lỗi; kế hoạch này tuân theo các ranh giới đó.", "",
-              "Các bài/miền input vẫn nhỏ và chỉ một seed huấn luyện. Nếu không cải thiện, giữ kết quả thất bại. Bảng không đủ để kết luận trên toàn bộ APPS hoặc coi kiến trúc rộng hơn luôn tốt hơn.", "",
-              "Kế hoạch, mã lúc chạy, targets, raw output và adapter nằm trên D: tại đường dẫn ghi trong metrics.json. Dựng lại bảng/hình từ bằng chứng: `python scripts/summarize_apps_lora.py <folder>`; không cần nạp model."]
-    (output / "README.md").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+    write_result_readme((output / 'README.md').parent)
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt

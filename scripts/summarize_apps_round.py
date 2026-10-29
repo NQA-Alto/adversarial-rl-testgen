@@ -6,6 +6,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 
 from apps_core import canonical, digest, read, write
+from result_docs import write_result_readme
 
 
 def scoring_ast(path):
@@ -84,16 +85,7 @@ def summarize(folder):
         writer = csv.writer(stream)
         writer.writerow(["variant", "apps_source_id", "tests", "valid", "correct_expected", "bug_detecting_tests", "cases_detected", "cases_total"])
         writer.writerows(per_problem)
-    lines = ["# APPS: prompt v2, SFT và GRPO", "", "Cùng 15 code lỗi từ năm bài Validation, bốn test/code, seed sinh 42. Tập Test chưa được model đánh giá.", "",
-             "| Phiên bản | Test hợp lệ | Expected đúng | Test bắt lỗi | Code phát hiện @4 |", "|---|---:|---:|---:|---:|"]
-    for key, label in names:
-        m = runs[key]["metrics"]
-        lines.append(f'| {label} | {m["valid_tests"]}/60 | {m["correct_expected"]}/60 | {m["bug_detecting_tests"]}/60 | {m["cases_detected"]}/15 |')
-    lines += ["", "Qwen gốc ở bảng này dùng prompt v2. Tác động đổi prompt so với v1 được ghi riêng trong metrics.json; không gộp thành cải thiện do huấn luyện.", "",
-              "SFT dùng nhãn input/expected từ APPS Train; GRPO dùng reward và bắt đầu từ đúng adapter SFT. Đây là GRPO với code lỗi cố định, chưa có curriculum adversary trên APPS.", "",
-              "![So sánh Validation](validation-comparison.png)", "", "Log gốc, target SFT, adapter, gradient, bản chụp mã nguồn và các biên bản kiểm chứng nằm trong thư mục round ghi tại metrics.json. Các đầu ra sai/bị cắt vẫn ở trong mẫu số.", "",
-              "Một seed và năm bài Validation chưa đủ kết luận hiệu quả ổn định. per-problem.csv cho phép xem khác biệt theo bài; metrics.json giữ phân loại lỗi và thông tin từng lượt."]
-    (output / "README.md").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+    write_result_readme((output / 'README.md').parent)
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt

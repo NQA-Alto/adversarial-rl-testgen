@@ -1,15 +1,18 @@
-# Pilot APPS đầu tiên
+# Thử nghiệm APPS ban đầu
 
-Số liệu ở `metrics.json` và `metrics.csv` được xuất từ kết quả đã chạy, không từ ảnh chụp. Mỗi lượt Validation có 15 code lỗi thuộc 5 bài APPS, mỗi code sinh 4 test. Giữ nguyên mẫu số 60 kể cả test sai hoặc bị cắt.
+Prompt v1, Qwen gốc và lượt GRPO đầu tiên. Mỗi code Validation sinh bốn test, seed 42.
 
-Hai lượt dùng cùng hash prompt cho từng code, cùng dữ liệu, bộ chấm, cấu hình sinh và seed 42. Pilot khởi tạo LoRA mới từ Qwen gốc, học GRPO 48 bước trên Train. Chưa dùng SFT hoặc curriculum đối kháng trên APPS.
+## Kết quả từng lượt
 
-Tỷ lệ hợp lệ tăng 5 điểm phần trăm và expected đúng tăng khoảng 1,67 điểm phần trăm. Số code bắt được lỗi giảm từ 2/15 xuống 1/15. Vì vậy chưa kết luận model tìm lỗi tốt hơn.
+| Cấu hình | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện /15 |
+|---|---|---|---|---|
+| Qwen gốc | 14 | 10 | 2 | 2 |
+| GRPO ban đầu | 17 | 11 | 1 | 1 |
 
-Nhóm lỗi lớn nhất là sai cấu trúc input hoặc ngoài miền thực nghiệm: baseline 42/60, pilot 38/60. Ngoài ra còn sai JSON, bị cắt và expected sai. Phân loại đầy đủ nằm trong `metrics.json`; không sửa output rồi tính lại thành test đúng.
+Đây là mốc đầu trước khi đổi prompt và thêm SFT.
 
-![Validation](validation-ui.png)
+## Dữ liệu
 
-![Reward và gradient của pilot](training-ui.png)
+[metrics.csv](metrics.csv) · [metrics.json](metrics.json)
 
-Các biểu đồ mô tả quá trình học, không thay thế đánh giá chất lượng. Log đầy đủ, bản chụp mã nguồn lúc chạy và adapter nằm tại các thư mục evidence ghi trong `metrics.json`, trên D:. Test phát triển và Test chính thức chưa được model đánh giá.
+[Cấu hình và chỉ số đánh giá](../../docs/EXPERIMENTS.md).

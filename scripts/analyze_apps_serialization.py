@@ -4,6 +4,7 @@ from pathlib import Path
 
 from apps_core import digest, read, write
 from apps_model_runner import PROJECT
+from result_docs import write_result_readme
 
 
 def analyze():
@@ -39,16 +40,7 @@ def analyze():
               "validation_first_field": summaries, "evaluations_per_variant": 3, "model_test_evaluation": False,
               "interpretation": "Observed order shift, not a causal demonstration that ordering alone explains low accuracy. Proposed experiment changes only top-level training-target field order; strict JSON scoring is order invariant."}
     write(output / "analysis.json", report)
-    lines = ["# Chẩn đoán thứ tự trường trong nhãn SFT", "", f'{len(targets)} nhãn SFT lịch sử đều bắt đầu bằng expected. Nguyên nhân là hàm canonical sắp xếp tên khóa khi tuần tự hóa. JSON vẫn hợp lệ và bộ chấm không phụ thuộc thứ tự khóa.', "", "Ví dụ nhãn gốc:", "", "```json", targets[0]["target"], "```", "",
-             "## Đầu ra đã lưu trên ba seed sinh test", "", "Mỗi phiên bản có 180 completion trên Validation. Bảng phân loại theo khóa đầu tiên trong JSON đọc được; parse_error là không đọc được JSON.", "",
-             "| Phiên bản | Trường đầu | Số mẫu | Input/JSON hợp lệ | Expected đúng | Test bắt lỗi |", "|---|---|---:|---:|---:|---:|"]
-    for variant, groups in summaries.items():
-        for key, c in groups.items():
-            lines.append(f'| {variant} | {key} | {c["samples"]} | {c["valid"]} | {c["correct_expected"]} | {c["bug_detected"]} |')
-    lines += ["", "## Ý nghĩa và kiểm chứng cần làm", "", "Model tự hồi quy sinh token từ trái sang phải. Nếu nhãn đặt expected trước input, nó được dạy trả đáp án trước khi hoàn tất input cụ thể trong văn bản. Dữ liệu cho thấy thứ tự đầu ra sau SFT thay đổi rõ rệt, nhưng chưa chứng minh đổi thứ tự sẽ cải thiện accuracy: còn nhiều yếu tố học khác cùng thay đổi.", "",
-              "Phép thử tiếp theo cần giữ nguyên profile LoRA, target input/expected, thứ tự bài, learning rate và ngân sách; chỉ đổi thứ tự hai khóa ngoài cùng sang input rồi expected. So riêng SFT và phần GRPO thêm vào; giữ parser và metric cũ. Không sắp xếp lại đầu ra model khi chấm hoặc dùng oracle sửa expected.", "",
-              "Đây là vấn đề biểu diễn nhãn được phát hiện khi rà mã, chưa phải bằng chứng toàn bộ kết quả cũ bị chấm sai. Test chưa được model đánh giá. Kết quả ba seed có tương quan và không phải nhiều seed train."]
-    (output / "README.md").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+    write_result_readme((output / 'README.md').parent)
     print({"output": str(output), "target_first_fields": first, "saved_output_first_fields": summaries})
 
 

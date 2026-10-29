@@ -1,186 +1,84 @@
 # Adversarial Reinforcement Learning for Test Case Generation
 
-Đồ án TTNT cá nhân: huấn luyện tăng cường đối kháng để sinh ca kiểm thử. Hệ thống dùng Qwen3.5-2B chạy local để sinh input và expected cho hàm Python. Gradio điều khiển thí nghiệm; Transformers, PEFT và TRL đảm nhiệm suy luận và huấn luyện trên GPU.
+Sinh ca kiểm thử cho hàm Python bằng Qwen3.5-2B chạy trên máy cá nhân. Mỗi ca kiểm thử gồm dữ liệu đầu vào và kết quả mong đợi (`input`, `expected`). Chương trình đối chiếu với lời giải tham chiếu để kiểm tra đáp án và xác định ca kiểm thử có phát hiện được lỗi hay không.
 
-Nhánh `apps-introductory` đang dùng dữ liệu APPS. Đã chạy SFT, GRPO cố định và hai vòng curriculum đối kháng bằng model local; các kết quả dữ liệu nội bộ cũ không được gộp vào bảng APPS.
-
-## Cập nhật 30/10 · input-first và expected
-
-| Checkpoint | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện /15 |
-|---|---:|---:|---:|
-| SFT64 cùng quỹ đạo mới | 19,00 | 5,33 | 4,00 |
-| SFT256 input-first | **26,00** | **10,33** | **7,00** |
-| SFT256 + GRPO96 | 24,67 | 8,67 | 6,00 |
-
-Trung bình ba seed sinh 42/43/44, một seed train; đầy đủ mẫu sai trong mẫu số. Lợi ích tăng thời lượng học thuộc SFT. GRPO mới có cập nhật tham số thật nhưng chưa cải thiện chất lượng; giữ SFT256 là checkpoint đang tốt hơn để demo. Thực nghiệm đối kháng hai vòng dùng parent SFT64 riêng, chưa chứng minh tốt hơn đối chứng cố định. Test vẫn chưa được model đánh giá.
-
-[So SFT64–256 cùng lượt](results/apps-shared-sft-budget/README.md) · [Phần thêm của RL](results/apps-sft256-grpo/README.md) · [Expected sai và ví dụ tính tay](results/apps-expected-diagnosis/README.md) · [Đối kháng input-first](results/apps-input-first-review/README.md)
-
-## Tiến độ và phân tích bổ sung
-
-[Bài giảng đồ án từ nền tảng đến TensorBoard](docs/BAI_GIANG_DO_AN_TTNT.html): một file HTML tự chứa, có sơ đồ, ví dụ tính reward/GRPO, hướng dẫn đọc kết quả và hai mô phỏng. Tải file về rồi mở bằng trình duyệt để đọc offline; GitHub thường hiển thị mã HTML thay vì chạy trang.
-
-[Roadmap APPS hiện tại](docs/APPS_PROGRESS.md) · [Phân tích lỗi](results/apps-error-analysis) · [Các phép thử tinh chỉnh](results/apps-tuning) · [EDA và pipeline](results/apps-data-profile)
-
-[Tiến độ toàn đề tài](docs/PROJECT_STATUS.md): ước lượng khoảng 70% toàn bộ công việc, khoảng 90% phần triển khai cốt lõi. Các tỷ lệ phục vụ điều phối, không phải điểm chấm hoặc mức cải thiện của model. Báo cáo, video và kiểm chứng cài lại chưa hoàn tất.
-
-Ở snapshot nhãn expected-first trước đó, hai nhánh GRPO cuối phát hiện cùng hai code; nhánh đối kháng mất tám cơ hội vì expected sai. Các phép thử thinking và diễn đạt hợp đồng đầu ra trên Train chưa qua tiêu chí. Đây là lịch sử thử suy luận, không phải lượt RL mới; các kết quả mới dùng input-first được tách riêng ở đầu trang.
-
-## Lịch sử ngân sách SFT · nhãn expected-first
-
-Đã thử 256 bước từ model gốc với cùng target pool, prompt v2 và seed. Do tái hiện checkpoint 64 không khớp tuyệt đối, có bổ sung đối chứng 64 trong chính lượt học mới trước khi xem Validation.
-
-| Mốc cùng lượt | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện @4 /15 |
-|---|---:|---:|---:|
-| SFT 64 bước | 15 | 5 | 4 |
-| SFT 256 bước | 21 | 3 | 2 |
-
-[Kết quả, đường loss và giới hạn](results/apps-sft-budget). Đây là thay đổi ngân sách SFT, không phải bằng chứng lợi ích của RL hay curriculum đối kháng. Các mốc GRPO cũ vẫn dùng warmup 64 bước lịch sử. Test chưa được dùng.
-
-## Kiểm chứng tỷ trọng reward GRPO
-
-Hai lượt mới cùng xuất phát từ SFT64 lịch sử, cùng 41 code Train, prompt v2, seed 42 và 96 bước/nhánh. Thử trọng số định dạng/expected/attack 0,1/0,2/0,7 so với 1/3 mỗi thành phần theo tỷ trọng ATGen. Điều kiện định dạng vẫn là JSON của đồ án, khác thinking tags của bài báo. Chỉ thay tỷ trọng, không thay curriculum trong phép thử này.
-
-| Phiên bản | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện @4 /15 |
-|---|---:|---:|---:|---:|
-| SFT64 trước RL | 41 | 13 | 4 | 3 |
-| GRPO reward hiện tại · lượt mới | 41 | 13 | 4 | 3 |
-| GRPO reward chia đều | **45** | **15** | **5** | **4** |
-
-Chữ đậm là giá trị cao nhất từng cột, kể cả khi hòa. Mẫu sai/bị cắt vẫn nằm trong mẫu số. Đây là lượt đối chứng mới; không dùng lại số liệu của lượt 96 bước trước để thay thế.
-
-Ứng viên chia đều qua tiêu chí đặt trước để cân nhắc thử đối kháng tiếp: **False**. Chưa tự thay cấu hình hoặc checkpoint chính. Gradient, thay đổi LoRA, bản lưu và toàn bộ rollout đã được kiểm chứng độc lập; không dùng reward tăng để thay cho đánh giá chất lượng.
-
-[Bảng, hình và phân tích](results/apps-reward-ablation/README.md) · [Kế hoạch thử nghiệm](docs/APPS_REWARD_EXPERIMENT.md). Test phát triển và Test chính thức vẫn được giữ lại.
-
-Đã kiểm tra thêm seed sinh 42/43/44 trên ba checkpoint cố định. Code phát hiện trung bình của nhánh hiện tại: 3.33 ± 1.53/15; chia đều: 3.67 ± 1.53/15. Đây là một seed huấn luyện và ba seed lấy mẫu; SD mô tả biến động, không phải khoảng tin cậy. [Toàn bộ chín lượt chấm](results/apps-reward-ablation/SAMPLING.md).
+Đồ án thử nghiệm SFT, GRPO và curriculum đối kháng trên một tập con APPS Introductory. Model sinh test được tinh chỉnh bằng LoRA; model sinh code bổ sung giữ nguyên trọng số. Quá trình suy luận và huấn luyện đều chạy local.
 
 ## Dữ liệu
 
-Nguồn: [codeparrot/apps](https://huggingface.co/datasets/codeparrot/apps), revision `21e74ddf8de1a21436da12e3e653065c5213e9d1`, được [kho APPS của tác giả](https://github.com/hendrycks/apps) dẫn tới.
+Từ APPS Train, chọn 29 bài dạng gọi hàm và tạo 74 phiên bản code lỗi bằng đột biến AST. Miền input được giới hạn để kiểm tra toàn bộ bằng hai lời giải tham chiếu.
 
-Chọn 29 bài Introductory dạng gọi hàm trong APPS Train, giữ nguyên đề và ID nguồn. Miền input được giới hạn để hai lời giải nguồn có thể được đối chiếu trên toàn bộ miền. Code lỗi được tạo bằng thay đổi AST từ lời giải nguồn, không phải code lỗi có sẵn trong APPS.
-
-| Tập phát triển | Bài nguồn | Code lỗi |
+| Tập | Số bài | Số code lỗi |
 |---|---:|---:|
 | Train | 17 | 41 |
 | Validation | 5 | 15 |
-| Test giữ lại | 7 | 18 |
+| Test | 7 | 18 |
 
-Các tập tách theo bài và URL. Đã kiểm tra 26.833 cặp code/input. Test phát triển nằm trong APPS Train, không phải Test chính thức. Model chưa được đánh giá trên hai tập Test này. Đây là tập con nhỏ có code đột biến, không phải kết quả benchmark toàn bộ APPS Introductory.
+Các tập được chia theo bài và URL nguồn. Tập Test này là phần giữ lại từ APPS Train; APPS Test chính thức là tập khác và chưa được sử dụng.
 
-Xem [nguồn và bộ lọc dữ liệu](docs/APPS_DATASET.md), [quy trình huấn luyện](docs/APPS_TRAINING.md).
+## Kết quả
 
-## Kết quả đối kháng hiện tại
+Kết quả Validation, trung bình trên ba seed sinh test 42, 43 và 44. Mỗi code sinh bốn test, tương ứng 60 test cho mỗi lượt đánh giá.
 
-Hai nhánh bắt đầu từ cùng adapter SFT, mỗi nhánh hai vòng × 48 bước GRPO. Cùng prompt v2, Validation, seed 42 và bốn test/code. Đối chứng cũng khởi tạo lại optimizer mỗi vòng; chi phí sinh/lọc code là phần tính toán thêm của nhánh đối kháng.
-
-| Phiên bản | Test hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện @4 /15 |
-|---|---:|---:|---:|---:|
-| Qwen gốc | 35 | **15** | **4** | **3** |
-| SFT | 41 | 13 | **4** | **3** |
-| SFT + GRPO cố định | **42** | 13 | 3 | 2 |
-| SFT + GRPO đối kháng | 41 | 12 | 3 | 2 |
-
-Chữ đậm là giá trị lớn nhất từng cột, kể cả khi hòa. Tất cả mẫu sai/bị cắt vẫn nằm trong mẫu số.
-
-Nhánh đối kháng bắt được lỗi ở 2/15 code; nhánh cố định là 2/15. Đây là một seed trên năm bài Validation; chưa đủ kết luận hiệu quả tổng quát hoặc tái lập mức cải thiện trong bài báo.
-
-Code bổ sung được Qwen local gốc sinh rồi lọc: còn sai trong miền kiểm tra nhưng vượt qua test đúng của policy hiện tại. Chỉ adapter sinh test được học bằng RL; model sinh code giữ nguyên trọng số. Làm mới curriculum giữa các vòng là cách triển khai theo lô ở quy mô nhỏ.
-
-[Kết quả và phân tích từng vòng](results/apps-adversarial) · [Đối chiếu với ATGen](docs/ATGEN_ALIGNMENT.md)
-
-![So sánh đối kháng trên Validation](results/apps-adversarial/validation-comparison.png)
-
-## Lượt GRPO cố định trước đó
-
-Cả ba mốc dùng prompt `apps-call-v2`, cùng 15 code Validation, bốn test/code, seed 42 và tối đa 96 token/completion. SFT bắt đầu từ Qwen gốc và LoRA mới; GRPO bắt đầu từ đúng adapter SFT đã chấm, optimizer mới.
-
-| Chỉ số | Qwen gốc | Sau SFT | Sau SFT + GRPO |
+| Cấu hình | Expected đúng /60 | Test phát hiện lỗi /60 | Code phát hiện /15 |
 |---|---:|---:|---:|
-| Test hợp lệ | 35/60 (58.33%) | **41/60 (68.33%)** | **44/60 (73.33%)** |
-| Expected đúng | 15/60 (25.00%) | 13/60 (21.67%) | **15/60 (25.00%)** |
-| Test bắt lỗi | 4/60 (6.67%) | 4/60 (6.67%) | 4/60 (6.67%) |
-| Code lỗi phát hiện @4 | 3/15 (20.00%) | 3/15 (20.00%) | 3/15 (20.00%) |
+| SFT 64 bước | 19,00 | 5,33 | 4,00 |
+| SFT 256 bước | **26,00** | **10,33** | **7,00** |
+| SFT 256 + GRPO 96 bước | 24,67 | 8,67 | 6,00 |
 
-Chữ đậm đánh dấu số tăng so với mốc liền trước, không biểu thị ý nghĩa thống kê. Tỷ lệ hợp lệ tăng sau học; expected đúng ở mốc GRPO trở lại bằng Qwen gốc. Số code phát hiện được vẫn là 3/15, nên chưa có bằng chứng tăng khả năng tìm lỗi trên phép thử này.
+Hai mốc SFT 64 và 256 được lấy từ cùng một lượt học. Tăng thời lượng SFT cải thiện cả expected lẫn khả năng phát hiện lỗi. Lượt GRPO tiếp theo chưa cải thiện thêm, nên demo hiện dùng SFT256 làm mốc so sánh tốt nhất.
 
-![So sánh Validation](results/apps-sft-grpo/validation-comparison.png)
+Trong thí nghiệm đối kháng riêng, hai nhánh cùng bắt đầu từ SFT64 và học hai vòng, mỗi vòng 48 bước. Cả hai phát hiện trung bình 4/15 code. Kết quả hiện tại chưa cho thấy lợi ích của curriculum đối kháng ở cấu hình đã thử.
 
-SFT dùng pool 319 mẫu input/expected từ Train, ngân sách 64 bước và bốn mẫu/bước (256 lượt ví dụ). Đây là học có giám sát, không phải RL. GRPO chạy 96 bước, sinh 384 test trong lúc học. Có 78 bước GRPO với gradient khác 0; 24 tensor adapter thay đổi và bản lưu khớp tham số sau học. Đỉnh bộ nhớ PyTorch cấp phát trong GRPO khoảng 4.791 GiB.
+Mỗi cấu hình mới được huấn luyện với một seed. Ba seed sinh test chỉ phản ánh biến động khi lấy mẫu. Toàn bộ kết quả trên đây thuộc Validation; model chưa được đánh giá trên Test.
 
-Đã chấm lại target SFT, 384 mẫu GRPO và toàn bộ 60 đầu ra của mỗi mốc Validation. Dữ liệu, prompt theo từng case, seed và cấu hình sinh của ba mốc khớp nhau. Log thô, gradient, adapter và mã nguồn lúc chạy được lưu trên D:; bản tóm tắt nằm ở [results/apps-sft-grpo](results/apps-sft-grpo).
+[Bảng thực nghiệm và cách tính chỉ số](docs/EXPERIMENTS.md)
 
-Chỉ đổi prompt từ v1 sang v2 đã giúp Qwen gốc tăng test hợp lệ từ 14/60 lên 35/60 và code phát hiện từ 2/15 lên 3/15. Mức tăng đó được ghi riêng, không tính là lợi ích của huấn luyện. Kết quả pilot v1 vẫn giữ trong `results/apps-pilot` và các thư mục evidence cũ.
+![So sánh trước và sau GRPO](results/apps-sft256-grpo/comparison.png)
 
-Reward: 0 nếu sai JSON/ngoài miền/bị cắt; 0,1 nếu input hợp lệ nhưng expected sai; 0,3 nếu expected đúng nhưng chưa bắt lỗi; 1 nếu expected đúng và bắt lỗi. Các mẫu sai vẫn nằm trong mẫu số. Lỗi giới hạn bộ chấm không được tính là bắt bug.
+Hình 1. Kết quả SFT256 và SFT256 + GRPO96 trên Validation. Thanh sai số là độ lệch chuẩn qua ba seed sinh test.
 
-## Chạy giao diện
+## Chạy demo
 
-Trên bản cài đặt hiện tại, nhấp `MO_GIAO_DIEN.cmd`, mở http://127.0.0.1:7860/?__theme=light. Nhấp `DONG_GIAO_DIEN.cmd` để đóng dịch vụ. Mở trang không tự train.
+Bản chạy hiện tại dùng Windows và lưu model, dữ liệu, adapter tại `D:/DA/TTNT_De19_Assets`.
 
-- **Demo:** xem đề, code và đầu ra của Qwen gốc, GRPO cố định và GRPO đối kháng; có thể sinh bốn test mới cho một code trên GPU.
-- **Kết quả:** bảng toàn bộ Validation; không chỉ giữ các bài thành công.
-- **Dữ liệu:** nguồn, cách chia tập và giới hạn thí nghiệm.
-- **Thực nghiệm:** kiểm tra dữ liệu, chấm model và khởi chạy huấn luyện; có nút dừng và log.
-- **Huấn luyện:** reward, gradient và thông số lượt GRPO mới nhất. TensorBoard tại http://127.0.0.1:6006 chỉ đọc các lượt APPS.
+1. Chạy `MO_GIAO_DIEN.cmd`.
+2. Mở [Gradio](http://127.0.0.1:7860/?__theme=light).
+3. Chọn bài toán để xem code, input, expected và kết quả kiểm tra.
 
-Tác vụ **Huấn luyện SFT + GRPO trên APPS** chạy lại toàn bộ từ Qwen gốc: baseline, SFT 64 bước, GRPO theo số bước chọn và chấm từng mốc. Tác vụ **Huấn luyện GRPO trên Train** bắt đầu từ adapter SFT đã lưu, không học nối tiếp adapter GRPO cuối. Mỗi lần có optimizer và thư mục evidence mới.
+Giao diện có phần xem kết quả đã lưu, sinh test trực tiếp, chạy thực nghiệm và theo dõi huấn luyện. TensorBoard ở [cổng 6006](http://127.0.0.1:6006). Chạy `DONG_GIAO_DIEN.cmd` để dừng các dịch vụ.
 
-Nút Sinh 4 test trong Demo chỉ suy luận/chấm, không cập nhật tham số. Trong log có nút Đầu log/Cuối log; tắt Tự cập nhật log để đọc. Dừng tác vụ sẽ mất cập nhật chưa lưu của lượt đó; kết quả đã lưu vẫn được giữ.
+## Môi trường
 
-## Chạy bằng PowerShell
-
-Các lệnh dùng môi trường đã cài trên máy này, khi GPU không có tác vụ khác:
-
-```powershell
-$env:PYTHONUTF8 = '1'
-$python = 'D:/DA/TTNT_De19_Assets/env/Scripts/python.exe'
-$project = 'D:/DA/DoAn_TTNT_De19/adversarial-rl-testgen'
-& $python -B "$project/scripts/verify_apps.py"
-& $python -B "$project/scripts/apps_round.py" --grpo-steps 96
-```
-
-`fetch_apps.py` tải/kiểm tra nguồn đã ghim phiên bản; `prepare_apps.py` chỉ chuẩn bị dữ liệu khi thư mục phiên bản chưa tồn tại, chủ động từ chối ghi đè dữ liệu đã đóng băng. Không cần tải hoặc chuẩn bị lại trên máy hiện tại.
-
-## Môi trường và giới hạn
-
-| Thành phần | Bản cài đặt hiện tại |
+| Thành phần | Cấu hình đã dùng |
 |---|---|
-| Mã nguồn | `D:/DA/DoAn_TTNT_De19/adversarial-rl-testgen` |
-| Model, dữ liệu, evidence | `D:/DA/TTNT_De19_Assets` |
-| Python huấn luyện | `D:/DA/TTNT_De19_Assets/env/Scripts/python.exe` |
-| Python giao diện | `D:/DA/TTNT_De19_Assets/tools/gui/env/Scripts/python.exe` |
-| GPU | RTX 4060 Laptop 8 GB |
-| Model | Qwen3.5-2B, BF16, mmap loader trên Windows |
+| CPU | AMD Ryzen 7 7840H |
+| GPU | NVIDIA RTX 4060 Laptop, 8 GB VRAM |
+| RAM | 16 GB |
+| Python | 3.12.15 |
+| PyTorch | 2.14.1+cu132 |
+| Transformers / PEFT / TRL | 5.20.2 / 0.21.2 / 1.16.0 |
+| Model | Qwen3.5-2B, BF16 |
+| LoRA | Rank 4, alpha 8, 208.896 tham số huấn luyện |
 
-Phiên bản thư viện của lượt đánh giá/GRPO nằm trong result. Môi trường train và giao diện có requirements riêng. Model, môi trường Python, cache, log lớn và adapter không đưa vào Git. Clone repo chưa tự tải model hay tái lập toàn bộ môi trường; script còn phụ thuộc đường dẫn D:.
+Các lệnh khởi chạy còn dùng đường dẫn của máy thực nghiệm. Model nền và checkpoint không được đưa vào Git; việc cài lại trên máy khác chưa được kiểm tra.
 
-Năm bài Validation và một seed chưa đủ kết luận ổn định. Miền hữu hạn, test tham chiếu và hai lời giải nguồn giúp kiểm tra dữ liệu, không chứng minh khả năng tổng quát trên APPS. Chưa xác nhận model nền có từng gặp bài công khai này khi tiền huấn luyện hay không. Bản sao lưu trước chuyển đổi ở `D:/DA/TTNT_Backups/De19-before-APPS-20261028-112210`.
+## Tài liệu và mã nguồn
 
-## Biến động lấy mẫu của chính nhánh đối kháng
+- [Chuẩn bị dữ liệu](docs/APPS_DATASET.md)
+- [Chạy và huấn luyện](docs/APPS_TRAINING.md)
+- [Các thí nghiệm](docs/EXPERIMENTS.md)
+- [Phần triển khai so với ATGen](docs/ATGEN_ALIGNMENT.md)
+- [Ví dụ demo](docs/DEMO.md)
 
-Đã kiểm tra Qwen gốc, SFT64 và hai checkpoint GRPO cuối với seed sinh test 42/43/44; mỗi lượt 60 test trên 15 code Validation. Sáu lượt mới và sáu kết quả cũ được chấm lại/đối chiếu; cùng prompt, cách lấy mẫu và bộ chấm. Đây là **một seed huấn luyện, ba seed sinh test**, không phải ba lượt train độc lập.
+Các script chính nằm trong `scripts/`: `apps_core.py` chứa bộ chấm, `apps_sft.py` thực hiện SFT, `apps_model_runner.py` chạy GRPO và đánh giá, `apps_adversarial_round.py` điều phối curriculum đối kháng, `apps_ui.py` tạo giao diện Gradio. Bảng số liệu và biểu đồ nằm trong `results/`.
 
-Code phát hiện trung bình ± SD: Qwen gốc 3.33 ± 0.58/15; SFT64 3.33 ± 1.53/15; cố định 2.67 ± 1.15/15; đối kháng 3.00 ± 1.73/15. Không có bằng chứng từ phép kiểm tra nhỏ này để tuyên bố đối kháng tốt hơn; SD chỉ mô tả biến động lấy mẫu.
+## Phạm vi
 
-[Bảng và biểu đồ đầy đủ](results/apps-adversarial-review/README.md). Có thống kê thời gian GRPO, probe Train, sinh/lọc code và bộ nhớ; hai nhánh ngang ngân sách RL, không ngang tổng chi phí. [Tiến độ toàn đề tài](docs/PROJECT_STATUS.md).
+Chương trình xử lý hàm Python trong tập cú pháp và miền input đã khai báo. Đây chưa phải hệ thống chấm mọi chương trình được nhập vào hoặc benchmark đầy đủ APPS. Kết quả trên năm bài Validation còn nhỏ; expected sai vẫn là nguồn thất bại chính.
 
-## Kiểm chứng thứ tự nhãn SFT
+## Tham khảo
 
-Đã kiểm chứng riêng thứ tự hai trường trong target SFT. Cấu hình cũ dạy expected trước input; cấu hình mới dạy input trước expected. Giữ nguyên 319 cặp nhãn, profile LoRA, thứ tự ví dụ, prompt, parser, reward và ngân sách. Đối chứng SFT64 được giữ từ lượt đã hoàn tất; hai GRPO96 chạy mới đầy đủ.
-
-| Nhãn SFT | Mốc | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện /15 |
-|---|---|---:|---:|---:|---:|
-| Expected trước | SFT | 41.00 | 11.33 | 3.67 | 3.33 |
-| Expected trước | GRPO | 43.33 | 12.00 | 3.67 | 3.33 |
-| Input trước | SFT | 43.33 | 19.00 | 5.33 | 4.00 |
-| Input trước | GRPO | 43.67 | 20.67 | 5.67 | 4.33 |
-
-Trung bình trên ba seed sinh test 42/43/44, một seed huấn luyện. Qua tiêu chí đặt trước để cân nhắc thử đối kháng tiếp: **True**. Phần lớn mức tăng thuộc thay đổi target SFT; tác động thêm của GRPO còn nhỏ. Đây không phải phép so sánh đối kháng mới.
-
-Expected tăng ở cả năm bài nguồn, nhưng số test bắt lỗi tăng tập trung ở bài làm tròn APPS 2947. Không kết luận cải thiện đồng đều mọi loại lỗi. Các output sai/bị cắt vẫn ở mẫu số.
-
-Phép thử mở rộng LoRA đã dừng trước Validation mới để ưu tiên vấn đề nhãn; không tính GRPO dở thành kết quả hoàn chỉnh. Đang thực hiện kế hoạch đối kháng có điều kiện từ adapter input-first mới; chưa thay checkpoint demo hoặc dùng Test.
-
-[Bảng, hình, từng seed và từng bài](results/apps-target-order/README.md) · [Kế hoạch](docs/APPS_TARGET_ORDER_EXPERIMENT.md).
+- [ATGen: Adversarial Reinforcement Learning for Test Case Generation](https://arxiv.org/abs/2510.14635)
+- [APPS](https://github.com/hendrycks/apps) và [codeparrot/apps](https://huggingface.co/datasets/codeparrot/apps)
+- [TRL GRPOTrainer](https://huggingface.co/docs/trl/grpo_trainer)

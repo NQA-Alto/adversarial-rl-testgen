@@ -1,7 +1,19 @@
-# Hồ sơ dữ liệu APPS
+# Thống kê dữ liệu
 
-Thống kê từ manifest và nội dung Train. Số lượng Test lấy từ manifest đã đóng băng; không đọc nội dung Test, không chạy model trên Test. Đây là tập con 29 bài dạng gọi hàm, không đại diện toàn bộ APPS.
+Tập con APPS gồm 29 bài, 74 mutant, chia theo bài thành Train/Validation/Test. Phần thống kê đặc trưng dùng Train; số lượng tập chia lấy từ manifest.
 
-![Hồ sơ dữ liệu](dataset-profile.png)
+Dữ liệu nguồn, hợp đồng input và bộ chấm được mô tả trong tài liệu dữ liệu.
 
-profile.json chứa số liệu gốc; chạy scripts/plot_apps_analysis.py để dựng lại.
+![Thống kê dữ liệu](dataset-profile.png)
+
+Hình 1. Thống kê dữ liệu.
+
+![Thống kê dữ liệu](pipeline.png)
+
+Hình 2. Thống kê dữ liệu.
+
+## Dữ liệu
+
+[profile.json](profile.json)
+
+[Cấu hình và chỉ số đánh giá](../../docs/EXPERIMENTS.md).

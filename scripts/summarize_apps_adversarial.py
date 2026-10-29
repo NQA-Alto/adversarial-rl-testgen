@@ -8,6 +8,7 @@ from apps_adversary import audit_pool, rows
 from apps_core import digest, read, write
 from apps_model_runner import PROJECT
 from audit_apps_run import audit
+from result_docs import write_result_readme
 
 
 def summarize(folder, output=None):
@@ -88,27 +89,7 @@ def summarize(folder, output=None):
             writer.writerows(data)
     maximum = {field: max(entry["result"]["metrics"][field] for entry in summary["runs"].values())
                for field in ("valid_tests", "correct_expected", "bug_detecting_tests", "cases_detected")}
-    lines = ["# APPS: GRPO cố định và curriculum đối kháng", "",
-             "Cùng checkpoint SFT, hai vòng × 48 bước/nhánh; optimizer được tạo lại ở đầu mỗi vòng ở cả hai nhánh. Validation: 15 code từ năm bài nguồn, bốn test/code, seed 42. Không đánh giá Test.", "",
-             "| Phiên bản | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện @4 /15 |", "|---|---:|---:|---:|---:|"]
-    for _, entry in summary["runs"].items():
-        m = entry["result"]["metrics"]
-        values = [f'**{m[field]}**' if m[field] == maximum[field] else str(m[field]) for field in maximum]
-        lines.append("| " + entry["label"] + " | " + " | ".join(values) + " |")
-    lines += ["", "Giá trị lớn nhất từng cột được in đậm, kể cả khi hòa. Đây là kết quả Validation của một seed, chưa chứng minh cải thiện ổn định.", "",
-              "| Vòng | Code được sinh | Code qua bộ lọc | Vị trí Train dùng code đối kháng /41 | Test RL sinh khi gặp code đối kháng |", "|---|---:|---:|---:|---:|"]
-    for stage in summary["rounds"]:
-        pool = stage["pool"]
-        lines.append(f'| {stage["round"]} | {pool["sampled_candidates"]} | {pool["accepted_candidates"]} | {stage["curricula"]["adaptive"]["counts"].get("local_adversary", 0)} | {stage["arms"]["adaptive"]["adversarial_generated_test_exposures"]} |')
-    control = summary["runs"]["control"]["result"]["metrics"]
-    adaptive = summary["runs"]["adaptive"]["result"]["metrics"]
-    lines += ["", f'Nhánh đối kháng phát hiện {adaptive["cases_detected"]}/15 code, đối chứng cố định phát hiện {control["cases_detected"]}/15. Test bắt lỗi lần lượt {adaptive["bug_detecting_tests"]}/60 và {control["bug_detecting_tests"]}/60.', "",
-              f'Tổng cộng {summary["distinct_accepted_behaviors_across_rounds"]} hành vi code đối kháng khác nhau giữa các vòng; số code qua bộ lọc trong bảng có thể gồm hành vi lặp lại từ vòng trước.', "",
-              "Đối kháng ở đây có nghĩa là code vượt qua những test đúng mà policy hiện tại sinh được, đồng thời còn nhân chứng sai trong miền input đã khai báo. Điều đó không chứng minh code khó hơn với mọi model hoặc sai ở ít input hơn. Code không được hỗ trợ, code đúng toàn miền, code sai toàn miền, code trùng hành vi và code bị cắt đều bị loại.", "",
-              "Hai nhánh khớp số bước học và ngân sách sinh test; nhánh đối kháng tốn thêm chi phí probe và sinh/lọc code. Không tuyên bố tổng chi phí tính toán bằng nhau.", "",
-              "Các lượt GRPO cố định 96 bước một mạch trước đây vẫn được giữ trong results/apps-sft-grpo; không dùng chúng thay cho đối chứng hai vòng trong bảng này.", "",
-              "![Kết quả Validation](validation-comparison.png)", "", "metrics.json giữ kế hoạch, hash, gradient/update, phân loại thất bại và thống kê từng vòng. per-problem.csv tách kết quả theo bài nguồn. Log đầy đủ và adapter lưu trên ổ D, không đưa vào Git."]
-    (output / "README.md").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+    write_result_readme((output / 'README.md').parent)
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt

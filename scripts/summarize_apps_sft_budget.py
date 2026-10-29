@@ -6,6 +6,7 @@ from pathlib import Path
 from apps_core import digest, read, write
 from apps_model_runner import PROJECT
 from audit_apps_run import audit
+from result_docs import write_result_readme
 
 
 def rows(path):
@@ -65,34 +66,7 @@ def summarize(folder, publish=False):
         writer.writerows(per_case)
     fields = ("valid_tests", "correct_expected", "bug_detecting_tests", "cases_detected")
     maximum = {field: max(historical["metrics"][field], a["metrics"][field], b["metrics"][field]) for field in fields}
-    lines = ["# APPS: kiểm chứng ngân sách khởi động SFT", "", "So sánh 64 và 256 bước, cùng model gốc, LoRA rank 4, 319 target Train, thứ tự target, seed 42, prompt v2 và optimizer. Bốn ví dụ/bước, tương ứng 256 và 1.024 lượt ví dụ. Đây là SFT, không phải RL.", "",
-             "| Ngân sách | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện @4 /15 |", "|---|---:|---:|---:|---:|"]
-    display_rows = [("64 bước, lịch sử", historical), ("256 bước", b)]
-    if paired:
-        display_rows.insert(1, ("64 bước, cùng lượt mới", a))
-    for label, record in display_rows:
-        m = record["metrics"]
-        values = [f'**{m[field]}**' if m[field] == maximum[field] else str(m[field]) for field in fields]
-        lines.append("| " + label + " | " + " | ".join(values) + " |")
-    replay = trial["step64_replay"]
-    lines += ["", "Giá trị lớn nhất mỗi cột được in đậm, kể cả khi hòa. Cùng 15 code từ năm bài Validation; mỗi code sinh bốn test, cùng prompt, seed và giới hạn 96 token. Mẫu sai/bị cắt vẫn nằm trong mẫu số.", "",
-              "## Kiểm chứng phép so sánh", "",
-              f'- Checkpoint tại bước 64 khớp từng tensor với lượt cũ: {replay["exact_tensor_match"]}. Sai khác L2 tương đối: {replay["relative_l2_difference"]:.8g}.',
-              '- Hash target pool và thứ tự target khớp lượt 64 bước cũ. Không đổi prompt, cách chấm hoặc kiểu expected.',
-              '- Checkpoint 128 chỉ được lưu để phục hồi; không chấm Validation để chọn mốc thuận lợi.',
-              '- Trọng số nền giữ nguyên; gradient chỉ đi vào LoRA. Adapter cuối được kiểm tra khớp bản lưu.',
-              '- Test phát triển và Test chính thức không được model đánh giá.', "",
-              f'Ứng viên qua tiêu chí đã đặt trước để cân nhắc thí nghiệm RL tiếp theo: **{trial["eligible_for_later_rl_comparison"]}**. Cấu hình và checkpoint đang dùng không tự động bị thay thế.', "",
-              "![So sánh Validation](validation-comparison.png)", "", "![Loss SFT trên Train](learning-curve.png)", "",
-              "Loss Train giảm chỉ chứng minh model khớp dữ liệu học hơn, không tự chứng minh tổng quát hóa. Kết quả hiện chỉ có một seed và năm bài Validation. Nếu warmup tốt hơn, phần thay đổi này thuộc SFT; cần phép so sánh RL riêng để kết luận về GRPO hoặc đối kháng.", "",
-              "Log, target, checkpoint 64/128/256 và bản chụp nguồn ở thư mục trial ghi trong metrics.json. Các bảng/hình được dựng lại bằng scripts/summarize_apps_sft_budget.py."]
-    if paired:
-        lines += ["", "## Đối chứng bổ sung trong cùng quỹ đạo học", "",
-                  "Kế hoạch gốc chỉ chấm checkpoint 256 và yêu cầu tái hiện bước 64 với sai khác L2 không quá 0,1%. Thực tế checkpoint 64 khác bản lịch sử khoảng 0,198%; ngưỡng tái hiện ban đầu không đạt và kết quả đó được giữ nguyên.", "",
-                  "Trước khi xem Validation mới, đã ghi paired64-plan.json để bổ sung checkpoint 64 của chính lượt hiện tại làm đối chứng. Hai checkpoint 64/256 chia sẻ chính xác cùng 64 bước đầu. Cả hai chỉ được chấm sau khi đã học xong 256 bước; checkpoint 128 không được đánh giá. Đây là phép đối chiếu bổ sung, không sửa lại kế hoạch gốc hay chọn checkpoint theo điểm thuận lợi.", "",
-                  f'Ứng viên qua tiêu chí bổ sung so với cả hai mốc 64: **{paired["eligible_for_later_rl_comparison"]}**. Trạng thái đủ điều kiện theo kế hoạch gốc vẫn là **{paired["original_trial_eligibility"]}**.', "",
-                  "Sai khác khi tái hiện chưa được quy cho một nguyên nhân cụ thể. [Tài liệu PyTorch về reproducibility](https://docs.pytorch.org/docs/2.14/notes/randomness.html) mô tả các nguồn không xác định và đặc tính của CUDA attention; đây là những khả năng cần kiểm tra, không phải kết luận đã xác định kernel gây ra sai khác trong lượt này."]
-    (output / "README.md").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+    write_result_readme((output / 'README.md').parent)
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt

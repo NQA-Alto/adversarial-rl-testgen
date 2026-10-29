@@ -8,6 +8,7 @@ from pathlib import Path
 from apps_core import digest, read, write
 from apps_model_runner import PROJECT
 from audit_apps_run import audit
+from result_docs import write_result_readme
 
 
 FIELDS = ("valid_tests", "correct_expected", "bug_detecting_tests", "cases_detected")
@@ -59,24 +60,7 @@ def summarize(root):
             writer = csv.DictWriter(stream, fieldnames=list(data[0]))
             writer.writeheader()
             writer.writerows(data)
-    lines = ["# Tác động thêm của GRPO từ SFT256", "", "Cùng adapter SFT256 input-first, thêm96 bước GRPO trên code Train cố định. Chỉ thay phần học RL; giữ prompt, model nền, bộ chấm và ngân sách sinh. Không phải phép thử đối kháng mới. Đối chứng hai vòng đối kháng trước vẫn dùng warmup SFT64 riêng.", "",
-             "| Phiên bản | Seed sinh | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện /15 |", "|---|---:|---:|---:|---:|---:|"]
-    for r in table:
-        lines.append(f'| {r["variant"]} | {r["generation_seed"]} | ' + " | ".join(str(r[f]) for f in FIELDS) + " |")
-    lines += ["", "| Phiên bản | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện /15 |", "|---|---:|---:|---:|---:|"]
-    for variant, values in summary.items():
-        cells = []
-        for f in FIELDS:
-            text = f'{values[f]["mean"]:.2f} ± {values[f]["sample_sd"]:.2f}'
-            cells.append("**" + text + "**" if values[f]["mean"] == max(v[f]["mean"] for v in summary.values()) else text)
-        lines.append("| " + variant + " | " + " | ".join(cells) + " |")
-    delta = {f: summary["sft256-grpo96"][f]["mean"] - summary["sft256"][f]["mean"] for f in FIELDS}
-    lines += ["", "Chênh lệch GRPO − SFT trung bình: " + "; ".join(f'{f}: {n:+.2f}' for f, n in delta.items()) + ".", "",
-              f'Lựa chọn trong cặp này theo thứ tự code phát hiện, test bắt lỗi, expected, hợp lệ, rồi phương án đơn giản khi hòa: **{best}**. Chỉ là lựa chọn trên Validation, chưa phải thành tích Test.', "",
-              "Đã xác nhận đúng parent, gradient, tham số LoRA thay đổi, bản lưu và chấm lại toàn bộ raw output. Các bằng chứng cập nhật không tự chứng minh chất lượng tăng; bảng trên mới là so sánh chất lượng.", "",
-              "Một seed train, ba seed sinh. SD không phải khoảng tin cậy. Nhiều lượt điều chỉnh trên cùng năm bài Validation có nguy cơ chọn quá khớp; không chỉnh phương pháp theo Test. Phần tăng từ SFT64 lên SFT256 thuộc SFT, không cộng vào lợi ích RL.", "",
-              "![So sánh trước và sau GRPO](comparison.png)", "", "Hình 1. Số đếm trung bình và SD lấy mẫu. Mẫu sai/bị cắt vẫn nằm trong mẫu số, trục ghi rõ đơn vị."]
-    (output / "README.md").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+    write_result_readme((output / 'README.md').parent)
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -93,6 +77,7 @@ def summarize(root):
     fig.tight_layout()
     fig.savefig(output / "comparison.png", dpi=180, facecolor="white")
     plt.close(fig)
+    delta = {f: summary["sft256-grpo96"][f]["mean"] - summary["sft256"][f]["mean"] for f in FIELDS}
     print("SFT256 RL SUMMARY:", best, delta, flush=True)
 
 

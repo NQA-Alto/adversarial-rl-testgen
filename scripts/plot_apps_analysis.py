@@ -3,6 +3,7 @@ from collections import Counter
 
 from apps_core import all_inputs, load_cases, read, write
 from apps_model_runner import PROJECT
+from result_docs import write_result_readme
 
 
 def main():
@@ -102,7 +103,7 @@ def main():
     fig.tight_layout()
     fig.savefig(data_output / "dataset-profile.png", dpi=180, facecolor="white")
     plt.close(fig)
-    (data_output / "README.md").write_text("# Hồ sơ dữ liệu APPS\n\nThống kê từ manifest và nội dung Train. Số lượng Test lấy từ manifest đã đóng băng; không đọc nội dung Test, không chạy model trên Test. Đây là tập con 29 bài dạng gọi hàm, không đại diện toàn bộ APPS.\n\n![Hồ sơ dữ liệu](dataset-profile.png)\n\nprofile.json chứa số liệu gốc; chạy scripts/plot_apps_analysis.py để dựng lại.\n", encoding="utf-8", newline="\n")
+    write_result_readme((data_output / 'README.md').parent)
 
     fig, ax = plt.subplots(figsize=(13, 6.2), facecolor="white")
     ax.set_xlim(0, 13)

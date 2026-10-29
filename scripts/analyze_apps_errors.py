@@ -7,6 +7,7 @@ from apps_core import canonical, digest, load_cases, read, score, write
 from apps_model_runner import PROJECT
 from audit_apps_run import audit
 from restricted_python import RestrictedFunction
+from result_docs import write_result_readme
 
 
 def rows(path):
@@ -89,19 +90,7 @@ def analyze():
             writer = csv.writer(stream)
             writer.writerow(header)
             writer.writerows(data)
-    lines = ["# Phân tích lỗi APPS", "", "Chấm lại các bản ghi đã có, không gọi model hay cập nhật trọng số. Validation gồm 15 code / 60 mẫu sinh cho mỗi phiên bản. Test chưa được dùng.", "",
-             "| Phiên bản | Input/JSON sai hoặc bị cắt | Expected sai | Đúng nhưng chưa bắt lỗi | Test bắt lỗi | Input có khả năng bắt lỗi* | Cơ hội mất do expected sai* |",
-             "|---|---:|---:|---:|---:|---:|---:|"]
-    for variant, entry in report["runs"].items():
-        c = entry["counts"]
-        lines.append(f'| {variant} | {c.get("invalid_input_or_json", 0) + c.get("truncated", 0)} | {c.get("wrong_expected", 0)} | {c.get("correct_expected_no_bug", 0)} | {c.get("bug_detected", 0)} | {c.get("input_only_attack", 0)} | {c.get("attack_lost_due_to_wrong_expected", 0)} |')
-    pair = report["paired_comparison"]
-    lines += ["", "*Hai cột cuối là chẩn đoán: giữ input mà model đã sinh và dùng reference để xem input đó có làm lộ lỗi không. Expected do reference cung cấp không được tính thành test đúng của model; các chỉ số chính không thay đổi. Đây là cách xem xét nút thắt input/expected, tương ứng ý tưởng Input Attack Rate ở ATGen §5.3.", "",
-              "![Phân tích các nhóm thất bại](failure-breakdown.png)", "", "Mốc sft là SFT64 lịch sử; mốc sft256 là kiểm chứng ngân sách riêng. Đối chứng 64/256 trong cùng quỹ đạo học nằm tại [apps-sft-budget](../apps-sft-budget/README.md). Không dùng hình tổng hợp này để gộp tác động SFT và RL.", "", "## Hai nhánh có phát hiện cùng code không?", "",
-              f'Cùng phát hiện: {", ".join(pair["both_detect"])}. Chỉ cố định phát hiện: {len(pair["only_control"])}; chỉ đối kháng phát hiện: {len(pair["only_adaptive"])}; cả hai bỏ sót: {len(pair["neither_detect"])}. Có {pair["identical_raw_outputs"]}/60 đầu ra giống hệt nhau.', "",
-              "Cùng số code phát hiện chưa có nghĩa là cùng tập code; bảng phân tích ở đây kiểm tra bằng ID. Đầu ra trùng nhau cũng không tự chứng minh adapter không học: tham số cập nhật và chất lượng đầu ra là hai kiểm chứng khác nhau.", "",
-              "## Giới hạn", "", "Một seed và năm bài Validation chưa đủ kết luận tổng quát. Các ví dụ expected trùng đầu ra buggy chỉ là dấu hiệu quan sát, không chứng minh model đã sao chép cách tính của code lỗi. Không dùng Test để tìm nguyên nhân hay chọn cấu hình."]
-    (output / "README.md").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+    write_result_readme((output / 'README.md').parent)
     print(json.dumps({"output": str(output), "paired_comparison": report["paired_comparison"], "counts": {key: value["counts"] for key, value in report["runs"].items()}}, ensure_ascii=False))
 
 

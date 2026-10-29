@@ -13,6 +13,7 @@ from apps_model_runner import PROJECT, run_folder
 from apps_round import run
 from apps_ui import gpu_busy
 from audit_apps_run import audit
+from result_docs import write_result_readme
 
 
 LABELS = {"base": "Qwen gốc", "sft": "SFT64", "control": "GRPO cố định", "adaptive": "GRPO đối kháng"}
@@ -212,32 +213,7 @@ def summarize(root, output=None):
             writer = csv.DictWriter(stream, fieldnames=list(rows[0]))
             writer.writeheader()
             writer.writerows(rows)
-    lines = ["# Kiểm tra lấy mẫu của hai nhánh đối kháng và cố định", "",
-             f'Cùng checkpoint SFT64, hai nhánh GRPO cuối sau 2 vòng × 48 bước, so với Qwen gốc. Ba seed sinh test 42/43/44, mỗi lượt 15 code Validation × 4 test. Dùng lại {sum(row["reused"] for row in result["runs"])} lượt đã có, chạy mới {sum(not row["reused"] for row in result["runs"])} lượt; mọi kết quả tái sử dụng đều được kiểm tra hash. Kế hoạch và thời điểm được ghi rõ trong metrics.json.', "",
-             "**Đây là một seed huấn luyện và ba seed sinh test.** Không phải ba lần train độc lập. Không đổi checkpoint, prompt, tập dữ liệu hoặc trọng số; Test vẫn chưa dùng.", "",
-             "| Phiên bản | Seed sinh | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện /15 |", "|---|---:|---:|---:|---:|---:|"]
-    for row in result["runs"]:
-        lines.append("| " + LABELS[row["variant"]] + " | " + str(row["generation_seed"]) + " | " + " | ".join(str(row["metrics"][field]) for field in FIELDS) + " |")
-    lines += ["", "## Trung bình ± độ lệch chuẩn mẫu", "", "| Phiên bản | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện /15 |", "|---|---:|---:|---:|---:|"]
-    for name in LABELS:
-        values = []
-        for field in FIELDS:
-            value = f'{summary[name][field]["mean"]:.2f} ± {summary[name][field]["sample_sd"]:.2f}'
-            values.append("**" + value + "**" if summary[name][field]["mean"] == max(summary[v][field]["mean"] for v in LABELS) else value)
-        lines.append("| " + LABELS[name] + " | " + " | ".join(values) + " |")
-    lines += ["", "Chữ đậm đánh dấu trung bình cao nhất, kể cả khi hòa. SD mô tả biến động lấy mẫu, không phải khoảng tin cậy; các mutant cùng bài có tương quan. Không dùng bảng này để tuyên bố ý nghĩa thống kê.", "",
-              "## Đối kháng trừ cố định theo cùng seed", "", "| Seed sinh | Hợp lệ | Expected đúng | Test bắt lỗi | Code phát hiện |", "|---:|---:|---:|---:|---:|"]
-    for row in paired:
-        lines.append("| " + str(row["seed"]) + " | " + " | ".join(f'{row[field]:+d}' for field in FIELDS) + " |")
-    lines += ["", "![Kết quả theo seed sinh test](sampling.png)", "", "Hình 1. Kết quả của bốn checkpoint cố định. Mỗi điểm là một lần sinh 60 test; trục dọc ghi số lượng và mẫu số. Các đường trùng nhau vẫn được giữ nguyên.", "",
-              "## Chi phí thực hiện đã ghi được", "", "| Nhánh | GRPO (giây) | Probe + sinh/lọc code (giây) | Chấm Validation hai vòng (giây) | Đỉnh PyTorch cấp phát (GiB) |", "|---|---:|---:|---:|---:|"]
-    for arm in totals:
-        t = totals[arm]
-        lines.append(f'| {LABELS[arm]} | {t["grpo_seconds"]:.1f} | {t["adaptive_data_seconds"]:.1f} | {t["validation_seconds"]:.1f} | {t["max_recorded_allocated_gib"]:.3f} |')
-    lines += ["", f'SFT64 dùng chung: {costs[0]["seconds"]:.1f} giây, không cộng hai lần vào chênh lệch hai nhánh. Nhánh đối kháng còn phải probe Train và sinh/lọc code; vì vậy cùng 96 bước GRPO không có nghĩa là cùng tổng chi phí.', "",
-              "Đây là tổng các pha có thời gian được ghi, chưa phải tổng thời gian từ bấm chạy đến hoàn tất. Nạp model, audit, tạo curriculum, điều phối và khoảng chờ chưa được bao quát đầy đủ. Đỉnh PyTorch cấp phát không phải tổng VRAM máy/GPU; không cộng các đỉnh giữa các pha. Không lấy thời gian export TensorBoard làm thời gian train.", "",
-              "Raw output, adapter và kế hoạch nằm trong thư mục evidence được ghi ở metrics.json. Chạy lại bảng/hình từ evidence: `python scripts/apps_adversarial_review.py --summarize <folder>`. Không cần nạp model để dựng lại."]
-    (output / "README.md").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+    write_result_readme((output / 'README.md').parent)
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt

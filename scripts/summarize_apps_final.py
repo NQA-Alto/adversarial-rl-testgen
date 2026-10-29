@@ -7,6 +7,7 @@ from pathlib import Path
 from apps_core import digest, load_cases, read, write
 from apps_final_evaluate import LOCK, audit_saved
 from apps_model_runner import PROJECT
+from result_docs import write_result_readme
 
 
 FIELDS = ("valid_tests", "correct_expected", "bug_detecting_tests", "cases_detected")
@@ -66,28 +67,7 @@ def summarize(root):
             writer.writeheader()
             writer.writerows(rows)
     selected = plan["selected_variant_before_test"]
-    lines = ["# Đánh giá cuối trên Test phát triển APPS", "", f'Tập giữ lại: {len({c["source_id"] for c in cases})} bài nguồn, {total} code lỗi; mỗi lượt có {slots} slot test, tối đa bốn test/code. Đây là holdout chia theo bài bên trong APPS Train, **không phải Test chính thức APPS**.', "",
-             f'Model được chọn trước khi mở Test: **{LABELS.get(selected,selected)}**. Quy tắc chọn dựa trên Validation đã khóa trong protocol.json. Không đổi model hoặc cấu hình theo kết quả Test.', "",
-             "Các variant, model nền, adapter/config, nguồn bộ chấm, phiên bản thư viện, ngân sách và seed đã được khóa trước đợt đánh giá. Lưu đủ mọi lượt và chấm lại raw output; không huấn luyện trong đợt này.", "",
-             f'| Phiên bản | Seed sinh | Hợp lệ /{slots} | Expected đúng /{slots} | Test bắt lỗi /{slots} | Code phát hiện /{total} |', "|---|---:|---:|---:|---:|---:|"]
-    for row in table:
-        lines.append("| " + LABELS.get(row["variant"],row["variant"]) + " | " + str(row["generation_seed"]) + " | " + " | ".join(str(row[f]) for f in FIELDS) + " |")
-    lines += ["", "## Trung bình ± độ lệch chuẩn mẫu", "", f'| Phiên bản | Chọn từ Validation | Hợp lệ /{slots} | Expected đúng /{slots} | Test bắt lỗi /{slots} | Code phát hiện /{total} |', "|---|---|---:|---:|---:|---:|"]
-    for name, item in summary.items():
-        values = []
-        for f in FIELDS:
-            value = f'{item[f]["mean"]:.2f} ± {item[f]["sample_sd"]:.2f}'
-            values.append("**"+value+"**" if name != "base" and item[f]["mean"] > summary["base"][f]["mean"] else value)
-        lines.append("| " + LABELS.get(name,name) + " | " + ("Có" if name==selected else "") + " | " + " | ".join(values) + " |")
-    lines += ["", "Chữ đậm là trung bình cao hơn Qwen gốc trên cùng Test, không phải bằng chứng ý nghĩa thống kê. Model được chọn vẫn là model đã chọn từ Validation, dù thứ hạng quan sát trên Test có thể khác.", "",
-              "![Kết quả Test cuối](comparison.png)", "", "Hình 1. Đợt Test đã khóa; thanh sai số là SD qua ba seed sinh test. Một seed train, không phải ba lượt huấn luyện độc lập. Các mutant cùng bài có tương quan.", "",
-              "## Cách đọc và giới hạn", "", "Expected đúng là cặp input/expected đúng theo reference; test bắt lỗi phải vừa đúng expected vừa làm code lỗi trả sai hoặc phát sinh lỗi được hỗ trợ. Code phát hiện @4 đếm code có ít nhất một trong bốn test bắt lỗi. Mẫu sai/bị cắt vẫn nằm trong mẫu số.", "",
-              "Nếu prompt vượt ngân sách đã khóa, bốn slot thất bại vẫn được tính; số lượng ghi trong errors.csv. Đây là slot ngân sách, không khẳng định model thực sự sinh token cho prompt đã bị chặn.", "",
-              "GRPO 96 bước liền và GRPO cố định hai vòng khác số lần khởi tạo optimizer; chỉ nhánh cố định hai vòng là đối chứng phù hợp cho nhánh đối kháng hai vòng. Không dùng thứ hạng Test để chọn checkpoint rồi coi Test còn độc lập.", "",
-              "Đây là quy mô nhỏ với miền input hữu hạn và mutant AST giữ lại. Không so trực tiếp mức điểm với benchmark ATGen hoặc toàn bộ APPS. Không cập nhật thiết kế từ Test và chấm lại dưới tên kết quả cuối.", "",
-              "metrics.csv ghi thời gian generation/chấm và đỉnh PyTorch cấp phát, chưa gồm nạp model/hash/audit/điều phối. Nếu có nối lại vì gián đoạn kỹ thuật, trường elapsed_seconds_scope ghi rõ phần thời gian còn lại; output đã hoàn tất được giữ nguyên.", "",
-              "Protocol và bảng tổng hợp ở đây; raw output, model và khóa sự kiện nằm trên ổ D: tại root ghi trong metrics.json. Script dựng lại: scripts/summarize_apps_final.py. Chạy lại tổng hợp chỉ chấm dữ liệu đã lưu, không tạo lượt model mới."]
-    (output / "README.md").write_text("\n".join(lines)+"\n",encoding="utf-8",newline="\n")
+    write_result_readme((output / 'README.md').parent)
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt

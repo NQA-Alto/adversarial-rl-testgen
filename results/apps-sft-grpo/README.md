@@ -1,19 +1,23 @@
-# APPS: prompt v2, SFT và GRPO
+# SFT và GRPO với nhãn expected-first
 
-Cùng 15 code lỗi từ năm bài Validation, bốn test/code, seed sinh 42. Tập Test chưa được model đánh giá.
+So sánh Qwen gốc, SFT64 và GRPO96 trên 15 code Validation, seed 42. Nhãn SFT ở lượt này đặt expected trước input.
 
-| Phiên bản | Test hợp lệ | Expected đúng | Test bắt lỗi | Code phát hiện @4 |
-|---|---:|---:|---:|---:|
-| Qwen gốc | 35/60 | 15/60 | 4/60 | 3/15 |
-| Sau SFT | 41/60 | 13/60 | 4/60 | 3/15 |
-| Sau SFT + GRPO | 44/60 | 15/60 | 4/60 | 3/15 |
+## Kết quả từng lượt
 
-Qwen gốc ở bảng này dùng prompt v2. Tác động đổi prompt so với v1 được ghi riêng trong metrics.json; không gộp thành cải thiện do huấn luyện.
+| Cấu hình | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện /15 |
+|---|---|---|---|---|
+| Qwen gốc | 35 | 15 | 4 | 3 |
+| SFT64 | 41 | 13 | 4 | 3 |
+| SFT64 + GRPO96 | 44 | 15 | 4 | 3 |
 
-SFT dùng nhãn input/expected từ APPS Train; GRPO dùng reward và bắt đầu từ đúng adapter SFT. Đây là GRPO với code lỗi cố định, chưa có curriculum adversary trên APPS.
+Tỷ lệ hợp lệ tăng sau học; số code phát hiện vẫn là 3/15.
 
-![So sánh Validation](validation-comparison.png)
+![SFT và GRPO với nhãn expected-first](validation-comparison.png)
 
-Log gốc, target SFT, adapter, gradient, bản chụp mã nguồn và các biên bản kiểm chứng nằm trong thư mục round ghi tại metrics.json. Các đầu ra sai/bị cắt vẫn ở trong mẫu số.
+Hình 1. SFT và GRPO với nhãn expected-first.
 
-Một seed và năm bài Validation chưa đủ kết luận hiệu quả ổn định. per-problem.csv cho phép xem khác biệt theo bài; metrics.json giữ phân loại lỗi và thông tin từng lượt.
+## Dữ liệu
+
+[metrics.csv](metrics.csv) · [metrics.json](metrics.json) · [per-problem.csv](per-problem.csv)
+
+[Cấu hình và chỉ số đánh giá](../../docs/EXPERIMENTS.md).

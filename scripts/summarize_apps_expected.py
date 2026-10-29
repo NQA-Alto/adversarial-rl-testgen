@@ -7,6 +7,7 @@ from pathlib import Path
 from apps_core import digest, read, write
 from apps_model_runner import PROJECT
 from audit_apps_run import audit
+from result_docs import write_result_readme
 
 
 FIELDS = ("valid_tests", "correct_expected", "bug_detecting_tests", "cases_detected")
@@ -23,17 +24,7 @@ def summarize(root):
         write(output / "metrics.json", {"root": str(root), "trial_result_sha256": digest(root / "result.json"),
                                        "plan": plan, "result": result, "replay_diagnosis": diagnosis,
                                        "quality_evaluated": False, "model_test_evaluation": False})
-        text = f'''# Lượt tăng SFT dừng ở kiểm tra replay
-
-Đã dừng có chủ đích sau {result["completed_optimizer_steps_before_stop"]} bước, không hoàn tất ngân sách256. Checkpoint64 lệch relative L2 = {diagnosis["replay"]["relative_l2_difference"]:.9f} so với SFT64 lịch sử, vượt ngưỡng0,001 ghi trước. Không nới ngưỡng để gọi lượt này thành công.
-
-Nhãn Train, thứ tự ví dụ và các mã nguồn dùng chung đều trùng hash. Loss bước đầu giống nhau, bắt đầu lệch từ bước2; chênh lệch loss lớn nhất64 bước đầu là {diagnosis["max_loss_difference_first64"]:.6f}. Nguyên nhân số học cụ thể chưa được xác định. Không coi đây là bằng chứng model kém đi hoặc bộ chấm sai.
-
-Không chạy Train probe, GRPO mới, Validation hay Test trong lượt này. Phần sau checkpoint64 chỉ có log cập nhật, không có adapter cuối256. Giữ checkpoint64, log, kế hoạch, STOP_REQUEST và bản trạng thái lỗi ban đầu trong evidence.
-
-Phép thử kế tiếp dùng checkpoint64 và256 của cùng một quỹ đạo huấn luyện mới làm cặp đối chứng, không phụ thuộc việc replay chính xác adapter lịch sử. Đây là kế hoạch mới được ghi riêng trước khi chạy; không tái sử dụng bước116 như ứng viên256 và không sửa trạng thái lượt dừng này thành thành công.
-'''
-        (output / "README.md").write_text(text, encoding="utf-8", newline="\n")
+        write_result_readme((output / 'README.md').parent)
         print("EXPECTED SUMMARY: stopped_at_replay_gate", output, flush=True)
         return
     if result["status"] not in ("completed", "stopped_at_train_gate") or digest(root / "plan.json") != result["plan_sha256"]:
@@ -84,30 +75,7 @@ Phép thử kế tiếp dùng checkpoint64 và256 của cùng một quỹ đạo
             writer = csv.DictWriter(stream, fieldnames=list(table[0]))
             writer.writeheader()
             writer.writerows(table)
-    lines = ["# Thử tăng thời lượng học expected", "", "Giữ input-first, 319 nhãn Train, LoRA và learning rate; tăng SFT64 lên SFT256 từ model gốc với seed42. SFT là học có giám sát, chưa phải RL. Nếu qua điều kiện Train, học thêm GRPO96 từ cả hai parent theo cùng giao thức; nhánh64 tái dùng kết quả đã kiểm chứng.", "",
-             "## Kiểm tra Train trước Validation", "", "| Mốc SFT | Hợp lệ /164 | Expected đúng /164 | Test bắt lỗi /164 | Code phát hiện /41 |", "|---|---:|---:|---:|---:|"]
-    for name, m in (("64 bước", result["baseline_train_metrics"]), ("256 bước", result["candidate_train_metrics"])):
-        lines.append("| " + name + " | " + " | ".join(str(m[f]) for f in FIELDS) + " |")
-    lines += ["", f'Qua điều kiện Train đã ghi trước: **{result["train_gate_passed"]}**. Replay64 relative L2 = {result["step64_replay"]["relative_l2_difference"]:.6g}. Train chỉ đo khả năng khớp dữ liệu đã học, không dùng để tuyên bố khái quát hóa.', ""]
-    if not result["train_gate_passed"]:
-        lines += ["Ứng viên dừng tại Train đúng kế hoạch. Không có GRPO hay Validation mới trong phép thử này. Không đổi checkpoint hiện hành và không mở Test."]
-    else:
-        lines += ["## Validation · ba seed sinh", "", "| SFT steps | Mốc | Seed sinh | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện /15 |", "|---:|---|---:|---:|---:|---:|---:|"]
-        for r in table:
-            lines.append(f'| {r["sft_steps"]} | {r["stage"]} | {r["generation_seed"]} | ' + " | ".join(str(r[f]) for f in FIELDS) + " |")
-        lines += ["", "| SFT steps / mốc | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện /15 |", "|---|---:|---:|---:|---:|"]
-        for label, data in summary.items():
-            cells = []
-            for f in FIELDS:
-                value = f'{data[f]["mean"]:.2f} ± {data[f]["sample_sd"]:.2f}'
-                cells.append("**" + value + "**" if data[f]["mean"] == max(x[f]["mean"] for x in summary.values()) else value)
-            lines.append("| " + label + " | " + " | ".join(cells) + " |")
-        lines += ["", f'Qua tiêu chí Validation đã ghi trước: **{eligible}**. Tiêu chí xét GRPO96: tổng expected ba seed tăng ít nhất9/180, các tổng hợp lệ/test bắt lỗi/code phát hiện không giảm. Không tự thay checkpoint chỉ vì loss thấp.', "",
-                  "Chỉ một seed huấn luyện. Ba seed sinh mô tả biến động lấy mẫu, SD không phải khoảng tin cậy. Đây là kiểm chứng bổ sung sau nhiều lần nhìn Validation; nguy cơ chọn quá khớp Validation vẫn có. Test chưa được dùng để chỉnh thiết kế."]
-    lines += ["", "## Chi phí SFT", "", f'SFT64: {baseline["training_seconds"]:.1f} giây; SFT256: {trained["training_seconds"]:.1f} giây. Đây là thời gian pha học/probe đã ghi, chưa bao gồm đầy đủ nạp model và điều phối. Đỉnh PyTorch cấp phát của ứng viên: {trained["peak_vram_gib"]:.3f}GiB.', "",
-              "![Đường loss SFT của phép thử](learning-curve.png)", "", "Hình 1. Loss theo bước cập nhật trên minibatch Train. Các minibatch khác nhau; không phải đường lỗi Validation hay bằng chứng model tổng quát tốt hơn.", "",
-              "Raw output, checkpoint, tham số, hash và kế hoạch nằm trong evidence ghi ở metrics.json. Không sửa expected sau sinh để làm đẹp kết quả."]
-    (output / "README.md").write_text("\n".join(lines) + "\n", encoding="utf-8", newline="\n")
+    write_result_readme((output / 'README.md').parent)
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
