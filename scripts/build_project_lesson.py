@@ -150,6 +150,10 @@ def main():
     expected_labels = {"base":"Qwen gốc", "sft":"SFT64 input-first", "control":"GRPO cố định · 2 vòng", "adaptive":"GRPO đối kháng · 2 vòng"}
     replacements["__EXPECTED_TABLE__"] = table(["Checkpoint", "Hợp lệ /60", "Expected đúng /60", "Test bắt lỗi /60", "Code /15"], [[expected_labels[name]] + [f'{values[f]["mean"]:.2f} ± {values[f]["sample_sd"]:.2f}' for f in ("valid_tests","correct_expected","bug_detecting_tests","cases_detected")] for name,values in expected_review["summary"].items()])
     replacements["__EXPECTED_ERRORS__"] = image(PROJECT / "results/apps-expected-diagnosis/expected-errors.png", "Phân loại đầu ra của năm checkpoint trên ba seed sinh Validation")
+    budget = read(PROJECT / "results/apps-shared-sft-budget/metrics.json")
+    replacements["__SHARED_BUDGET_TABLE__"] = table(["SFT cùng lượt", "Hợp lệ /60", "Expected đúng /60", "Test bắt lỗi /60", "Code /15"], [[steps + " bước"] + [f'{values[f]["mean"]:.2f} ± {values[f]["sample_sd"]:.2f}' for f in ("valid_tests","correct_expected","bug_detecting_tests","cases_detected")] for steps,values in budget["summary"].items()])
+    followup = read(PROJECT / "results/apps-sft256-grpo/metrics.json")
+    replacements["__SFT256_RL_TABLE__"] = table(["Checkpoint", "Hợp lệ /60", "Expected đúng /60", "Test bắt lỗi /60", "Code /15"], [["SFT256" if name == "sft256" else "SFT256 + GRPO96"] + [f'{values[f]["mean"]:.2f} ± {values[f]["sample_sd"]:.2f}' for f in ("valid_tests","correct_expected","bug_detecting_tests","cases_detected")] for name,values in followup["summary"].items()])
     fragments = sorted(SOURCE.glob('0[1-5]-*.html'))
     if len(fragments)!=5:
         raise ValueError("Five teaching parts required")

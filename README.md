@@ -4,6 +4,18 @@
 
 Nhánh `apps-introductory` đang dùng dữ liệu APPS. Đã chạy SFT, GRPO cố định và hai vòng curriculum đối kháng bằng model local; các kết quả dữ liệu nội bộ cũ không được gộp vào bảng APPS.
 
+## Cập nhật 30/10 · input-first và expected
+
+| Checkpoint | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện /15 |
+|---|---:|---:|---:|
+| SFT64 cùng quỹ đạo mới | 19,00 | 5,33 | 4,00 |
+| SFT256 input-first | **26,00** | **10,33** | **7,00** |
+| SFT256 + GRPO96 | 24,67 | 8,67 | 6,00 |
+
+Trung bình ba seed sinh 42/43/44, một seed train; đầy đủ mẫu sai trong mẫu số. Lợi ích tăng thời lượng học thuộc SFT. GRPO mới có cập nhật tham số thật nhưng chưa cải thiện chất lượng; giữ SFT256 là checkpoint đang tốt hơn để demo. Thực nghiệm đối kháng hai vòng dùng parent SFT64 riêng, chưa chứng minh tốt hơn đối chứng cố định. Test vẫn chưa được model đánh giá.
+
+[So SFT64–256 cùng lượt](results/apps-shared-sft-budget/README.md) · [Phần thêm của RL](results/apps-sft256-grpo/README.md) · [Expected sai và ví dụ tính tay](results/apps-expected-diagnosis/README.md) · [Đối kháng input-first](results/apps-input-first-review/README.md)
+
 ## Tiến độ và phân tích bổ sung
 
 [Bài giảng đồ án từ nền tảng đến TensorBoard](docs/BAI_GIANG_DO_AN_TTNT.html): một file HTML tự chứa, có sơ đồ, ví dụ tính reward/GRPO, hướng dẫn đọc kết quả và hai mô phỏng. Tải file về rồi mở bằng trình duyệt để đọc offline; GitHub thường hiển thị mã HTML thay vì chạy trang.
@@ -12,9 +24,9 @@ Nhánh `apps-introductory` đang dùng dữ liệu APPS. Đã chạy SFT, GRPO c
 
 [Tiến độ toàn đề tài](docs/PROJECT_STATUS.md): ước lượng khoảng 70% toàn bộ công việc, khoảng 90% phần triển khai cốt lõi. Các tỷ lệ phục vụ điều phối, không phải điểm chấm hoặc mức cải thiện của model. Báo cáo, video và kiểm chứng cài lại chưa hoàn tất.
 
-Hai nhánh GRPO cuối phát hiện cùng hai code; nhánh đối kháng mất tám cơ hội vì expected sai. Đã thử thinking và hai cách diễn đạt hợp đồng đầu ra trên Train; các ứng viên chưa qua tiêu chí nên giữ prompt v2 và checkpoint hiện tại. Đây là các phép thử suy luận, không phải lượt RL mới. Test vẫn được giữ lại.
+Ở snapshot nhãn expected-first trước đó, hai nhánh GRPO cuối phát hiện cùng hai code; nhánh đối kháng mất tám cơ hội vì expected sai. Các phép thử thinking và diễn đạt hợp đồng đầu ra trên Train chưa qua tiêu chí. Đây là lịch sử thử suy luận, không phải lượt RL mới; các kết quả mới dùng input-first được tách riêng ở đầu trang.
 
-## Kiểm chứng ngân sách SFT
+## Lịch sử ngân sách SFT · nhãn expected-first
 
 Đã thử 256 bước từ model gốc với cùng target pool, prompt v2 và seed. Do tái hiện checkpoint 64 không khớp tuyệt đối, có bổ sung đối chứng 64 trong chính lượt học mới trước khi xem Validation.
 

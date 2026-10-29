@@ -1,0 +1,7 @@
+sft_steps,generation_seed,valid_tests,correct_expected,bug_detecting_tests,cases_detected,path
+64,42,40,17,6,3,D:\DA\TTNT_De19_Assets\evidence\apps-adapter-validation-20261030-002756-005318
+256,42,53,27,10,7,D:\DA\TTNT_De19_Assets\evidence\apps-adapter-validation-20261030-002837-023045
+64,43,42,22,5,4,D:\DA\TTNT_De19_Assets\evidence\apps-adapter-validation-20261030-002918-234279
+256,43,56,27,10,7,D:\DA\TTNT_De19_Assets\evidence\apps-adapter-validation-20261030-003001-239729
+64,44,48,18,5,5,D:\DA\TTNT_De19_Assets\evidence\apps-adapter-validation-20261030-003036-104064
+256,44,54,24,11,7,D:\DA\TTNT_De19_Assets\evidence\apps-adapter-validation-20261030-003114-053900

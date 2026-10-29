@@ -74,7 +74,7 @@ def execute(root):
     write(root / "result.json", result)
     try:
         for profile in plan["arms"]:
-            trained = run([python, "-B", str(PROJECT / "scripts/apps_sft.py"), "--steps", "64", "--lora-profile", profile], root, profile + "-sft")
+            trained = run([python, "-B", str(PROJECT / "scripts/apps_sft.py"), "--steps", "64", "--lora-profile", profile, "--target-order", "sorted-v1"], root, profile + "-sft")
             audit(trained)
             info = read(trained / "result.json")
             if info["lora_coverage"]["profile"] != profile or not info["update_verified"]:

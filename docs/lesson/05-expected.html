@@ -14,7 +14,13 @@ __EXPECTED_TABLE__
 <figure>__EXPECTED_ERRORS__<figcaption>Phân loại đủ180 đầu ra mỗi checkpoint. Các nhóm trong thanh loại trừ nhau, không bỏ mẫu sai khỏi mẫu số.</figcaption></figure>
 <p>Với SFT64 + GRPO96 input-first, có69 đầu ra hợp lệ nhưng expected sai. Trong đó36 input có thể làm lộ lỗi nếu đáp án được tính đúng. Chỉ6 expected sai trùng kết quả code lỗi; vì vậy không nên vội kết luận model chỉ đang chép kết quả mutant.</p>
 <h3>24.5. Học thêm có chắc tốt hơn?</h3>
-<p>Không chắc. SFT64 chỉ xử lý256 lượt ví dụ trên319 nhãn. Đang kiểm chứng SFT256 bằng cặp checkpoint64/256 từ cùng một lượt học mới. Trước tiên phải cải thiện trên Train mà không làm giảm khả năng bắt lỗi; sau đó mới chấm đủ ba seed Validation. Nếu chỉ loss giảm thì chưa đủ kết luận.</p>
+<p>Không chắc, nên phải đo trên bài chưa học. Phép thử checkpoint64/256 từ cùng một lượt SFT đã hoàn tất và qua điều kiện đặt trước. Trên Train, expected đúng tăng từ59 lên97/164; sau đó đã chấm đủ sáu lượt Validation của hai checkpoint.</p>
+__SHARED_BUDGET_TABLE__
+<p>Trên Validation, expected tăng trung bình từ19 lên26/60, test bắt lỗi từ5,33 lên10,33/60 và code phát hiện từ4 lên7/15. Cả ba seed sinh đều cho7 code phát hiện ở SFT256, nhưng đây vẫn chỉ là một lần huấn luyện. Mức tăng này thuộc SFT.</p>
+<h3>24.6. Thêm RL sau đó có tốt hơn không?</h3>
+__SFT256_RL_TABLE__
+<p>Lượt GRPO96 từ đúng parent SFT256 đã hoàn tất và chấm đủ ba seed sinh. Expected giảm từ26 xuống24,67/60, code phát hiện giảm từ7 xuống6/15, dù số test hợp lệ tăng nhẹ. Vì vậy chọn giữ SFT256 làm checkpoint đang tốt hơn; không chọn bản RL chỉ vì nó được train sau hoặc tên phương pháp phù hợp đề tài hơn.</p>
+<p>Đồ án vẫn có vòng GRPO thật và thực nghiệm curriculum đối kháng thật, với bằng chứng tham số được cập nhật. Kết luận thực nghiệm hiện tại là chưa thấy lợi ích thêm của RL/curriculum ở cấu hình này. Đây là điều phải giải thích khi bảo vệ; không xóa lượt không tăng và không gọi mức tăng nhờ SFT là kết quả của RL.</p>
 <p>Một lượt thử dùng adapter64 lịch sử làm đối chứng đã dừng vì lệch replay0,269%, vượt ngưỡng0,1% ghi trước. Nhãn và mã nguồn dùng chung khớp nhưng chưa xác định nguyên nhân số học cụ thể. Không dùng lượt dở đó làm bằng chứng chất lượng, không nới ngưỡng để gọi là thành công.</p>
 <p>Test vẫn được giữ riêng đến khi chốt thiết kế. Mô hình nhỏ và17 bài Train là phạm vi hẹp; mục tiêu là kiểm chứng phương pháp, đo đúng giới hạn và giải thích được từng thành phần, không hứa AI sẽ tính đúng mọi bài lập trình.</p>
 <details class="question"><summary>Tôi nên nói gì nếu thầy hỏi expected do ai tạo?</summary><p>Khi suy luận, chính model local sinh cả input và expected. Trong SFT, nhãn đúng được tính từ reference của các bài Train; khi đánh giá, reference chỉ ở phía bộ chấm. Validation/Test không được đưa vào học. Số liệu giữ nguyên expected model sinh, kể cả khi sai.</p></details>

@@ -76,6 +76,7 @@ def main(args):
     os.environ.update(PYTHONUTF8="1", PYTHONDONTWRITEBYTECODE="1", PYTHONUNBUFFERED="1", HF_HUB_OFFLINE="1",
                       HF_HOME=str(ASSETS / "cache/huggingface"), TEMP=str(ASSETS / "temp"), TMP=str(ASSETS / "temp"))
     previous = read(PROJECT / "APPS_STATE.json")
+    target_order = read(PROJECT / "configs/active-dataset.json").get("sft_target_order", "sorted-v1")
     write(root / "previous-state.json", previous)
     write(root / "previous-active-config.json", read(PROJECT / "configs/active-dataset.json"))
     source = root / "source"
@@ -85,7 +86,7 @@ def main(args):
         shutil.copy2(Path(__file__).with_name(name), source / name)
         hashes[name] = digest(source / name)
     plan = {"status": "planned", "dataset_id": previous["dataset_id"], "prompt_version": "apps-call-v2",
-            "source_hashes": hashes, "sft_steps": 64, "grpo_steps": args.grpo_steps, "seed": 42,
+            "source_hashes": hashes, "sft_steps": 64, "grpo_steps": args.grpo_steps, "seed": 42, "sft_target_order": target_order,
             "validation_tests_per_case": 4, "max_completion_tokens": 96,
             "selection": "Final adapter at the declared budget; no best-checkpoint selection or Test evaluation",
             "lineage": "fresh base -> SFT on Train only -> static GRPO on Train only", "adversary_curriculum": False}
@@ -97,7 +98,7 @@ def main(args):
     try:
         run([python, "-B", str(PROJECT / "scripts/verify_apps.py")], root, "verify-data")
         diagnose(root, previous)
-        targets, train_cases, manifest = build_examples()
+        targets, train_cases, manifest = build_examples(target_order=target_order)
         from transformers import AutoTokenizer
         from apps_model_runner import render_prompt
         tokenizer = AutoTokenizer.from_pretrained(ASSETS / "models/Qwen3.5-2B", local_files_only=True)
@@ -108,7 +109,7 @@ def main(args):
         write(root / "preflight.json", {"train_examples": len(targets), "train_cases": len(train_cases), "validation_cases": len(validation), "prompt_tokens_min": min(lengths), "prompt_tokens_max": max(lengths), "test_not_used": True})
         base = run(runner + ["evaluate", "--prompt-version", "apps-call-v2", "--no-publish"], root, "base-validation")
         run([python, "-B", str(PROJECT / "scripts/audit_apps_run.py"), str(base)], root, "audit-base")
-        sft = run([python, "-B", str(PROJECT / "scripts/apps_sft.py"), "--steps", "64"], root, "sft")
+        sft = run([python, "-B", str(PROJECT / "scripts/apps_sft.py"), "--steps", "64", "--target-order", target_order], root, "sft")
         run([python, "-B", str(PROJECT / "scripts/audit_apps_run.py"), str(sft)], root, "audit-sft")
         warm = run(runner + ["evaluate", "--adapter", str(sft / "adapter"), "--prompt-version", "apps-call-v2", "--no-publish"], root, "sft-validation")
         run([python, "-B", str(PROJECT / "scripts/audit_apps_run.py"), str(warm)], root, "audit-sft-validation")
@@ -129,7 +130,7 @@ def main(args):
         for name, expected in hashes.items():
             if digest(Path(__file__).with_name(name)) != expected:
                 raise RuntimeError("Experiment source changed during execution: " + name)
-        new_state = {"dataset_id": manifest["dataset_id"], "dataset_path": str(DATA), "prompt_version": "apps-call-v2", "round_path": str(root)}
+        new_state = {"dataset_id": manifest["dataset_id"], "dataset_path": str(DATA), "prompt_version": "apps-call-v2", "round_path": str(root), "sft_target_order": target_order}
         for key, folder in result["runs"].items():
             record = {"path": folder, "result_sha256": digest(Path(folder) / "result.json")}
             if key.endswith("training"):

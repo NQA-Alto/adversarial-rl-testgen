@@ -62,7 +62,7 @@ def main():
     runner = [python, "-B", str(PROJECT / "scripts/apps_model_runner.py")]
     try:
         training = run([python, "-B", str(PROJECT / "scripts/apps_sft.py"), "--steps", "256", "--checkpoint-steps", "64", "128",
-                        "--reference-adapter", str(baseline / "adapter")], root, "sft-256")
+                        "--reference-adapter", str(baseline / "adapter"), "--target-order", "sorted-v1"], root, "sft-256")
         audit(training)
         trained = read(training / "result.json")
         if trained["target_sha256"] != old["target_sha256"] or digest(training / "training-order.json") != digest(baseline / "training-order.json"):

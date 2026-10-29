@@ -5,5 +5,7 @@
   "legacy_backup": "De19-before-APPS-20261028-112210",
   "prompt_version": "apps-call-v2",
   "grpo_start": "sft",
-  "adversary_refresh": "per-round"
+  "adversary_refresh": "per-round",
+  "sft_target_order": "input-first-v1",
+  "ui_grpo_parent": "selected_sft_training"
 }

@@ -32,6 +32,7 @@ CSS = """
 .apps-neutral { color: #58635b; }
 .apps-wrong { color: #a04838; }
 .apps-muted { font-size: 13px; color: #747c72; }
+.apps-value { white-space: pre-wrap; font-family: Consolas,monospace; }
 #apps-job-log textarea { height: 300px !important; min-height: 300px !important; max-height: 300px !important; overflow-y: scroll !important; scrollbar-gutter: stable; scrollbar-width: auto; scrollbar-color: #7c897f #e6ebe7; font-family: Consolas,monospace; }
 #apps-job-log textarea::-webkit-scrollbar { width: 14px; }
 #apps-job-log textarea::-webkit-scrollbar-track { background: #e6ebe7; }
@@ -73,7 +74,7 @@ def card(title, row):
         output += '<div class="apps-sample"><span class="' + tone + '">Test ' + str(index) + ' · ' + label + '</span><pre>' + html.escape(sample["raw_output"]) + '</pre>'
         if sample.get("valid_format"):
             observed = sample.get("buggy_error") or canonical(sample.get("buggy_output"))
-            output += '<div class="apps-muted">Đáp án tham chiếu: ' + html.escape(canonical(sample.get("gold_output"))) + '<br>Code trả về: ' + html.escape(observed) + '</div>'
+            output += '<div class="apps-muted">Đáp án tham chiếu: <code class="apps-value">' + html.escape(canonical(sample.get("gold_output"))) + '</code><br>Code trả về: <code class="apps-value">' + html.escape(observed) + '</code></div>'
         else:
             reason = "Input sai cấu trúc hoặc nằm ngoài miền cho phép." if sample.get("error") == "schema_or_domain" else "Đầu ra bị cắt trước khi hoàn tất." if sample.get("error") == "truncated" else "Không đọc được một đối tượng JSON đúng định dạng."
             output += '<div class="apps-muted">' + reason + '</div>'
@@ -85,7 +86,9 @@ def saved(identity):
     current = state()
     cards = []
     variants = [("baseline_validation", "Qwen gốc")]
-    if current.get("demo_selection"):
+    if current.get("expected_grpo_validation") and current.get("sft_budget_validation"):
+        variants += [("sft_budget_validation", "SFT256"), ("expected_grpo_validation", "SFT256 + GRPO96")]
+    elif current.get("demo_selection"):
         chosen = current["demo_selection"]
         if chosen["validation_key"] != "baseline_validation":
             variants.append((chosen["validation_key"], chosen["label"]))
@@ -113,7 +116,8 @@ def metric_table():
                 ("sft_budget_validation", "SFT 256 bước · kiểm chứng"),
                 ("pilot_validation", "GRPO cố định · 96 bước liền" if current.get("adversarial_validation") else "Sau SFT + GRPO" if current.get("sft_training") else "Sau GRPO pilot"),
                 ("paired_control_validation", "GRPO cố định · 2 vòng"),
-                ("adversarial_validation", "GRPO đối kháng · 2 vòng")]
+                ("adversarial_validation", "GRPO đối kháng · 2 vòng"),
+                ("expected_grpo_validation", "GRPO từ SFT256 · 96 bước")]
     for key, title in variants:
         record = state().get(key)
         if not record:
@@ -141,7 +145,7 @@ def gpu_busy(ignore_pid=None):
             if process.pid in ignored:
                 continue
             if (process.info["name"] or "").lower().startswith("python") and any(
-                    Path(str(value)).name in ("apps_model_runner.py", "apps_sft.py", "apps_round.py", "apps_adversary.py", "apps_adversarial_round.py", "apps_reasoning_probe.py", "apps_prompt_trial.py", "apps_sft_budget_trial.py", "apps_sft_paired_control.py", "apps_reward_trial.py", "apps_reward_seed_probe.py", "apps_adversarial_review.py", "apps_lora_trial.py", "apps_order_trial.py", "apps_final_evaluate.py", "apps_expected_trial.py", "apps_shared_budget_trial.py") for value in process.info["cmdline"] or []):
+                    Path(str(value)).name in ("apps_model_runner.py", "apps_sft.py", "apps_round.py", "apps_adversary.py", "apps_adversarial_round.py", "apps_reasoning_probe.py", "apps_prompt_trial.py", "apps_sft_budget_trial.py", "apps_sft_paired_control.py", "apps_reward_trial.py", "apps_reward_seed_probe.py", "apps_adversarial_review.py", "apps_lora_trial.py", "apps_order_trial.py", "apps_final_evaluate.py", "apps_expected_trial.py", "apps_shared_budget_trial.py", "apps_sft256_rl_followup.py") for value in process.info["cmdline"] or []):
                 return True
         except (psutil.AccessDenied, psutil.NoSuchProcess):
             pass
@@ -193,6 +197,30 @@ def input_first_review_table():
             for name, values in report["summary"].items()]
 
 
+def shared_budget_table():
+    path = PROJECT / "results/apps-shared-sft-budget/metrics.json"
+    if not path.exists():
+        return []
+    report = read(path)
+    if digest(Path(report["root"]) / "result.json") != report["trial_result_sha256"]:
+        raise ValueError("Shared SFT budget evidence changed")
+    return [["SFT " + steps + " bước"] + [f'{values[f]["mean"]:.2f} ± {values[f]["sample_sd"]:.2f}' for f in
+                                         ("valid_tests", "correct_expected", "bug_detecting_tests", "cases_detected")]
+            for steps, values in report["summary"].items()]
+
+
+def sft256_rl_table():
+    path = PROJECT / "results/apps-sft256-grpo/metrics.json"
+    if not path.exists():
+        return []
+    report = read(path)
+    if digest(Path(report["root"]) / "result.json") != report["result_sha256"]:
+        raise ValueError("SFT256 RL evidence changed")
+    return [["SFT256" if name == "sft256" else "SFT256 + GRPO96"] + [f'{values[f]["mean"]:.2f} ± {values[f]["sample_sd"]:.2f}' for f in
+                                                                   ("valid_tests", "correct_expected", "bug_detecting_tests", "cases_detected")]
+            for name, values in report["summary"].items()]
+
+
 def training_plot(folder):
     import matplotlib
     matplotlib.use("Agg")
@@ -218,12 +246,15 @@ def training_plot(folder):
 
 def training_view():
     current = state()
-    record = current.get("adversarial_training") or current.get("pilot_training")
-    if not record:
+    candidates = [(key, current[key]) for key in ("adversarial_training", "pilot_training", "expected_grpo_training") if current.get(key)]
+    if not candidates:
         return "Chưa hoàn tất lượt GRPO trên APPS.", None, {}
+    key, record = max(candidates, key=lambda item: read(Path(item[1]["path"]) / "result.json").get("started_at", ""))
     result = read(Path(record["path"]) / "result.json")
     text = f'**GRPO:** {result["optimizer_steps"]} bước · {result["nonzero_gradient_steps"]} bước có gradient khác 0 · {len(result["changed_adapter_tensors"])} tensor adapter thay đổi.'
-    if current.get("adversarial_training"):
+    if key == "expected_grpo_training":
+        text += "\n\nKhởi tạo từ SFT256 input-first, code Train cố định. Đây là phép đo phần thêm của RL, không phải vòng đối kháng mới."
+    elif key == "adversarial_training":
         experiment = read(Path(current["adversarial_round_path"]) / "result.json")
         text += f'\n\nĐây là vòng cuối của {len(experiment["rounds"])} vòng đối kháng; tổng {experiment["total_steps_per_arm"]} bước GRPO. Biểu đồ bên dưới thể hiện vòng cuối.'
         text += "\n\n| Vòng | Code sinh | Qua bộ lọc | Vị trí Train đối kháng /41 |\n|---|---:|---:|---:|"
@@ -246,7 +277,8 @@ def run_live(identity, variant):
         command = [str(TRAIN_PYTHON), "-B", str(PROJECT / "scripts/apps_model_runner.py"), "evaluate", "--case", identity]
         if variant != "Qwen gốc":
             key = {"Sau SFT": "sft_training", "GRPO cố định · 2 vòng": "paired_control_training",
-                   "GRPO đối kháng · 2 vòng": "adversarial_training", "SFT 256 bước · kiểm chứng": "sft_budget_training"}.get(variant, "pilot_training")
+                   "GRPO đối kháng · 2 vòng": "adversarial_training", "SFT 256 bước · kiểm chứng": "sft_budget_training",
+                   "GRPO từ SFT256": "expected_grpo_training"}.get(variant, "pilot_training")
             pilot = state().get(key)
             if not pilot:
                 yield "Chưa có adapter APPS.", ""
@@ -285,7 +317,7 @@ def build_ui():
     import apps_jobs
     cases = validation_cases()
     choices = [(case["title"] + " · " + case["case_id"], case["case_id"]) for case in cases]
-    identity = cases[0]["case_id"]
+    identity = next((case["case_id"] for case in cases if case["case_id"] == "apps-train-3014/m1"), cases[0]["case_id"])
     manifest = read(DATA / "manifest.json")
     with gr.Blocks(title=TITLE, analytics_enabled=False) as app:
         gr.HTML('<header class="apps-header"><h1>' + TITLE + '</h1><p>Huấn luyện tăng cường đối kháng để sinh ca kiểm thử · APPS Introductory</p></header>')
@@ -298,6 +330,8 @@ def build_ui():
                 variants = ["Qwen gốc", "Sau SFT", "GRPO cố định · 96 bước liền", "GRPO cố định · 2 vòng", "GRPO đối kháng · 2 vòng"] if state().get("adversarial_validation") else ["Qwen gốc", "Sau SFT", "Sau SFT + GRPO"] if state().get("sft_training") else ["Qwen gốc", "Sau GRPO pilot"]
                 if state().get("sft_budget_training"):
                     variants.insert(2, "SFT 256 bước · kiểm chứng")
+                if state().get("expected_grpo_training"):
+                    variants.append("GRPO từ SFT256")
                 variant = gr.Radio(variants, value="Qwen gốc", label="Phiên bản")
                 button = gr.Button("Sinh 4 test", variant="primary")
                 live = gr.HTML()
@@ -311,7 +345,7 @@ def build_ui():
             refresh.click(metric_table, outputs=table)
             gr.Markdown("Mỗi code Validation sinh 4 test, seed 42. Mẫu sai và bị cắt vẫn nằm trong mẫu số. Hai nhánh GRPO 2 vòng cùng bắt đầu từ SFT và cùng ngân sách học. Mốc 96 bước liền là lượt thực nghiệm trước đó." if state().get("adversarial_validation") else "Mỗi code Validation sinh 4 test, seed 42. Mẫu sai và bị cắt vẫn nằm trong mẫu số. Các mốc SFT và GRPO được đánh giá riêng. Vòng sinh code đối kháng trên APPS đang được hoàn thiện.")
             if state().get("sft_budget_validation"):
-                gr.Markdown("Mốc SFT 256 bước được chấm riêng để kiểm chứng ngân sách học. Các nhánh GRPO hiện tại vẫn xuất phát từ SFT 64 bước.")
+                gr.Markdown("Hai nhánh GRPO theo vòng dùng cùng SFT64 cha. SFT256 và GRPO từ SFT256 là phép thử thời lượng học và phần thêm của RL riêng." if state().get("expected_grpo_validation") else "Mốc SFT 256 bước được chấm riêng để kiểm chứng ngân sách học. Các nhánh GRPO hiện tại vẫn xuất phát từ SFT 64 bước.")
             if (PROJECT / "results/apps-reward-ablation/metrics.json").exists():
                 with gr.Accordion("Kiểm chứng tỷ trọng reward", open=False):
                     gr.Markdown("Hai lượt GRPO mới, cùng SFT 64 bước và 96 bước học trên code cố định. Bảng dùng seed sinh 42; đây là phép thử riêng về reward, chưa thay các checkpoint chính.")
@@ -334,6 +368,16 @@ def build_ui():
                 with gr.Accordion("Expected sai ở đâu?", open=False):
                     gr.Image(str(PROJECT / "results/apps-expected-diagnosis/expected-errors.png"), show_label=False, interactive=False)
                     gr.Markdown("GRPO96 input-first: 36/180 input làm lộ lỗi nhưng expected sai. Đáp án tham chiếu chỉ dùng để chấm; đầu ra model được giữ nguyên.")
+            if (PROJECT / "results/apps-shared-sft-budget/metrics.json").exists():
+                with gr.Accordion("Thời lượng học expected", open=False):
+                    gr.Markdown("Checkpoint 64 và 256 từ cùng một lượt SFT. Bảng Validation là trung bình ± SD qua ba seed sinh. Đây là kiểm chứng SFT, chưa phải RL.")
+                    gr.Dataframe(value=shared_budget_table(), headers=["Checkpoint", "Hợp lệ /60", "Expected đúng /60", "Test bắt lỗi /60", "Code phát hiện /15"], interactive=False)
+                    gr.Image(str(PROJECT / "results/apps-shared-sft-budget/learning-curve.png"), show_label=False, interactive=False)
+            if (PROJECT / "results/apps-sft256-grpo/metrics.json").exists():
+                with gr.Accordion("GRPO thêm gì sau SFT256?", open=False):
+                    gr.Markdown("Cùng parent SFT256, thêm 96 bước GRPO trên code Train cố định. Ba seed sinh, một seed train; chưa phải thực nghiệm đối kháng mới.")
+                    gr.Dataframe(value=sft256_rl_table(), headers=["Checkpoint", "Hợp lệ /60", "Expected đúng /60", "Test bắt lỗi /60", "Code phát hiện /15"], interactive=False)
+                    gr.Image(str(PROJECT / "results/apps-sft256-grpo/comparison.png"), show_label=False, interactive=False)
         with gr.Tab("Dữ liệu"):
             gr.Dataframe(value=[[name, spec["problems"], spec["cases"]] for name, spec in manifest["splits"].items()], headers=["Tập phát triển", "Bài APPS", "Code lỗi"], interactive=False)
             gr.Markdown("Nguồn: **codeparrot/apps**, nhãn Introductory. Tập con dùng bài dạng gọi hàm và miền input hữu hạn được ghi rõ. Code lỗi được tạo bằng thay đổi AST từ lời giải nguồn, không phải code lỗi có sẵn của APPS.\n\nTrain/Validation/Test phát triển được chia theo bài trong **APPS Train**. Tập Test chính thức của APPS chưa tải, chưa đánh giá. Test phát triển chưa được model đánh giá.\n\nHai lời giải nguồn phải qua test gốc và đồng ý trên toàn bộ miền input thực nghiệm. Bài không đạt bộ lọc được ghi lý do loại.")

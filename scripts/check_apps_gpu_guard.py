@@ -15,6 +15,7 @@ def check():
         ("final_evaluation", "python.exe", ["python.exe", "scripts/apps_final_evaluate.py"], True),
         ("expected_trial", "python.exe", ["python.exe", "scripts/apps_expected_trial.py"], True),
         ("shared_budget_trial", "python.exe", ["python.exe", "scripts/apps_shared_budget_trial.py"], True),
+        ("sft256_rl_followup", "python.exe", ["python.exe", "scripts/apps_sft256_rl_followup.py"], True),
         ("completion_wrapper", "python.exe", ["python.exe", "C:/a/finish_apps_reward_trial.py"], False),
         ("prefixed_script", "python.exe", ["python.exe", "C:/a/archive_apps_model_runner.py"], False),
         ("dashboard", "python.exe", ["python.exe", "scripts/ui_dashboard.py"], False),

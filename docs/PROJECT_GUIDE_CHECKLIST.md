@@ -33,3 +33,9 @@ Phần nhiều seed huấn luyện vẫn là giới hạn, không đánh dấu h
 ## Rà biểu diễn nhãn ngày 29/10/2026
 
 Giữ đủ 12 lượt Validation và phân tích theo năm bài nguồn, tách hiệu ứng thứ tự nhãn SFT khỏi RL. Kế hoạch có tiêu chí trước kết quả; target mới giữ nguyên ngữ nghĩa, parser/metric không đổi. Lượt LoRA dừng sớm có ghi nguyên nhân và bằng chứng thiếu; không trình bày như so sánh hoàn chỉnh. Test vẫn giữ lại.
+
+## Cập nhật expected và RL · 30/10
+
+Đã chấm đủ sáu lượt SFT64/256 từ cùng quỹ đạo và sáu lượt trước/sau GRPO từ SFT256; raw output được chấm lại, prompt/seed/generation khớp. SFT tăng expected và số code phát hiện, nhưng thêm GRPO làm giảm các chỉ số chính. Đã giữ checkpoint SFT tốt hơn, lưu cả kết quả RL không tăng và biên bản lượt dừng do replay. Phù hợp yêu cầu tr.22 về ablation và phân tích lỗi, không dùng bằng chứng gradient thay thành tích chất lượng.
+
+Có ba ví dụ demo Validation kèm cách tính tay, gồm trường hợp expected sai; chưa quay video dự phòng hoặc đánh giá Test cuối. Báo cáo chính thức và kiểm chứng cài lại vẫn để sau theo ưu tiên đã thống nhất.

@@ -27,11 +27,12 @@ def command_for(task, steps):
     if task == TASKS[2]:
         command += ["train", "--steps", str(int(steps))]
         state = read(PROJECT / "APPS_STATE.json")
-        parent = state.get("sft_training")
+        parent = state.get("selected_sft_training") or state.get("sft_training")
         if parent:
             if digest(Path(parent["adapter_path"]) / "adapter_model.safetensors") != parent["adapter_sha256"]:
                 raise ValueError("Adapter SFT đã thay đổi.")
-            command += ["--init-adapter", parent["adapter_path"], "--baseline-run", state["sft_validation"]["path"]]
+            baseline = state.get("selected_sft_train_probe") or state["sft_validation"]
+            command += ["--init-adapter", parent["adapter_path"], "--baseline-run", baseline["path"]]
     else:
         command += ["evaluate"]
         if task == TASKS[3]:

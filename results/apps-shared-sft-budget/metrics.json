@@ -1,0 +1,293 @@
+{
+  "root": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-shared-sft-budget-20261030-001127-767479",
+  "trial_result_sha256": "c04904bfd2b9d1dc1ff457ea1e50793291e1443f9b2d4b079e2303b380f49440",
+  "plan": {
+    "recorded_at": "2026-10-29T17:11:27.847579+00:00",
+    "purpose": "Compare SFT64 and SFT256 from the SAME fresh training trajectory, avoiding reliance on exact historical CUDA replay.",
+    "predecessor": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-expected-budget-trial-20261030-000324-270571",
+    "reason_for_new_protocol": "Previous attempt stopped at its original replay threshold, with no new Validation. Targets/order/shared source hashes matched, but floating-point trajectories differed from step2. Cause not established. Do not relax the old threshold or mark that attempt successful.",
+    "method": "SFT_NOT_RL",
+    "seed": 42,
+    "target_order": "input-first-v1",
+    "sft_steps": 256,
+    "control_checkpoint": 64,
+    "control": "Checkpoint64 and final256 saved during one uninterrupted optimizer trajectory. Same initial LoRA, targets, optimizer and first64 updates by construction. Do not use step116 from the interrupted run.",
+    "train_gate": "At256 relative to same-run64, expected +8/164 minimum; valid, bug-test and detected-case counts must not decrease. Otherwise stop without new Validation. No larger-budget retry.",
+    "validation": "If Train gate passes, evaluate BOTH checkpoints on seeds42/43/44, all15 Validation codes and4 tests/code, same v2 prompt and96-token budget. Report all6 evaluations. No checkpoint selection mid-training.",
+    "validation_gate": "Total expected across3 seeds +9/180 minimum; valid, bug-test and detected-case totals must not decrease. SFT result only; no claim of RL improvement or automatic replacement of a GRPO checkpoint.",
+    "limits": "Exploratory budget study after earlier Validation exposure. One training seed, three sampling seeds. Nested checkpoints are paired observations, not independent training replicates. Test remains sealed.",
+    "source_hashes": {
+      "apps_shared_budget_trial.py": "1db2a1ca1d034a9b54fd682f8a65aa7ca218036550482de09c9f4a6ce8897d93",
+      "apps_sft.py": "33e7059ecdaf50f39024fc8fffcd40a669e568021bff0b7a551f8a8c4a513203",
+      "apps_model_runner.py": "f4d9277be033a5a2330a6b21397ea6b5d64677765d3a9058f957c0c3ed878077",
+      "apps_core.py": "8852daf15c5a8e021a1594d44704a61c8bd2ac675c38565eea175f3c1c79cd33",
+      "apps_lora.py": "a7b149d708d39890e5dd1aa6403bf507c9af5b480be114aa5035baae49bba672",
+      "apps_round.py": "626355c0339629aa7307cec11bebbe3d137f14e80d85af24d3ad3d5ce92cd0ee",
+      "apps_profiles.py": "b63ba5a9c1e6319d34925969fd16c438efc887bbdb7c7a40c93bcbb5e35bdf93",
+      "restricted_python.py": "542fd37b7ed73225fd2105922845155615e241b246b039e7ccce7fc840967111",
+      "local_model_loader.py": "339d647aa8b2d123cb9972654b9244a0aeb57aa8a02e173bac0f4abfcfa2221a",
+      "check_lora_update.py": "b57d4606fd72f14f653290fbd9252269d4b753eb75dc945ba9752a12bbfdec7d",
+      "train_static_grpo.py": "42d2d34ce7f1a7a86184a984106e49988d31a07c1f2d19018acee8f57421a36c",
+      "audit_apps_run.py": "f7ce9fb53d0a1ebf0060b5388021221b5ef10791d0e7ebf689fd0530dafe1dab"
+    },
+    "state_sha256": "6fbf0ffa6a6e1b3d805b1d5e69d1c76361496b1d203b108ba66e2ba6536df376",
+    "active_config_sha256": "f0143afbedd075c7613637941b5074670309580f28036290c7200b45ea2f94f2",
+    "model_test_evaluation": false
+  },
+  "result": {
+    "status": "completed",
+    "plan_sha256": "d10cd3e8730ce023188ffde632857315d417fed2eeb49c1c9298e491b71fb393",
+    "model_test_evaluation": false,
+    "training": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-sft-v2-20261030-001128-025822",
+    "probes": {
+      "64": {
+        "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-002447-620110",
+        "result_sha256": "b4e5f2d84f5dfd7c1e1d024d1cb50001320a736ef24c2ef7a9b0449a3d03e93d",
+        "metrics": {
+          "evaluated_cases": 41,
+          "generated_tests": 164,
+          "valid_tests": 119,
+          "correct_expected": 59,
+          "bug_detecting_tests": 27,
+          "cases_detected": 21,
+          "valid_rate": 0.725609756097561,
+          "io_accuracy": 0.3597560975609756,
+          "attack_rate": 0.16463414634146342,
+          "case_detection_at_4": 0.5121951219512195,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        }
+      },
+      "256": {
+        "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-002632-199011",
+        "result_sha256": "c96ad8a58e7600a0179849656c1a92ab3fb0f079145ff2f75425827c847d3186",
+        "metrics": {
+          "evaluated_cases": 41,
+          "generated_tests": 164,
+          "valid_tests": 151,
+          "correct_expected": 97,
+          "bug_detecting_tests": 54,
+          "cases_detected": 31,
+          "valid_rate": 0.9207317073170732,
+          "io_accuracy": 0.5914634146341463,
+          "attack_rate": 0.32926829268292684,
+          "case_detection_at_4": 0.7560975609756098,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        }
+      }
+    },
+    "evaluations": [
+      {
+        "sft_steps": 64,
+        "generation_seed": 42,
+        "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-002756-005318",
+        "result_sha256": "e7e6d58f49e37af9e63382f4fa7f59307e1c49a64e5bc4e0e03b6bbfd4d84c62",
+        "metrics": {
+          "evaluated_cases": 15,
+          "generated_tests": 60,
+          "valid_tests": 40,
+          "correct_expected": 17,
+          "bug_detecting_tests": 6,
+          "cases_detected": 3,
+          "valid_rate": 0.6666666666666666,
+          "io_accuracy": 0.2833333333333333,
+          "attack_rate": 0.1,
+          "case_detection_at_4": 0.2,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        }
+      },
+      {
+        "sft_steps": 256,
+        "generation_seed": 42,
+        "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-002837-023045",
+        "result_sha256": "94b6d9037dc888733cfa272b212031d4c6ee0c597a2d0c2ad395366ef77cfde2",
+        "metrics": {
+          "evaluated_cases": 15,
+          "generated_tests": 60,
+          "valid_tests": 53,
+          "correct_expected": 27,
+          "bug_detecting_tests": 10,
+          "cases_detected": 7,
+          "valid_rate": 0.8833333333333333,
+          "io_accuracy": 0.45,
+          "attack_rate": 0.16666666666666666,
+          "case_detection_at_4": 0.4666666666666667,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        }
+      },
+      {
+        "sft_steps": 64,
+        "generation_seed": 43,
+        "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-002918-234279",
+        "result_sha256": "d91059fad99809183ceaea805cbd48c3b1507df4f0d1638118db2b1776e89289",
+        "metrics": {
+          "evaluated_cases": 15,
+          "generated_tests": 60,
+          "valid_tests": 42,
+          "correct_expected": 22,
+          "bug_detecting_tests": 5,
+          "cases_detected": 4,
+          "valid_rate": 0.7,
+          "io_accuracy": 0.36666666666666664,
+          "attack_rate": 0.08333333333333333,
+          "case_detection_at_4": 0.26666666666666666,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        }
+      },
+      {
+        "sft_steps": 256,
+        "generation_seed": 43,
+        "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-003001-239729",
+        "result_sha256": "49961a7f32d00c627280dbc7fc243cbca8dc4346648e45613eeaa14a5580e3cd",
+        "metrics": {
+          "evaluated_cases": 15,
+          "generated_tests": 60,
+          "valid_tests": 56,
+          "correct_expected": 27,
+          "bug_detecting_tests": 10,
+          "cases_detected": 7,
+          "valid_rate": 0.9333333333333333,
+          "io_accuracy": 0.45,
+          "attack_rate": 0.16666666666666666,
+          "case_detection_at_4": 0.4666666666666667,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        }
+      },
+      {
+        "sft_steps": 64,
+        "generation_seed": 44,
+        "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-003036-104064",
+        "result_sha256": "26b84f1ba2b80d47a71da8311298c7266fed1736d07ae90099700b75b3976835",
+        "metrics": {
+          "evaluated_cases": 15,
+          "generated_tests": 60,
+          "valid_tests": 48,
+          "correct_expected": 18,
+          "bug_detecting_tests": 5,
+          "cases_detected": 5,
+          "valid_rate": 0.8,
+          "io_accuracy": 0.3,
+          "attack_rate": 0.08333333333333333,
+          "case_detection_at_4": 0.3333333333333333,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        }
+      },
+      {
+        "sft_steps": 256,
+        "generation_seed": 44,
+        "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-003114-053900",
+        "result_sha256": "c84c11cad0119c97fc578e7470333a690597f017b0496d35d249062b3f8b0fef",
+        "metrics": {
+          "evaluated_cases": 15,
+          "generated_tests": 60,
+          "valid_tests": 54,
+          "correct_expected": 24,
+          "bug_detecting_tests": 11,
+          "cases_detected": 7,
+          "valid_rate": 0.9,
+          "io_accuracy": 0.4,
+          "attack_rate": 0.18333333333333332,
+          "case_detection_at_4": 0.4666666666666667,
+          "denominator": "All generated tests, including invalid and truncated outputs; case rate uses all evaluated buggy programs"
+        }
+      }
+    ],
+    "train_gate_passed": true,
+    "active_checkpoint_unchanged": true
+  },
+  "summary": {
+    "64": {
+      "valid_tests": {
+        "mean": 43.333333333333336,
+        "sample_sd": 4.163331998932265
+      },
+      "correct_expected": {
+        "mean": 19,
+        "sample_sd": 2.6457513110645907
+      },
+      "bug_detecting_tests": {
+        "mean": 5.333333333333333,
+        "sample_sd": 0.5773502691896257
+      },
+      "cases_detected": {
+        "mean": 4,
+        "sample_sd": 1.0
+      }
+    },
+    "256": {
+      "valid_tests": {
+        "mean": 54.333333333333336,
+        "sample_sd": 1.5275252316519468
+      },
+      "correct_expected": {
+        "mean": 26,
+        "sample_sd": 1.7320508075688772
+      },
+      "bug_detecting_tests": {
+        "mean": 10.333333333333334,
+        "sample_sd": 0.5773502691896257
+      },
+      "cases_detected": {
+        "mean": 7,
+        "sample_sd": 0.0
+      }
+    }
+  },
+  "validation_rows": [
+    {
+      "sft_steps": 64,
+      "generation_seed": 42,
+      "valid_tests": 40,
+      "correct_expected": 17,
+      "bug_detecting_tests": 6,
+      "cases_detected": 3,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-002756-005318"
+    },
+    {
+      "sft_steps": 256,
+      "generation_seed": 42,
+      "valid_tests": 53,
+      "correct_expected": 27,
+      "bug_detecting_tests": 10,
+      "cases_detected": 7,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-002837-023045"
+    },
+    {
+      "sft_steps": 64,
+      "generation_seed": 43,
+      "valid_tests": 42,
+      "correct_expected": 22,
+      "bug_detecting_tests": 5,
+      "cases_detected": 4,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-002918-234279"
+    },
+    {
+      "sft_steps": 256,
+      "generation_seed": 43,
+      "valid_tests": 56,
+      "correct_expected": 27,
+      "bug_detecting_tests": 10,
+      "cases_detected": 7,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-003001-239729"
+    },
+    {
+      "sft_steps": 64,
+      "generation_seed": 44,
+      "valid_tests": 48,
+      "correct_expected": 18,
+      "bug_detecting_tests": 5,
+      "cases_detected": 5,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-003036-104064"
+    },
+    {
+      "sft_steps": 256,
+      "generation_seed": 44,
+      "valid_tests": 54,
+      "correct_expected": 24,
+      "bug_detecting_tests": 11,
+      "cases_detected": 7,
+      "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-003114-053900"
+    }
+  ],
+  "eligible_for_rl_followup": true,
+  "model_test_evaluation": false
+}

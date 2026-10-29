@@ -99,3 +99,9 @@ Code phát hiện trung bình ± SD: Qwen gốc 3.33 ± 0.58/15; SFT64 3.33 ± 1
 Đã phát hiện canonical JSON đặt expected trước input trong nhãn SFT; chẩn đoán cho thấy thứ tự đầu ra model thay đổi theo nhãn. Phép so sánh chỉ đổi thứ tự hai trường, không đổi semantic label hoặc cách chấm. Cấu hình input-first qua tiêu chí sàng lọc trên ba seed lấy mẫu.
 
 Đây là điều chỉnh triển khai SFT của đồ án, không phải thành phần nguyên bản của ATGen hoặc bằng chứng lợi ích đối kháng. Phải chạy lại đối chứng/curriculum từ cùng warmup mới; không nối số liệu hai warmup thành một chuỗi cải thiện. [Kết quả](../results/apps-target-order/README.md) và [kế hoạch tiếp theo](APPS_INPUT_FIRST_ADAPTIVE_PLAN.md).
+
+## Đã hoàn tất đối chứng input-first · 30/10
+
+Hai nhánh cùng warmup mới, cùng hai vòng × 48 bước; đã chấm đủ ba seed sinh. Cố định và đối kháng đều phát hiện trung bình 4/15 code, cùng 5/60 test bắt lỗi; expected tương ứng 20,33 và 19/60. Nhánh đối kháng có 120/384 test RL được sinh trên vị trí adversary. Quy trình làm mới curriculum đã thực hiện thật, nhưng chưa chứng minh tăng chất lượng nhờ đối kháng.
+
+Expected sai đang được phân tích riêng và kiểm chứng thời lượng SFT. Đây là điều chỉnh bổ sung của triển khai, không được gán thành cải tiến gốc của bài báo hay kết quả tái lập benchmark ATGen. [Số liệu và chi phí](../results/apps-input-first-review/README.md) · [Phân tích expected](../results/apps-expected-diagnosis/README.md).

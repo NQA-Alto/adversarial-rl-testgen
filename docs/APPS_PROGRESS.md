@@ -106,3 +106,17 @@ Expected tăng ở cả năm bài nguồn, nhưng số test bắt lỗi tăng t�
 Phép thử mở rộng LoRA đã dừng trước Validation mới để ưu tiên vấn đề nhãn; không tính GRPO dở thành kết quả hoàn chỉnh. Đang thực hiện kế hoạch đối kháng có điều kiện từ adapter input-first mới; chưa thay checkpoint demo hoặc dùng Test.
 
 [Bảng, hình và phân tích](../results/apps-target-order/README.md).
+
+## Đối kháng input-first và phân tích expected · 30/10
+
+Đã hoàn tất hai vòng × 48 bước từ SFT64 input-first cho cả nhánh cố định và đối kháng, sau đó kiểm tra đủ ba seed sinh 42/43/44. Cố định và đối kháng đều phát hiện trung bình 4/15 code; số test bắt lỗi đều 5/60. Expected trung bình tương ứng 20,33 và 19/60. Chưa có bằng chứng tăng nhờ curriculum đối kháng trong lượt này.
+
+Nhánh đối kháng có 120 test RL thực sự tiếp xúc các vị trí code adversary trong tổng 384 test RL. Hai vòng dùng 8 rồi 16/41 vị trí Train đối kháng. Không nhầm số vị trí này với số code ứng viên đã sinh hoặc số lỗi phát hiện trên Validation.
+
+Phân tích checkpoint SFT64 + GRPO96 liền: 62/180 expected đúng, 69 mẫu hợp lệ nhưng expected sai; 36 input làm lộ lỗi nhưng expected sai. Có bảng theo bài và ví dụ điểm đối xứng tính tay. [Phân tích lỗi](../results/apps-expected-diagnosis/README.md) · [Đối kháng và chi phí](../results/apps-input-first-review/README.md).
+
+Đã hoàn tất kiểm chứng thời lượng SFT bằng checkpoint 64/256 từ cùng một quỹ đạo, qua điều kiện Train rồi chấm đủ ba seed Validation. Expected trung bình tăng 19 lên 26/60; test bắt lỗi 5,33 lên 10,33/60; code phát hiện 4 lên 7/15. Lượt dùng replay lịch sử đã dừng theo chốt kỹ thuật được giữ riêng, không tính là kiểm chứng chất lượng hoàn chỉnh. [Kết quả SFT](../results/apps-shared-sft-budget/README.md).
+
+GRPO96 từ đúng SFT256 mới đã chạy và kiểm chứng đầy đủ. Expected trung bình 24,67/60; test bắt lỗi 8,67/60; code phát hiện 6/15, thấp hơn parent SFT256. Giữ SFT256 làm checkpoint đang tốt hơn cho demo; không gán lợi ích SFT thành thành tích RL. Demo lưu đủ Qwen gốc, SFT256 và SFT256+GRPO96; các đối chứng đối kháng SFT64 vẫn xem được riêng. [Phần thêm của RL](../results/apps-sft256-grpo/README.md).
+
+Các lần train GRPO thủ công mới khởi tạo từ SFT256 đã chọn; nút chấm adapter hiện tại vẫn chấm lượt pilot mới nhất. Chấm lại và chọn model trước khi thay checkpoint demo, không tự dùng bản mới nhất chỉ vì vừa train xong. Test cuối, video dự phòng, báo cáo/slide và kiểm chứng cài lại vẫn là các hạng mục còn lại.

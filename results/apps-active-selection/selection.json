@@ -1,0 +1,29 @@
+{
+  "variant": "sft256",
+  "validation_key": "sft_budget_validation",
+  "label": "SFT256",
+  "provisional": true,
+  "rule": "Detected cases, bug tests, correct expected, validity, then SFT when tied; three generation seeds, one training seed",
+  "means": {
+    "valid_tests": {
+      "mean": 54.333333333333336,
+      "sample_sd": 1.5275252316519468
+    },
+    "correct_expected": {
+      "mean": 26,
+      "sample_sd": 1.7320508075688772
+    },
+    "bug_detecting_tests": {
+      "mean": 10.333333333333334,
+      "sample_sd": 0.5773502691896257
+    },
+    "cases_detected": {
+      "mean": 7,
+      "sample_sd": 0.0
+    }
+  },
+  "model_test_evaluation": false,
+  "evidence": "results/apps-sft256-grpo/metrics.json",
+  "previous_state_backup": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-sft256-activation-20261030-004503-123102",
+  "limits": "Validation selection only. Existing matched adaptive/control comparison remains based on SFT64; do not claim this SFT256 follow-up is adversarial."
+}

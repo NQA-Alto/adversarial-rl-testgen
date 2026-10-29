@@ -7,6 +7,8 @@
   "horizontal_overflow": false,
   "viewport_width": 1265,
   "screenshot": "results/apps-expected-diagnosis/lesson.jpg",
-  "html_sha256": "48dbc8e8ebf322784dfb53f19a128758d00e76515701029442a9957ff0441eec",
-  "model_test_evaluation": false
+  "html_sha256": "a46eda41d77320096758ebd580548fe0c40a3d52e71dfc446647c5e0e416bba5",
+  "model_test_evaluation": false,
+  "scope": "Point diagram/images/width visually checked; newly added budget/RL tables structurally checked using same table renderer",
+  "added_tables_match_saved_metrics": true
 }

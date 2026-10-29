@@ -1,7 +1,7 @@
 {
   "date": "2026-10-30",
   "output": "D:\\DA\\DoAn_TTNT_De19\\adversarial-rl-testgen\\docs\\BAI_GIANG_DO_AN_TTNT.html",
-  "bytes": 598690,
+  "bytes": 600655,
   "sections": 24,
   "self_contained_images": 4,
   "inline_svg_figures": 4,
@@ -12,8 +12,8 @@
     "docs/lesson/02-learning.html": "2eea996baf4f6e520147bf1348c06acb0ac9001421c844f67c113d6a64f5a970",
     "docs/lesson/03-results-and-tensorboard.html": "7271e2e859ea36fa9ef8b5e6d42cda617a3f52ef1b3c45221e649e87ee551218",
     "docs/lesson/04-practice.html": "deacdf457b6ffadf9bf73dd9bee75cac7dca8bda21308b473222b43edc30b132",
-    "docs/lesson/05-expected.html": "a45e2e84b085c35a8e0bfae1c19fd7e27de743d1bf542de31f3c52e330918094",
-    "scripts/build_project_lesson.py": "42906946925fd5d1ecb8b412f24a97217fe79143d4b4c82732a55b5c83a25ad0",
+    "docs/lesson/05-expected.html": "c341c2ab2e2dae1733421a649553ebefeaf9ac0b24f9c84f82cefd1a8e1af4c3",
+    "scripts/build_project_lesson.py": "1cc9ef52d2b668406f31455c1d768eab978fd9c5fb2df3282842187faaf1ca11",
     "docs/lesson/tensorboard.png": "a2fd2122e016dfa6dc3911853576dc11813c3fd6eb28463e627ee01e908e9427"
   },
   "reward_trial_result_sha256": "dc9968334e6cc99fbb3915b3789908cfaaa53a5a08713616d8bc87a6d6f66776",
