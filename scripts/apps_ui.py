@@ -145,7 +145,7 @@ def gpu_busy(ignore_pid=None):
             if process.pid in ignored:
                 continue
             if (process.info["name"] or "").lower().startswith("python") and any(
-                    Path(str(value)).name in ("apps_model_runner.py", "apps_sft.py", "apps_round.py", "apps_adversary.py", "apps_adversarial_round.py", "apps_reasoning_probe.py", "apps_prompt_trial.py", "apps_sft_budget_trial.py", "apps_sft_paired_control.py", "apps_reward_trial.py", "apps_reward_seed_probe.py", "apps_adversarial_review.py", "apps_lora_trial.py", "apps_order_trial.py", "apps_final_evaluate.py", "apps_expected_trial.py", "apps_shared_budget_trial.py", "apps_sft256_rl_followup.py") for value in process.info["cmdline"] or []):
+                    Path(str(value)).name in ("apps_model_runner.py", "apps_sft.py", "apps_round.py", "apps_adversary.py", "apps_adversarial_round.py", "apps_reasoning_probe.py", "apps_prompt_trial.py", "apps_sft_budget_trial.py", "apps_sft_paired_control.py", "apps_reward_trial.py", "apps_reward_seed_probe.py", "apps_adversarial_review.py", "apps_lora_trial.py", "apps_order_trial.py", "apps_final_evaluate.py", "apps_expected_trial.py", "apps_shared_budget_trial.py", "apps_sft256_rl_followup.py", "apps_lora_input_trial.py", "resume_sft256_evaluation.py") for value in process.info["cmdline"] or []):
                 return True
         except (psutil.AccessDenied, psutil.NoSuchProcess):
             pass
@@ -209,8 +209,8 @@ def shared_budget_table():
             for steps, values in report["summary"].items()]
 
 
-def sft256_rl_table():
-    path = PROJECT / "results/apps-sft256-grpo/metrics.json"
+def sft256_rl_table(folder="apps-sft256-grpo"):
+    path = PROJECT / "results" / folder / "metrics.json"
     if not path.exists():
         return []
     report = read(path)
@@ -218,6 +218,17 @@ def sft256_rl_table():
         raise ValueError("SFT256 RL evidence changed")
     return [["SFT256" if name == "sft256" else "SFT256 + GRPO96"] + [f'{values[f]["mean"]:.2f} ± {values[f]["sample_sd"]:.2f}' for f in
                                                                    ("valid_tests", "correct_expected", "bug_detecting_tests", "cases_detected")]
+            for name, values in report["summary"].items()]
+
+
+def lora_input_table():
+    path = PROJECT / "results/apps-lora-input-first/metrics.json"
+    report = read(path)
+    if digest(Path(report["root"]) / "result.json") != report["result_sha256"]:
+        raise ValueError("Saved LoRA experiment changed")
+    return [["LoRA 6 khối" if name == "attention-qv-v1" else "LoRA 24 khối"] +
+            [f'{values[f]["mean"]:.2f} ± {values[f]["sample_sd"]:.2f}' for f in
+             ("valid_tests", "correct_expected", "bug_detecting_tests", "cases_detected")]
             for name, values in report["summary"].items()]
 
 
@@ -367,7 +378,7 @@ def build_ui():
             if (PROJECT / "results/apps-expected-diagnosis/analysis.json").exists():
                 with gr.Accordion("Expected sai ở đâu?", open=False):
                     gr.Image(str(PROJECT / "results/apps-expected-diagnosis/expected-errors.png"), show_label=False, interactive=False)
-                    gr.Markdown("GRPO96 input-first: 36/180 input làm lộ lỗi nhưng expected sai. Đáp án tham chiếu chỉ dùng để chấm; đầu ra model được giữ nguyên.")
+                    gr.Markdown("SFT64 + GRPO96 input-first: 36/180 input làm lộ lỗi nhưng expected sai. Đáp án tham chiếu chỉ dùng để chấm; đầu ra model được giữ nguyên.")
             if (PROJECT / "results/apps-shared-sft-budget/metrics.json").exists():
                 with gr.Accordion("Thời lượng học expected", open=False):
                     gr.Markdown("Checkpoint 64 và 256 từ cùng một lượt SFT. Bảng Validation là trung bình ± SD qua ba seed sinh. Đây là kiểm chứng SFT, chưa phải RL.")
@@ -378,6 +389,16 @@ def build_ui():
                     gr.Markdown("Cùng parent SFT256, thêm 96 bước GRPO trên code Train cố định. Ba seed sinh, một seed train; chưa phải thực nghiệm đối kháng mới.")
                     gr.Dataframe(value=sft256_rl_table(), headers=["Checkpoint", "Hợp lệ /60", "Expected đúng /60", "Test bắt lỗi /60", "Code phát hiện /15"], interactive=False)
                     gr.Image(str(PROJECT / "results/apps-sft256-grpo/comparison.png"), show_label=False, interactive=False)
+            if (PROJECT / "results/apps-lora-input-first/validation-comparison.png").exists():
+                with gr.Accordion("Phạm vi LoRA", open=False):
+                    gr.Markdown("Cùng 256 bước SFT và nhãn input-first; so adapter trên 6 và 24 khối. Bảng Validation là trung bình ± SD của ba seed sinh.")
+                    gr.Dataframe(value=lora_input_table(), headers=["Adapter", "Hợp lệ /60", "Expected đúng /60", "Test bắt lỗi /60", "Code phát hiện /15"], interactive=False)
+                    gr.Image(str(PROJECT / "results/apps-lora-input-first/validation-comparison.png"), show_label=False, interactive=False)
+            if (PROJECT / "results/apps-sft256-equal-reward/metrics.json").exists():
+                with gr.Accordion("Reward chia đều từ SFT256", open=False):
+                    gr.Markdown("Thêm 96 bước GRPO từ SFT256, trọng số định dạng/expected/attack cùng bằng 1/3. Ba seed sinh, một seed train.")
+                    gr.Dataframe(value=sft256_rl_table("apps-sft256-equal-reward"), headers=["Checkpoint", "Hợp lệ /60", "Expected đúng /60", "Test bắt lỗi /60", "Code phát hiện /15"], interactive=False)
+                    gr.Image(str(PROJECT / "results/apps-sft256-equal-reward/comparison.png"), show_label=False, interactive=False)
         with gr.Tab("Dữ liệu"):
             gr.Dataframe(value=[[name, spec["problems"], spec["cases"]] for name, spec in manifest["splits"].items()], headers=["Tập phát triển", "Bài APPS", "Code lỗi"], interactive=False)
             gr.Markdown("Nguồn: **codeparrot/apps**, nhãn Introductory. Tập con dùng bài dạng gọi hàm và miền input hữu hạn được ghi rõ. Code lỗi được tạo bằng thay đổi AST từ lời giải nguồn, không phải code lỗi có sẵn của APPS.\n\nTrain/Validation/Test phát triển được chia theo bài trong **APPS Train**. Tập Test chính thức của APPS chưa tải, chưa đánh giá. Test phát triển chưa được model đánh giá.\n\nHai lời giải nguồn phải qua test gốc và đồng ý trên toàn bộ miền input thực nghiệm. Bài không đạt bộ lọc được ghi lý do loại.")
