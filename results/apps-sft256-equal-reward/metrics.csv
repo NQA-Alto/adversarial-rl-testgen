@@ -1,7 +1,0 @@
-variant,generation_seed,valid_tests,correct_expected,bug_detecting_tests,cases_detected
-sft256,42,53,27,10,7
-sft256,43,56,27,10,7
-sft256,44,54,24,11,7
-sft256-grpo96,42,53,25,11,8
-sft256-grpo96,43,57,24,9,5
-sft256-grpo96,44,56,26,12,8

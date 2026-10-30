@@ -29,9 +29,7 @@ Reward mặc định dùng trọng số định dạng/expected/attack là 0,1/0
 
 Ở phép so sánh input-first, nhánh cố định và đối kháng đều phát hiện trung bình 4/15 code qua ba seed sinh. Nhánh đối kháng có 120/384 test RL được sinh trên các vị trí code bổ sung.
 
-Tăng SFT64 lên SFT256 giúp số code phát hiện tăng từ 4 lên 7/15. Thêm GRPO96 với reward mặc định từ SFT256 còn 6/15.
-
-Khi đổi reward sang chia đều, nhánh GRPO từ SFT256 đạt lại 7/15 code; test bắt lỗi trung bình 10,67/60 so với 10,33 của SFT, nhưng expected giảm từ 26 xuống 25/60. Đây là một phép điều chỉnh trọng số reward; chưa đủ để kết luận RL vượt SFT hoặc tái hiện mức tăng của bài báo.
+Tăng SFT64 lên SFT256 giúp số code phát hiện tăng từ 4 lên 7/15. Thêm GRPO96 từ SFT256 còn 6/15. Kết quả này cho thấy lợi ích của SFT trong cấu hình đã thử, nhưng chưa cho thấy lợi ích thêm của RL hoặc curriculum đối kháng.
 
 Đồ án chưa triển khai toàn bộ benchmark của ATGen, lọc Best-of-N hay RL cho model sinh code. Số liệu ở đây dùng để đánh giá các thành phần của bản triển khai, không so trực tiếp với điểm benchmark trong bài báo.
 

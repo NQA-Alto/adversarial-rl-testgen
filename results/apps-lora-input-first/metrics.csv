@@ -1,7 +1,0 @@
-variant,generation_seed,valid_tests,correct_expected,bug_detecting_tests,cases_detected
-attention-qv-v1,42,53,27,10,7
-attention-qv-v1,43,56,27,10,7
-attention-qv-v1,44,54,24,11,7
-hybrid-qkv-v1,42,53,27,10,8
-hybrid-qkv-v1,43,55,28,9,6
-hybrid-qkv-v1,44,57,27,10,7

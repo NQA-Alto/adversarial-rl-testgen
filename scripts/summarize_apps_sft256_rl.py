@@ -8,7 +8,6 @@ from pathlib import Path
 from apps_core import digest, read, write
 from apps_model_runner import PROJECT
 from audit_apps_run import audit
-from apps_rewards import PROFILES
 from result_docs import write_result_readme
 
 
@@ -22,26 +21,8 @@ def summarize(root):
     training = Path(result["training"])
     audit(training)
     trained = read(training / "result.json")
-    if trained["reward_profile"] != plan["reward_profile"] or trained["reward_weights"] != PROFILES[plan["reward_profile"]]:
-        raise ValueError("Training reward differs from planned profile")
     if trained["parent_adapter_sha256"] != plan["parent_adapter_sha256"] or not trained["parent_adapter_exact_match"] or not trained["update_verified"] or trained["optimizer_steps"] != 96:
         raise ValueError("Exact SFT256 parent and verified96 RL updates required")
-    reward_control = None
-    if plan["reward_profile"] == "equal-v1":
-        reference = read(PROJECT / "results/apps-sft256-grpo/metrics.json")
-        reference_root = Path(reference["root"])
-        if digest(reference_root / "result.json") != reference["result_sha256"]:
-            raise ValueError("Default reward comparison changed")
-        reference_training = Path(read(reference_root / "result.json")["training"])
-        audit(reference_training)
-        control = read(reference_training / "result.json")
-        if control["parent_adapter_sha256"] != plan["parent_adapter_sha256"] or control["configuration"] != trained["configuration"] or control["versions"] != trained["versions"] or control["source_hashes"] != trained["source_hashes"]:
-            raise ValueError("Reward arms differ beyond their reward profile")
-        order = lambda folder: [json.loads(line)["case_id"] for line in (folder / "rollouts.jsonl").read_text(encoding="utf-8").splitlines()]
-        if order(reference_training) != order(training) or len(order(training)) != 96:
-            raise ValueError("Reward arms used different case order")
-        reward_control = {"training": str(reference_training), "result_sha256": digest(reference_training / "result.json"),
-                          "parent_config_versions_sources_and_case_order_match": True}
     table, runs, signatures, errors = [], [], {}, []
     decoding = None
     for variant, items in (("sft256", plan["parent_validation"]), ("sft256-grpo96", result["evaluations"])):
@@ -68,28 +49,12 @@ def summarize(root):
                 errors.append({"variant": variant, "seed": seed, "case_id": row["case_id"], **{f: c[f] for f in ("invalid", "wrong_expected", "correct_no_bug", "bug_detected")}})
     summary = {v: {f: {"mean": statistics.mean(r[f] for r in table if r["variant"] == v), "sample_sd": statistics.stdev(r[f] for r in table if r["variant"] == v)} for f in FIELDS} for v in ("sft256", "sft256-grpo96")}
     best = max(summary, key=lambda v: tuple(summary[v][f]["mean"] for f in ("cases_detected", "bug_detecting_tests", "correct_expected", "valid_tests")) + (v == "sft256",))
-    output = PROJECT / ("results/apps-sft256-grpo" if plan["reward_profile"] == "legacy-v1" else "results/apps-sft256-equal-reward")
+    output = PROJECT / "results/apps-sft256-grpo"
     output.mkdir(parents=True, exist_ok=True)
-    if result.get("evaluation_recovery"):
-        recovery = Path(result["evaluation_recovery"])
-        record = read(recovery / "plan.json")
-        if record["original_plan_sha256"] != result["plan_sha256"] or digest(recovery / "failed-result.json") != record["failed_result_sha256"]:
-            raise ValueError("Recovery evidence changed")
-        write(output / "evaluation-recovery.json", {"record": record,
-                                                   "recovery_plan_sha256": digest(recovery / "plan.json"),
-                                                   "original_failure_preserved": True, "training_repeated": False})
     write(output / "metrics.json", {"root": str(root), "result_sha256": digest(root / "result.json"), "plan": plan,
                                    "summary": summary, "runs": runs, "selected_within_this_pair": best,
                                    "selection_rule": "Detected cases, bug tests, correct expected, validity, then SFT when tied; three generation seeds, one training seed",
                                    "model_test_evaluation": False})
-    if reward_control:
-        write(output / "reward-control.json", reward_control)
-        costs = []
-        for profile, folder in (("legacy-v1", reference_training), ("equal-v1", training)):
-            events = [json.loads(line) for line in (folder / "trainer-metrics.jsonl").read_text(encoding="utf-8").splitlines()]
-            costs.append({"reward_profile": profile, "training_seconds": next(row["train_runtime"] for row in events if "train_runtime" in row),
-                          "peak_pytorch_allocated_gib": read(folder / "result.json")["peak_vram_gib"]})
-        write(output / "costs.json", {"rows": costs, "scope": "Trainer phase times, excluding model loading/audits. Separate sessions with uncontrolled background load; not a timing benchmark."})
     for filename, data in (("metrics.csv", table), ("errors.csv", errors)):
         with (output / filename).open("w", encoding="utf-8", newline="") as stream:
             writer = csv.DictWriter(stream, fieldnames=list(data[0]))
