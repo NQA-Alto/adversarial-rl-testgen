@@ -1,0 +1,15 @@
+{
+  "rows": [
+    {
+      "reward_profile": "legacy-v1",
+      "training_seconds": 589.6825,
+      "peak_pytorch_allocated_gib": 4.8
+    },
+    {
+      "reward_profile": "equal-v1",
+      "training_seconds": 647.0405,
+      "peak_pytorch_allocated_gib": 4.8
+    }
+  ],
+  "scope": "Trainer phase times, excluding model loading/audits. Separate sessions with uncontrolled background load; not a timing benchmark."
+}

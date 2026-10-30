@@ -8,6 +8,7 @@ Các thư mục dưới đây lưu bảng số liệu, cấu hình và biểu đ
 |---|---|
 | [apps-shared-sft-budget](apps-shared-sft-budget/README.md) | SFT64 và SFT256 trên cùng một lượt học, nhãn input-first |
 | [apps-sft256-grpo](apps-sft256-grpo/README.md) | SFT256 trước và sau 96 bước GRPO |
+| [apps-sft256-equal-reward](apps-sft256-equal-reward/README.md) | GRPO từ SFT256 với reward chia đều; đối chiếu với lượt reward mặc định |
 | [apps-input-first-adversarial](apps-input-first-adversarial/README.md) | Hai vòng GRPO cố định và đối kháng, bắt đầu từ SFT64 input-first |
 | [apps-input-first-review](apps-input-first-review/README.md) | Lấy mẫu lại hai nhánh trên ba seed sinh và tổng hợp chi phí |
 
@@ -24,6 +25,7 @@ Các bảng APPS hiện dùng Validation gồm 15 code lỗi. Chưa có kết qu
 | [apps-serialization-diagnosis](apps-serialization-diagnosis/README.md) | Thứ tự khóa JSON trong nhãn và đầu ra |
 | [apps-reward-ablation](apps-reward-ablation/README.md) | Thay tỷ trọng các thành phần reward |
 | [apps-lora-coverage](apps-lora-coverage/README.md) | Thử mở rộng các lớp gắn LoRA; dừng trước Validation |
+| [apps-lora-input-first](apps-lora-input-first/README.md) | LoRA 6 và 24 khối với cùng 256 bước, nhãn input-first |
 | [apps-expected-budget](apps-expected-budget/README.md) | Lượt SFT dừng ở kiểm tra replay |
 | [apps-tuning](apps-tuning/README.md) | Thinking và cách diễn đạt hợp đồng đầu ra |
 

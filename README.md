@@ -23,10 +23,14 @@ Kết quả Validation, trung bình trên ba seed sinh test 42, 43 và 44. Mỗi
 | Cấu hình | Expected đúng /60 | Test phát hiện lỗi /60 | Code phát hiện /15 |
 |---|---:|---:|---:|
 | SFT 64 bước | 19,00 | 5,33 | 4,00 |
-| SFT 256 bước | **26,00** | **10,33** | **7,00** |
+| SFT 256 bước | 26,00 | 10,33 | **7,00** |
+| SFT 256, LoRA 24 khối | **27,33** | 9,67 | **7,00** |
 | SFT 256 + GRPO 96 bước | 24,67 | 8,67 | 6,00 |
+| SFT 256 + GRPO 96, reward chia đều | 25,00 | **10,67** | **7,00** |
 
-Hai mốc SFT 64 và 256 được lấy từ cùng một lượt học. Tăng thời lượng SFT cải thiện cả expected lẫn khả năng phát hiện lỗi. Lượt GRPO tiếp theo chưa cải thiện thêm, nên demo hiện dùng SFT256 làm mốc so sánh tốt nhất.
+Hai mốc SFT 64 và 256 được lấy từ cùng một lượt học. Tăng thời lượng SFT cải thiện cả expected lẫn khả năng phát hiện lỗi. Mở rộng LoRA từ 6 lên 24 khối giúp expected tăng nhẹ, nhưng số test bắt lỗi giảm.
+
+Reward chia đều giúp nhánh RL trở lại mức 7/15 code phát hiện, so với 6/15 của reward mặc định. So với SFT256, nhánh này chỉ thêm một test bắt lỗi trên tổng 180 test, trong khi expected giảm và kết quả giữa các seed biến động hơn. Demo vẫn dùng SFT256 6 khối làm mặc định.
 
 Trong thí nghiệm đối kháng riêng, hai nhánh cùng bắt đầu từ SFT64 và học hai vòng, mỗi vòng 48 bước. Cả hai phát hiện trung bình 4/15 code. Kết quả hiện tại chưa cho thấy lợi ích của curriculum đối kháng ở cấu hình đã thử.
 
@@ -34,9 +38,9 @@ Mỗi cấu hình mới được huấn luyện với một seed. Ba seed sinh t
 
 [Bảng thực nghiệm và cách tính chỉ số](docs/EXPERIMENTS.md)
 
-![So sánh trước và sau GRPO](results/apps-sft256-grpo/comparison.png)
+![So sánh trước và sau GRPO](results/apps-sft256-equal-reward/comparison.png)
 
-Hình 1. Kết quả SFT256 và SFT256 + GRPO96 trên Validation. Thanh sai số là độ lệch chuẩn qua ba seed sinh test.
+Hình 1. Kết quả SFT256 và SFT256 + GRPO96 với reward chia đều trên Validation. Thanh sai số là độ lệch chuẩn qua ba seed sinh test.
 
 ## Chạy demo
 

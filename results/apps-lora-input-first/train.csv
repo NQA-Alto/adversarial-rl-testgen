@@ -1,0 +1,3 @@
+variant,valid_tests,correct_expected,bug_detecting_tests,cases_detected
+attention-qv-v1,151,97,54,31
+hybrid-qkv-v1,158,116,64,31

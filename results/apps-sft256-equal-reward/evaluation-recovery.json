@@ -1,0 +1,22 @@
+{
+  "record": {
+    "original_plan_sha256": "3d6d2d5b8a8f38d4c9691f7c64712f1bc98c41d76f739dbf26267c164805f473",
+    "failed_result_sha256": "89cc878d83168c87149222e9c07cfc3d9dd51aa373885ed97196d7eaf818aa5e",
+    "resume_source_sha256": "76c3fff8277e0f058d3702c18de03a242d9865605193922bf72f928662f944c6",
+    "retained_seeds": [
+      42
+    ],
+    "restart_empty_attempts": [
+      {
+        "generation_seed": 43,
+        "path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-adapter-validation-20261030-201029-260494",
+        "result_sha256": "2883a5e85edf2d01b7240e84c1d473c3abd2c1a27fa4e0a57af14efc8d93054d",
+        "generated_outputs": 0
+      }
+    ],
+    "scope": "Evaluation only; identical frozen adapter, prompts, seeds and budget. Completed outputs are retained. No training or model selection."
+  },
+  "recovery_plan_sha256": "f945d3089e82c7c69173dd71c7bfdd3b365df00e526c52b946229ef6ce69ad63",
+  "original_failure_preserved": true,
+  "training_repeated": false
+}

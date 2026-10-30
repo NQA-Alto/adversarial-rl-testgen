@@ -39,6 +39,20 @@ Thêm 96 bước GRPO từ đúng adapter SFT256, giữ code Train cố định 
 
 Số test hợp lệ tăng nhẹ nhưng các chỉ số còn lại giảm. SFT256 được giữ làm checkpoint tốt hơn trong cặp này. [Bảng trước/sau RL](../results/apps-sft256-grpo/README.md).
 
+## Reward chia đều sau SFT256
+
+Giữ nguyên parent, optimizer, 96 bước và thứ tự code của lượt GRPO trên. Chỉ đổi trọng số định dạng/expected/attack từ 0,1/0,2/0,7 sang 1/3 cho mỗi thành phần.
+
+| Checkpoint | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện /15 |
+|---|---:|---:|---:|---:|
+| SFT256 | 54,33 | **26,00** | 10,33 | **7,00** |
+| GRPO reward mặc định | **55,33** | 24,67 | 8,67 | 6,00 |
+| GRPO reward chia đều | **55,33** | 25,00 | **10,67** | **7,00** |
+
+Reward chia đều tốt hơn reward mặc định ở expected và khả năng bắt lỗi. So với SFT, số code phát hiện không tăng; tổng test bắt lỗi chỉ tăng từ 31 lên 32/180, còn expected đúng giảm từ 78 xuống 75/180. Số code phát hiện theo seed là 8, 5, 8, so với 7, 7, 7 của SFT. Vì mức tăng nhỏ và có đánh đổi, demo giữ SFT256 làm mặc định.
+
+Quy tắc xếp hạng tự động trong cặp ưu tiên số code rồi số test bắt lỗi, nên xếp nhánh RL trước nhờ một test chênh lệch. Đây là thứ hạng theo số đếm, chưa chứng minh chất lượng khái quát tốt hơn. [Kết quả, cấu hình và bản ghi nối lại đánh giá](../results/apps-sft256-equal-reward/README.md).
+
 ## Curriculum đối kháng
 
 Hai nhánh bắt đầu từ SFT64 input-first, mỗi nhánh hai vòng × 48 bước GRPO. Cả hai cùng khởi tạo lại optimizer ở đầu mỗi vòng. Nhánh đối kháng làm mới một phần code Train giữa các vòng; nhánh cố định giữ nguyên code.
@@ -58,6 +72,7 @@ Nhánh đối kháng có 120/384 test RL tiếp xúc code bổ sung. Hai nhánh 
 | [Tỷ trọng reward](../results/apps-reward-ablation/README.md) | Trọng số 0,1/0,2/0,7 so với chia đều | Tăng nhẹ ở một seed, chưa ổn định qua các seed sinh |
 | [SFT với nhãn cũ](../results/apps-sft-budget/README.md) | Tăng 64 lên 256 bước | Expected tăng nhưng số code phát hiện giảm |
 | [Phạm vi LoRA](../results/apps-lora-coverage/README.md) | Thêm projection của linear attention | Dừng trước đánh giá Validation |
+| [LoRA mở rộng, nhãn input-first](../results/apps-lora-input-first/README.md) | Cùng 256 bước; tăng phạm vi từ 6 lên 24 khối | Expected tăng 26 lên 27,33/60; test bắt lỗi giảm 10,33 xuống 9,67; số code giữ ở 7/15 |
 | [Thinking và prompt](../results/apps-tuning/README.md) | Kiểm tra trần token và hợp đồng đầu ra | Các ứng viên không qua điều kiện trên Train |
 | [Replay SFT](../results/apps-expected-budget/README.md) | Chạy lại mốc 64 lịch sử | Dừng do độ lệch tham số vượt ngưỡng; chuyển sang đối chứng cùng quỹ đạo |
 
@@ -69,6 +84,6 @@ Nhánh đối kháng có 120/384 test RL tiếp xúc code bổ sung. Hai nhánh 
 
 ## Phạm vi kết luận
 
-Các phép thử hiện cho thấy SFT có ích với cấu hình và dữ liệu đã chọn. GRPO và curriculum đối kháng chưa cải thiện các chỉ số chính. Số bài Validation còn ít và đã được dùng trong nhiều phép điều chỉnh, nên cần đánh giá trên Test sau khi chốt cấu hình. Các kết quả này không đại diện cho toàn bộ APPS hoặc mức cải thiện trong bài báo ATGen.
+Các phép thử hiện cho thấy SFT có ích với cấu hình và dữ liệu đã chọn. Đổi reward cải thiện nhánh GRPO so với reward cũ, nhưng chưa vượt SFT về số code phát hiện; curriculum đối kháng cũng chưa cho thấy mức tăng ở chỉ số này. Số bài Validation còn ít và đã được dùng trong nhiều phép điều chỉnh, nên cần đánh giá trên Test sau khi chốt cấu hình. Các kết quả này không đại diện cho toàn bộ APPS hoặc mức cải thiện trong bài báo ATGen.
 
 `metrics.csv` và `metrics.json` giữ các số đếm, cấu hình, seed và đường dẫn lượt chạy. Raw output, adapter và mã nguồn theo từng lượt được lưu ngoài Git trong `D:/DA/TTNT_De19_Assets/evidence`. Các script `summarize_apps_*.py` dựng lại bảng và biểu đồ từ những bản ghi đó.
