@@ -9,7 +9,13 @@ from apps_core import canonical, digest, load_cases, metrics, read, score, write
 def audit(folder):
     result = read(folder / "result.json")
     if result["status"] == "evaluation_completed":
-        cases, manifest = load_cases(result["split"])
+        if result.get("curriculum_path"):
+            if result["split"] != "train":
+                raise ValueError("Curriculum evaluation must be Train-only")
+            from apps_curriculum import training_cases
+            cases, manifest, _ = training_cases(Path(folder) / "evaluation-cases.jsonl", result["curriculum_sha256"])
+        else:
+            cases, manifest = load_cases(result["split"])
         by_id = {case["case_id"]: case for case in cases}
         predictions = [json.loads(line) for line in (folder / "predictions.jsonl").read_text(encoding="utf-8").splitlines()]
         identities = [row["case_id"] for row in predictions]
@@ -40,6 +46,14 @@ def audit(folder):
         cases, manifest, _ = training_cases(result.get("curriculum_path"), result.get("curriculum_sha256"))
         by_id = {case["case_id"]: case for case in cases}
         events = [json.loads(line) for line in (folder / "rollouts.jsonl").read_text(encoding="utf-8").splitlines()]
+        if result.get("schedule_path"):
+            from apps_sampling import load_schedule
+            schedule = load_schedule(Path(folder) / "schedule.json", result["schedule_sha256"], cases,
+                                     result["optimizer_steps"], result["configuration"]["seed"])
+            if [event["case_id"] for event in events] != schedule["case_ids"] or not result.get("schedule_verified"):
+                raise ValueError("Observed schedule mismatch")
+            if result["observed_focus_groups"] != schedule["focus_groups"]:
+                raise ValueError("Observed focus exposure mismatch")
         count = 0
         for event in events:
             rewards = []

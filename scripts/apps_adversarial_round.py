@@ -14,11 +14,14 @@ from apps_round import run
 from audit_apps_run import audit
 
 
-def curriculum(root, round_number, pool):
+def curriculum(root, round_number, pool, current_path=None):
     from transformers import AutoTokenizer
     cases, _ = load_cases("train")
     tokenizer = AutoTokenizer.from_pretrained(ASSETS / "models/Qwen3.5-2B", local_files_only=True)
     accepted = rows(pool / "adversarial-cases.jsonl")
+    current = {}
+    if current_path:
+        current = {case["case_id"]: case for case in training_cases(current_path, digest(current_path))[0]}
     adaptive, usage = [], Counter()
     for case in cases:
         choices = []
@@ -28,7 +31,7 @@ def curriculum(root, round_number, pool):
             trial = {**case, "buggy_code": candidate["buggy_code"]}
             if len(tokenizer.encode(render_prompt(tokenizer, trial, "apps-call-v2"), add_special_tokens=False)) <= 1536:
                 choices.append(candidate)
-        row = {**case, "curriculum_source": "static_curated"}
+        row = dict(current.get(case["case_id"], {**case, "curriculum_source": "static_curated"}))
         if choices:
             chosen = min(choices, key=lambda value: (usage[value["candidate_id"]], value["candidate_id"]))
             row.update(buggy_code=chosen["buggy_code"], curriculum_source="local_adversary",
@@ -100,13 +103,15 @@ def main(args):
     runner = [python, "-B", str(PROJECT / "scripts/apps_model_runner.py")]
     parents = {arm: parent for arm in ("control", "adaptive")}
     validations = {arm: parent_validation for arm in parents}
+    active_curriculum = None
     try:
         for number in (1, 2):
             if number == 1:
                 probe, pool = args.initial_probe, args.initial_pool
             else:
                 probe = run(runner + ["evaluate", "--split", "train", "--adapter", str(parents["adaptive"]),
-                                     "--prompt-version", "apps-call-v2", "--no-publish"], root, f'r{number}-train-probe')
+                                     "--prompt-version", "apps-call-v2", "--no-publish",
+                                     "--curriculum", str(active_curriculum), "--curriculum-sha256", digest(active_curriculum)], root, f'r{number}-train-probe')
                 audit(probe)
                 pool = run([python, "-B", str(PROJECT / "scripts/apps_adversary.py"), "--probe", str(probe),
                             "--parent-adapter", str(parents["adaptive"]), "--round", str(number), "--samples-per-problem", "16"], root, f'r{number}-adversary')
@@ -114,7 +119,7 @@ def main(args):
             pool_result = read(pool / "result.json")
             if pool_result["parent_adapter_sha256"] != digest(parents["adaptive"] / "adapter_model.safetensors"):
                 raise ValueError("Adversary pool was not filtered against this round's parent")
-            curricula = curriculum(root, number, pool)
+            curricula = curriculum(root, number, pool, active_curriculum)
             if number == 1 and not curricula["adaptive"]["counts"].get("local_adversary", 0):
                 raise RuntimeError("No eligible locally generated adversarial code; refusing to label static training adversarial")
             stage = {"round": number, "probe": str(probe), "pool": str(pool), "curricula": curricula, "arms": {}}
@@ -141,6 +146,7 @@ def main(args):
                 comparison.append({row["case_id"]: (row["prompt_sha256"], row["case_seed"]) for row in rows(folder / "predictions.jsonl")})
             if not comparison[0] == comparison[1] == comparison[2]:
                 raise ValueError("Validation prompts or case seeds differ")
+            active_curriculum = Path(curricula["adaptive"]["path"])
             result["rounds"].append(stage)
             write(root / "result.json", result)
         for name, expected in hashes.items():

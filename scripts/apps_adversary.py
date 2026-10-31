@@ -35,7 +35,12 @@ def signature(outputs):
 def contexts(probe, parent):
     audit(probe)
     result = read(probe / "result.json")
-    cases, manifest = load_cases("train")
+    originals, manifest = load_cases("train")
+    cases = originals
+    if result.get("curriculum_path"):
+        from apps_curriculum import training_cases
+        cases, manifest, _ = training_cases(probe / "evaluation-cases.jsonl", result["curriculum_sha256"])
+    original_by_id = {case["case_id"]: case for case in originals}
     if result["split"] != "train" or not result["complete_split"] or result["prompt_version"] != "apps-call-v2":
         raise ValueError("A complete Train probe with the fixed v2 prompt is required")
     if result["adapter_sha256"] != digest(parent / "adapter_model.safetensors"):
@@ -54,6 +59,8 @@ def contexts(probe, parent):
         context = output[identity]
         buggy = RestrictedFunction(case["buggy_code"], case["arguments"])
         context["known"].add(signature([observed(buggy, item) for item in context["inputs"]]))
+        original = RestrictedFunction(original_by_id[case["case_id"]]["buggy_code"], case["arguments"])
+        context["known"].add(signature([observed(original, item) for item in context["inputs"]]))
         samples = predictions[case["case_id"]]["samples"]
         if any(sample["bug_detected"] for sample in samples):
             suite = {canonical(sample["test"]["input"]): sample["test"] for sample in samples if sample["correct_expected"]}

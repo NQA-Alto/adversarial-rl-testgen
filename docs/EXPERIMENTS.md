@@ -19,7 +19,7 @@ Ba seed sinh 42, 43, 44 phản ánh biến động lấy mẫu. Các mutant cùn
 
 ## Thử nghiệm tiếp theo
 
-Lịch cân bằng tăng số nhóm được học trên code đối kháng. Nhánh cố định và đối kháng có cùng parent SFT, case ID, số bước, learning rate và reward. Mỗi nhánh được học hai vòng 64 bước trên hai seed train. Chỉ code tại các vị trí đối kháng được thay; sau vòng đầu, bộ sinh code được lọc lại theo policy mới.
+Lịch cân bằng tăng số nhóm được học trên code đối kháng. Nhánh cố định và đối kháng có cùng parent SFT, case ID, số bước, learning rate và reward. Mỗi nhánh được học hai vòng 64 bước; pilot dùng seed 42 và chỉ chạy seed 43 xác nhận nếu đạt điều kiện đã chốt. Chỉ code tại các vị trí đối kháng được thay; sau vòng đầu, bộ sinh code được lọc theo test sinh trên curriculum hiện tại. Các lỗi chưa bị bắt được giữ lại.
 
 Các phép thử mới chỉ dùng Train/Validation. Test cũ giữ nguyên để mô tả phiên bản đã chốt, không được gán cho checkpoint mới. Muốn đánh giá cuối một phiên bản tiếp theo cần một holdout mới chưa tham gia điều chỉnh.
 

@@ -68,7 +68,15 @@ def render_prompt(tokenizer, case, version=PROMPT_VERSION):
 
 def evaluate(args, folder, result):
     import torch
-    cases, manifest = load_cases(args.split)
+    if args.curriculum:
+        if args.split != "train":
+            raise ValueError("Curriculum probes are Train-only")
+        from apps_curriculum import training_cases
+        cases, manifest, _ = training_cases(args.curriculum, args.curriculum_sha256)
+        result.update(curriculum_path=str(args.curriculum), curriculum_sha256=args.curriculum_sha256)
+        shutil.copy2(args.curriculum, folder / "evaluation-cases.jsonl")
+    else:
+        cases, manifest = load_cases(args.split)
     if args.case:
         cases = [case for case in cases if case["case_id"] == args.case]
         if not cases:

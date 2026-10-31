@@ -37,7 +37,7 @@ def main(args):
     parent_validation = Path(original_plan["parent_validation"])
     state = read(PROJECT / "APPS_STATE.json")
     os.environ["TTNT_APPS_STATE_PATH"] = state["selected_local_model"]["state_path"]
-    root = run_folder("balanced-adversarial")
+    root = run_folder("balanced-current-curriculum")
     print("EVIDENCE:", root, flush=True)
     write(ASSETS / "evidence/APPS_BALANCED_STUDY.json", {"path": str(root)})
     cases, manifest = load_cases("train")
@@ -55,6 +55,8 @@ def main(args):
             "parent_adapter": str(parent), "parent_adapter_sha256": digest(parent / "adapter_model.safetensors"),
             "parent_validation": str(parent_validation), "model_profile": "2b", "prompt_version": "apps-call-v2",
             "training_seeds": [42, 43], "generation_seeds": [42, 43, 44], "rounds": 2, "steps_per_round": 64,
+            "confirmation_rule": "Run seed43 only if seed42 adaptive adds at least1 mean detected code vs SFT with nondecreasing expected, or adds at least3 expected with nondecreasing code detection, or adds >=1/3 detected code vs matched control with nondecreasing expected. Otherwise stop the pilot and retain SFT.",
+            "revision": "Probe the current curriculum; replace solved slots only and retain unsolved code.",
             "learning_rate": 5e-6, "reward_profile": "equal-v1", "group_size": 4,
             "sampling": "50% groups on eligible adversarial slots, 50% on remaining Train slots; exact same case-ID schedule in control",
             "adversary": "Frozen local Qwen3.5-2B; same audited SFT840 pool in round1, resample from each adaptive policy in round2",
@@ -68,11 +70,13 @@ def main(args):
     python = str(ASSETS / "env/Scripts/python.exe")
     runner = [python, "-B", str(PROJECT / "scripts/apps_model_runner.py")]
     def stage(command, label):
-        folder = execute(command, root, label)
-        return folder
-    def evaluate(adapter, label, seed=42, split="validation"):
-        folder = stage(runner + ["evaluate", "--split", split, "--adapter", str(adapter), "--seed", str(seed),
-                                "--prompt-version", "apps-call-v2", "--no-publish"], label)
+        return execute(command, root, label)
+    def evaluate(adapter, label, seed=42, split="validation", curriculum_path=None):
+        command = runner + ["evaluate", "--split", split, "--adapter", str(adapter), "--seed", str(seed),
+                            "--prompt-version", "apps-call-v2", "--no-publish"]
+        if curriculum_path:
+            command += ["--curriculum", str(curriculum_path), "--curriculum-sha256", digest(curriculum_path)]
+        folder = stage(command, label)
         audit(folder)
         return folder
     def guard():
@@ -89,20 +93,21 @@ def main(args):
             parents = {arm: parent for arm in ("control", "adaptive")}
             validations = {arm: parent_validation for arm in parents}
             seed_record = {"seed": seed, "rounds": []}
+            active_curriculum = None
             for number in (1, 2):
                 guard()
                 if number == 1:
                     old_stages = read(old / "stages.json")
                     probe, pool = Path(old_stages["r1-train-probe"]), Path(old_stages["r1-adversary"])
                 else:
-                    probe = evaluate(parents["adaptive"], f"s{seed}-r{number}-train-probe", split="train")
+                    probe = evaluate(parents["adaptive"], f"s{seed}-r{number}-train-probe", split="train", curriculum_path=active_curriculum)
                     pool = stage([python, "-B", str(PROJECT / "scripts/apps_adversary.py"), "--probe", str(probe),
                                   "--parent-adapter", str(parents["adaptive"]), "--round", str(number),
                                   "--samples-per-problem", "8"], f"s{seed}-r{number}-adversary")
                 audit_pool(pool)
                 if read(pool / "result.json")["parent_adapter_sha256"] != digest(parents["adaptive"] / "adapter_model.safetensors"):
                     raise ValueError("Pool belongs to another policy")
-                curricula = curriculum(seed_root, number, pool)
+                curricula = curriculum(seed_root, number, pool, active_curriculum)
                 adaptive_rows = rows(Path(curricula["adaptive"]["path"]))
                 focused = [row["case_id"] for row in adaptive_rows if row["curriculum_source"] == "local_adversary"]
                 schedule = make_schedule([row["case_id"] for row in cases], focused, 64, seed)
@@ -132,6 +137,7 @@ def main(args):
                         "adversarial_test_exposures": exposure if arm == "adaptive" else 0}
                     parents[arm], validations[arm] = trained / "adapter", validation
                     write(root / "progress.json", {"seed": seed, "round": number, "arm_completed": arm, "stage": info})
+                active_curriculum = Path(curricula["adaptive"]["path"])
                 seed_record["rounds"].append(info)
                 write(seed_root / "result.json", seed_record)
             seed_record["validation"] = {}
@@ -142,6 +148,20 @@ def main(args):
             progress["seeds"].append(seed_record)
             write(seed_root / "result.json", seed_record)
             write(root / "result.json", progress)
+            if seed == 42:
+                adaptive = seed_record["validation"]["adaptive"]["summary"]
+                control = seed_record["validation"]["control"]["summary"]
+                sft = previous["summary"]["sft"]
+                a = lambda key: adaptive[key]["mean"]
+                c = lambda key: control[key]["mean"]
+                b = lambda key: sft[key]["mean"]
+                promising = (a("cases_detected") >= b("cases_detected") + 1 - 1e-9 and a("correct_expected") >= b("correct_expected") - 1e-9 or
+                             a("correct_expected") >= b("correct_expected") + 3 - 1e-9 and a("cases_detected") >= b("cases_detected") - 1e-9 or
+                             a("cases_detected") >= c("cases_detected") + 1/3 - 1e-9 and a("correct_expected") >= c("correct_expected") - 1e-9)
+                progress["pilot_promising_for_confirmation"] = promising
+                if not promising:
+                    progress["confirmation_skipped_reason"] = "Pilot has no predeclared meaningful adaptive advantage; retain SFT."
+                    break
         guard()
         summary = {arm: mean_metrics([run for seed in progress["seeds"] for run in seed["validation"][arm]["runs"]])
                    for arm in ("control", "adaptive")}
@@ -152,7 +172,7 @@ def main(args):
             mean("adaptive", "cases_detected") >= base("cases_detected") + 1 - 1e-9 and mean("adaptive", "correct_expected") >= base("correct_expected") - 1e-9 or
             mean("adaptive", "correct_expected") >= base("correct_expected") + 3 - 1e-9 and mean("adaptive", "cases_detected") >= base("cases_detected") - 1e-9)
         progress.update(status="completed", summary=summary, sft_validation=sft, adaptive_passes_selection_gate=eligible,
-                        selected_variant="adaptive" if eligible else "sft", total_adversarial_test_exposures=512,
+                        selected_variant="adaptive" if eligible else "sft", total_adversarial_test_exposures=256 * len(progress["seeds"]),
                         final_test_unchanged=True, active_demo_unchanged=True)
         write(root / "result.json", progress)
         print("BALANCED STUDY COMPLETED:", root, canonical(summary), flush=True)

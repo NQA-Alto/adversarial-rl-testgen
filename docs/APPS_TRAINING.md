@@ -48,7 +48,7 @@ Mỗi nhóm sinh bốn test cho cùng một code. Cấu hình `equal-v1` cộng 
 
 ## Lấy mẫu đối kháng cân bằng
 
-`apps_balanced_study.py` điều phối hai vòng, mỗi vòng 64 bước cho từng nhánh. Hai seed huấn luyện là 42 và 43. Một nửa số nhóm lấy từ các vị trí có code đối kháng, một nửa từ phần Train còn lại. Nhánh cố định dùng đúng lịch case ID đó nhưng giữ code AST ban đầu. Code đối kháng được làm mới giữa hai vòng.
+`apps_balanced_study.py` điều phối hai vòng, mỗi vòng 64 bước cho từng nhánh. Pilot dùng seed train 42. Seed 43 chỉ chạy xác nhận khi pilot đạt điều kiện cải thiện đã chốt trước. Một nửa số nhóm lấy từ các vị trí có code đối kháng, một nửa từ phần Train còn lại. Nhánh cố định dùng đúng lịch case ID đó nhưng giữ code AST ban đầu. Trước vòng hai, policy kiểm tra đúng code đang học. Vị trí chưa bắt được lỗi giữ nguyên; chỉ vị trí đã bắt được mới tìm code thay thế.
 
 ```powershell
 & $python -B "$project/scripts/apps_balanced_study.py" `

@@ -14,3 +14,7 @@
 Dùng JSON trực tiếp, không có thẻ suy luận; Python và input hữu hạn; refresh theo vòng. Chưa triển khai Best-of-N, RL cho model sinh code hoặc benchmark đầy đủ. Số liệu không so ngang điều kiện với bài báo.
 
 [Thực nghiệm cuối](../results/apps-expanded-adaptive/README.md) tách hiệu quả SFT, GRPO và đối kháng. Chỉ protagonist cập nhật tham số; adversary thay dữ liệu theo policy, không đồng thời huấn luyện trọng số.
+
+## Cập nhật curriculum
+
+Vòng thích nghi kiểm tra policy trên code đang có trong pool. Chỉ vị trí đã bị test hiện tại bắt lỗi mới tìm code thay thế; các code còn vượt qua test được giữ lại. Bộ lọc loại cả hành vi trùng với AST ban đầu và code đang học. Lịch cân bằng lấy một nửa số nhóm từ các vị trí đối kháng, dùng cùng case ID cho nhánh cố định.
