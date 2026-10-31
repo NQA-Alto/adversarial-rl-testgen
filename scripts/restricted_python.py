@@ -104,8 +104,10 @@ class RestrictedFunction:
 
     def tick(self):
         self.steps += 1
-        if self.steps > 4000 or time.monotonic() > self.deadline:
+        if self.steps > 4000:
             raise RestrictedCodeError("Execution step limit")
+        if time.monotonic() > self.deadline:
+            raise RestrictedCodeError("Execution time limit")
 
     def assign(self, target, value, env):
         self.tick()
@@ -281,7 +283,7 @@ class RestrictedFunction:
         for value in inputs.values():
             bound(value)
         self.steps = 0
-        self.deadline = time.monotonic() + 0.1
+        self.deadline = time.monotonic() + 1.0
         try:
             self.statements(self.fn.body, copy.deepcopy(inputs))
         except ReturnValue as result:

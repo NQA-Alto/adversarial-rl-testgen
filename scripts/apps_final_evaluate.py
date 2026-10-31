@@ -46,7 +46,7 @@ def prepare(selection_path):
     source = root / "source"
     source.mkdir()
     hashes = {}
-    for name in ("apps_final_evaluate.py", "apps_model_runner.py", "apps_core.py", "apps_lora.py", "apps_profiles.py", "restricted_python.py", "local_model_loader.py"):
+    for name in ("apps_final_evaluate.py", "apps_model_runner.py", "apps_core.py", "apps_lora.py", "apps_profiles.py", "restricted_python.py", "local_model_loader.py", "model_profiles.py"):
         path = Path(__file__).with_name(name)
         hashes[name] = digest(path)
         shutil.copy2(path, source / name)

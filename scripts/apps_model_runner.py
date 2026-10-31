@@ -12,12 +12,11 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 from apps_core import ASSETS, DATA, PROMPT_VERSION, canonical, digest, load_cases, metrics, model_prompt, read, score, write
-from local_model_loader import load_qwen_local
 from restricted_python import RestrictedFunction
 
 
 PROJECT = Path(__file__).resolve().parents[1]
-STATE = PROJECT / "APPS_STATE.json"
+STATE = Path(os.environ.get("TTNT_APPS_STATE_PATH", str(PROJECT / "APPS_STATE.json")))
 
 
 def run_folder(label):
@@ -28,32 +27,29 @@ def run_folder(label):
 
 
 def freeze_sources(folder):
-    names = ("apps_core.py", "apps_profiles.py", "apps_model_runner.py", "restricted_python.py", "local_model_loader.py", "train_static_grpo.py", "check_lora_update.py", "apps_curriculum.py", "apps_output_contracts.py", "apps_rewards.py", "apps_lora.py")
+    names = ("apps_core.py", "apps_profiles.py", "apps_model_runner.py", "restricted_python.py", "local_model_loader.py", "model_profiles.py", "train_static_grpo.py", "check_lora_update.py", "apps_curriculum.py", "apps_output_contracts.py", "apps_rewards.py", "apps_lora.py", "apps_sampling.py")
     (folder / "source").mkdir()
     for name in names:
         shutil.copy2(Path(__file__).with_name(name), folder / "source" / name)
     return {name: digest(Path(__file__).with_name(name)) for name in names}
 
 
-def load_model(adapter=None, train=False, lora_profile="attention-qv-v1"):
+def load_model(adapter=None, train=False, lora_profile="attention-qv-v1", model_profile=None):
     import torch
-    from transformers import AutoTokenizer
     from peft import LoraConfig, PeftModel, TaskType, get_peft_model
     from apps_lora import PROFILES
+    from model_profiles import load_base
+    model_profile = model_profile or os.environ.get("TTNT_MODEL_PROFILE", "2b")
 
-    path = ASSETS / "models/Qwen3.5-2B"
     if not torch.cuda.is_available() or not torch.cuda.is_bf16_supported():
         raise RuntimeError("CUDA BF16 is required")
     torch.cuda.reset_peak_memory_stats()
-    tokenizer = AutoTokenizer.from_pretrained(path, local_files_only=True, padding_side="left")
-    base, loading = load_qwen_local(path, output_loading_info=True)
-    if any(loading.get(key) for key in ("missing_keys", "unexpected_keys", "mismatched_keys")):
-        raise RuntimeError("Unexpected model loading result")
+    base, tokenizer = load_base(ASSETS, model_profile)
     if adapter:
         model = PeftModel.from_pretrained(base, adapter, is_trainable=train, local_files_only=True)
     elif train:
         model = get_peft_model(base, LoraConfig(task_type=TaskType.CAUSAL_LM, r=4, lora_alpha=8,
-                              lora_dropout=0, bias="none", target_modules=PROFILES[lora_profile]))
+                              lora_dropout=0, bias="none", target_modules=["q_proj", "v_proj"] if model_profile == "coder3b" else PROFILES[lora_profile]))
     else:
         model = base
     if not train:
@@ -83,7 +79,8 @@ def evaluate(args, folder, result):
                   seed=args.seed, tests_per_case=4, prompt_version=args.prompt_version,
                   model_test_evaluation=False, complete_split=not bool(args.case), training=False,
                   generation={"max_new_tokens": 96, "temperature": 1.0, "top_p": 0.95, "top_k": 20, "thinking": False})
-    model, tokenizer, eos = load_model(args.adapter)
+    profile_args = {"model_profile": args.model_profile} if hasattr(args, "model_profile") else {}
+    model, tokenizer, eos = load_model(args.adapter, **profile_args)
     predictions = []
     started = time.perf_counter()
     for index, case in enumerate(cases):
@@ -140,30 +137,41 @@ def train(args, folder, result):
 
     from apps_curriculum import training_cases
     from apps_rewards import PROFILES, training_reward
+    from model_profiles import PROFILES as MODEL_PROFILES
+    model_name = MODEL_PROFILES[getattr(args, "model_profile", "2b")]["name"]
     reward_profile = getattr(args, "reward_profile", "legacy-v1")
     cases, manifest, counts = training_cases(args.curriculum, args.curriculum_sha256)
+    schedule = None
+    if args.schedule:
+        from apps_sampling import load_schedule
+        schedule = load_schedule(args.schedule, args.schedule_sha256, cases, args.steps, args.seed)
     state = read(STATE)
     baseline_path = args.baseline_run or Path(state["baseline_validation"]["path"])
     baseline = read(baseline_path / "result.json")
     if baseline["dataset_id"] != manifest["dataset_id"] or baseline["status"] != "evaluation_completed" or baseline["prompt_version"] != args.prompt_version:
         raise RuntimeError("Completed matching baseline required")
-    config = {"steps": args.steps, "max_completion_tokens": 96, "learning_rate": 1e-5,
+    config = {"steps": args.steps, "max_completion_tokens": 96, "learning_rate": args.learning_rate,
               "beta": 0.0, "temperature": 1.0, "top_p": 0.95, "top_k": 20, "seed": args.seed}
     result.update(status="preparing", dataset_id=manifest["dataset_id"], prompt_version=args.prompt_version,
                   train_sha256=manifest["splits"]["train"]["sha256"], baseline_path=str(baseline_path),
                   baseline_result_sha256=digest(baseline_path / "result.json"),
                   configuration=config, training=True, model_test_evaluation=False,
-                  initialization="Declared APPS parent adapter; new GRPO optimizer" if args.init_adapter else "original Qwen3.5-2B plus new rank-4 LoRA; no previous adapters",
+                  initialization="Declared APPS parent adapter; new GRPO optimizer" if args.init_adapter else "original " + model_name + " plus new rank-4 LoRA; no previous adapters",
                   parent_adapter_sha256=digest(args.init_adapter / "adapter_model.safetensors") if args.init_adapter else None,
                   scope="GRPO on a frozen per-round curriculum" if args.curriculum else "Static APPS GRPO pilot; adversarial curriculum is not implemented in this run",
                   curriculum_path=str(args.curriculum) if args.curriculum else None,
                   curriculum_sha256=args.curriculum_sha256, curriculum_counts=counts,
                   reward_profile=reward_profile, reward_weights=PROFILES[reward_profile],
                   reward_format_scope="Strict JSON plus bounded input validity; this differs from ATGen thinking tags")
+    if schedule:
+        result.update(schedule_path=str(args.schedule), schedule_sha256=args.schedule_sha256,
+                      schedule_focus_groups=schedule["focus_groups"], schedule_background_groups=schedule["background_groups"])
+        shutil.copy2(args.schedule, folder / "schedule.json")
     if args.curriculum:
         shutil.copy2(args.curriculum, folder / "training-cases.jsonl")
     torch.manual_seed(args.seed)
-    model, tokenizer, eos = load_model(args.init_adapter, train=True)
+    profile_args = {"model_profile": args.model_profile} if hasattr(args, "model_profile") else {}
+    model, tokenizer, eos = load_model(args.init_adapter, train=True, **profile_args)
     initial = {name: value.detach().cpu().clone() for name, value in get_peft_model_state_dict(model).items()}
     if args.init_adapter:
         from safetensors.torch import load_file
@@ -176,6 +184,9 @@ def train(args, folder, result):
     elif not all(torch.count_nonzero(value).item() == 0 for name, value in initial.items() if "lora_B" in name):
         raise RuntimeError("LoRA is not freshly initialized")
     rows = [{"case_id": case["case_id"], "prompt": render_prompt(tokenizer, case, args.prompt_version)} for case in cases]
+    if schedule:
+        by_identity = {row["case_id"]: row for row in rows}
+        rows = [by_identity[identity] for identity in schedule["case_ids"]]
     if max(len(tokenizer.encode(row["prompt"], add_special_tokens=False)) for row in rows) > 1536:
         raise RuntimeError("Training prompt too long")
     functions = {case["case_id"]: (RestrictedFunction(case["reference"], case["arguments"]), RestrictedFunction(case["buggy_code"], case["arguments"])) for case in cases}
@@ -219,13 +230,21 @@ def train(args, folder, result):
             if logs:
                 with (folder / "trainer-metrics.jsonl").open("a", encoding="utf-8", newline="\n") as stream:
                     stream.write(canonical({"step": state.global_step, **logs}) + "\n")
-    trainer = GRPOTrainer(model=model, args=make_config(folder, config, False),
+    training_args = make_config(folder, config, False)
+    if schedule:
+        training_args.shuffle_dataset = False
+    trainer = GRPOTrainer(model=model, args=training_args,
                           reward_funcs=reward, train_dataset=Dataset.from_list(rows), processing_class=tokenizer, callbacks=[Audit()])
     result["trainable_parameters"] = sum(p.numel() for p in model.parameters() if p.requires_grad)
     write(folder / "plan.json", result)
     trainer.train()
     if trainer.state.global_step != args.steps:
         raise RuntimeError("Unexpected optimizer step count")
+    if schedule:
+        if [event["case_id"] for event in events] != schedule["case_ids"]:
+            raise RuntimeError("Observed GRPO groups differ from the declared schedule")
+        result.update(schedule_verified=True, observed_focus_groups=sum(
+            event["case_id"] in schedule["focus_case_ids"] for event in events))
     current = get_peft_model_state_dict(model)
     changed = [name for name, value in current.items() if not torch.equal(initial[name], value.detach().cpu())]
     checkpoint = save_adapter_checked(model, folder / "adapter", trainer.state.global_step)
@@ -254,6 +273,8 @@ def main():
     parser.add_argument("action", choices=("evaluate", "train"))
     parser.add_argument("--split", choices=("train", "validation"), default="validation")
     parser.add_argument("--adapter", type=Path)
+    from model_profiles import PROFILES as MODEL_PROFILES, model_path
+    parser.add_argument("--model-profile", choices=tuple(MODEL_PROFILES), default=os.environ.get("TTNT_MODEL_PROFILE", "2b"))
     parser.add_argument("--case")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--steps", type=int, default=48)
@@ -264,17 +285,29 @@ def main():
     parser.add_argument("--init-adapter", type=Path)
     parser.add_argument("--curriculum", type=Path)
     parser.add_argument("--curriculum-sha256")
+    parser.add_argument("--schedule", type=Path)
+    parser.add_argument("--schedule-sha256")
+    parser.add_argument("--learning-rate", type=float, default=1e-5)
     from apps_rewards import PROFILES
     parser.add_argument("--reward-profile", choices=tuple(PROFILES), default="legacy-v1")
     args = parser.parse_args()
+    if args.model_profile != "2b" and not os.environ.get("TTNT_APPS_STATE_PATH"):
+        args.no_publish = True
+    if bool(args.schedule) != bool(args.schedule_sha256):
+        parser.error("Provide both schedule and its hash")
+    if not 0 < args.learning_rate <= 1e-4:
+        parser.error("Learning rate must be in (0, 1e-4]")
+    if args.schedule and not args.no_publish:
+        parser.error("Scheduled research runs require --no-publish")
     if not 1 <= args.steps <= 96:
         parser.error("Pilot must use 1 to 96 steps")
-    if args.action == "train" and args.reward_profile != "legacy-v1" and not args.no_publish:
+    if args.action == "train" and args.reward_profile != "legacy-v1" and not args.no_publish and not os.environ.get("TTNT_APPS_STATE_PATH"):
         parser.error("Research reward profiles require --no-publish")
     folder = run_folder("grpo-pilot" if args.action == "train" else "adapter-validation" if args.adapter else "baseline-validation")
     print("EVIDENCE:", folder, flush=True)
     result = {"status": "started", "action": args.action, "source_hashes": freeze_sources(folder),
-              "started_at": datetime.now(timezone.utc).isoformat(), "model_path": str(ASSETS / "models/Qwen3.5-2B"),
+              "started_at": datetime.now(timezone.utc).isoformat(), "model_path": str(model_path(ASSETS, args.model_profile)),
+              "model_profile": args.model_profile,
               "versions": {name: importlib.metadata.version(name) for name in ("torch", "transformers", "trl", "peft")}}
     write(folder / "result.json", result)
     try:

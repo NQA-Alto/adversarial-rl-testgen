@@ -1,36 +1,16 @@
-# Phương pháp tham khảo: ATGen
+# Phương pháp tham khảo
 
-Tài liệu tham khảo chính là [ATGen: Adversarial Reinforcement Learning for Test Case Generation](https://arxiv.org/abs/2510.14635), bản v1. Đồ án triển khai vòng sinh test, học từ reward thực thi và làm mới code huấn luyện theo khả năng của policy.
+[ATGen](https://arxiv.org/html/2510.14635v1) là tài liệu chính. Đồ án tái hiện GRPO từ reward thực thi và curriculum code vượt qua test hiện tại.
 
-## Phần triển khai
-
-| Thành phần | Cách thực hiện |
+| Thành phần | Bản triển khai |
 |---|---|
-| Test generator | Qwen3.5-2B local, trả JSON gồm input và expected |
-| Bộ chấm | Đối chiếu expected với reference, rồi kiểm tra kết quả code cần thử |
-| GRPO | TRL, bốn completion mỗi nhóm, cập nhật adapter LoRA |
-| Reward | Kết hợp tính hợp lệ, độ đúng expected và khả năng bắt lỗi |
-| Code generator | Qwen gốc, giữ nguyên trọng số, lấy mẫu lời giải cho bài Train |
-| Lọc code | Giữ code còn sai trong miền thực nghiệm nhưng qua được test đúng của policy |
-| Curriculum | Thay một phần code Train và làm mới giữa các vòng |
-| Đối chứng | Hai nhánh cùng parent SFT64, cùng hai vòng × 48 bước và cách đánh giá |
+| Protagonist | Qwen3.5-2B, LoRA rank 4 |
+| Khởi động | SFT 840, 1050 nhãn Train |
+| Reward | Định dạng, expected, bắt lỗi; mỗi phần 1/3 |
+| Adversary | Qwen gốc giữ trọng số; lấy mẫu lời giải rồi lọc |
+| Curriculum | Hai vòng, làm mới sau vòng đầu |
+| Đối chứng | Cùng parent, 145 vị trí Train và 2 × 32 bước |
 
-Chỉ model sinh test được cập nhật bằng RL. Model sinh code không được huấn luyện cùng lúc. Code bổ sung được lấy từ các lời giải model sinh còn lỗi, thay vì yêu cầu model cố tình chèn một lỗi định trước.
+Dùng JSON trực tiếp, không có thẻ suy luận; Python và input hữu hạn; refresh theo vòng. Chưa triển khai Best-of-N, RL cho model sinh code hoặc benchmark đầy đủ. Số liệu không so ngang điều kiện với bài báo.
 
-## Những điều chỉnh
-
-Đồ án dùng Qwen3.5-2B, LoRA rank 4 và GPU 8 GB; đầu ra là JSON trực tiếp, tắt chế độ thinking. SFT được thêm làm bước khởi động trước GRPO. Vì vậy, ảnh hưởng của SFT được đo riêng trước khi xét phần RL thêm vào.
-
-Dữ liệu gồm 29 bài APPS dạng gọi hàm, với miền input hữu hạn và bộ thông dịch Python giới hạn. Code ban đầu là mutant AST; code bổ sung trong curriculum được model local sinh rồi lọc. Phạm vi này khác bộ benchmark APPS và Codeforces của bài báo.
-
-Reward mặc định dùng trọng số định dạng/expected/attack là 0,1/0,2/0,7. Đã có phép so sánh với trọng số chia đều. Điều kiện định dạng JSON của đồ án khác định dạng có thẻ suy luận trong bài báo.
-
-## Kết quả
-
-Ở phép so sánh input-first, nhánh cố định và đối kháng đều phát hiện trung bình 4/15 code qua ba seed sinh. Nhánh đối kháng có 120/384 test RL được sinh trên các vị trí code bổ sung.
-
-Tăng SFT64 lên SFT256 giúp số code phát hiện tăng từ 4 lên 7/15. Thêm GRPO96 từ SFT256 còn 6/15. Kết quả này cho thấy lợi ích của SFT trong cấu hình đã thử, nhưng chưa cho thấy lợi ích thêm của RL hoặc curriculum đối kháng.
-
-Đồ án chưa triển khai toàn bộ benchmark của ATGen, lọc Best-of-N hay RL cho model sinh code. Số liệu ở đây dùng để đánh giá các thành phần của bản triển khai, không so trực tiếp với điểm benchmark trong bài báo.
-
-[Kết quả đối kháng](../results/apps-input-first-review/README.md) · [Phép so sánh SFT và GRPO](../results/apps-sft256-grpo/README.md)
+[Thực nghiệm cuối](../results/apps-expanded-adaptive/README.md) tách hiệu quả SFT, GRPO và đối kháng. Chỉ protagonist cập nhật tham số; adversary thay dữ liệu theo policy, không đồng thời huấn luyện trọng số.

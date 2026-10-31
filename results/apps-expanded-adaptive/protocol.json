@@ -1,0 +1,60 @@
+{
+  "dataset_id": "apps-intro-expanded-v4-0b00cd05b256",
+  "train_problems": 58,
+  "train_case_slots": 145,
+  "rounds": 2,
+  "optimizer_steps_per_round_per_arm": 32,
+  "total_optimizer_steps_per_arm": 64,
+  "train_seed": 42,
+  "generation_seeds": [
+    42,
+    43,
+    44
+  ],
+  "parent_adapter_sha256": "2642e0e09e5af695ad411851815f177aacb056798cf58bde6e514d8a5d8f0b54",
+  "prompt_version": "apps-call-v2",
+  "reward_profile": "equal-v1",
+  "source_hashes": {
+    "apps_model_runner.py": "e2e0c29befcb45f84559fe29d204006ebd9c445b0accac78cbc0fe1f13f465d4",
+    "apps_core.py": "8b61563427a92c11c3e38eb41d19542b25cca3adcf69afc7019924f6c2323dfe",
+    "apps_adversary.py": "9b6480d6d7caf9e273ecd4c8cd7607f3c0421f6f0d4c8ba71f14f60165b20dbf",
+    "apps_adversarial_round.py": "db8b288c3bc4261f4cc0cba06eaba138f4118eb7524cd7b1c6e3a9ad99371190",
+    "apps_curriculum.py": "9f53830ed4316cf121418ea50c3f0a5f191373a1f37958c990caed9ba0e47109",
+    "restricted_python.py": "fe85fb95ca3d34083a974733f08836bead4307f8359970681fd4141df81a15c6",
+    "apps_rewards.py": "5f236334aa49cf424153a9df1039f694ebf7fc44d58a140741cca29dbe7641a2",
+    "apps_lora.py": "a7b149d708d39890e5dd1aa6403bf507c9af5b480be114aa5035baae49bba672",
+    "model_profiles.py": "9d20619f3f6f378dfd582e36ddf307139523f91df8a7498cbd2242eec5e3014d",
+    "local_model_loader.py": "339d647aa8b2d123cb9972654b9244a0aeb57aa8a02e173bac0f4abfcfa2221a",
+    "train_static_grpo.py": "42d2d34ce7f1a7a86184a984106e49988d31a07c1f2d19018acee8f57421a36c",
+    "audit_apps_run.py": "f7ce9fb53d0a1ebf0060b5388021221b5ef10791d0e7ebf689fd0530dafe1dab"
+  },
+  "source_revision": "21e74ddf8de1a21436da12e3e653065c5213e9d1",
+  "splits": {
+    "train": {
+      "cases": 145,
+      "problems": 58,
+      "sha256": "117df0e03b84b478141da9b1cfb37e3e2b9d87e632fb3ddbbdafdc1a756fac0e"
+    },
+    "validation": {
+      "cases": 15,
+      "problems": 5,
+      "sha256": "d275394b4985cf8e4e9142885fe297b125ff4b33c4201933bb1c041bf3215c06"
+    },
+    "test": {
+      "cases": 18,
+      "problems": 7,
+      "sha256": "a333162780204cddd87dab2e7fec9c345a8e8ad9dbc080c261e6bfaeb785a8c2"
+    }
+  },
+  "model": "Qwen3.5-2B BF16",
+  "method": "LoRA rank4 GRPO, frozen local code generator",
+  "sft": {
+    "steps": 840,
+    "examples": 1050,
+    "learning_rate": 5e-05,
+    "seed": 42,
+    "target_sha256": "ac102a0965d2c0350f38898927adbee0139154a0b9581db69138abe6e47015c5"
+  },
+  "selected_before_test": "sft",
+  "official_apps_test_used": false
+}

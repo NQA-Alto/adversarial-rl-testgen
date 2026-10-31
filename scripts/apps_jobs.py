@@ -14,6 +14,17 @@ CURRENT = None
 GUARD = threading.Lock()
 
 
+def active_context():
+    current = read(PROJECT / "APPS_STATE.json")
+    selected = current.get("selected_local_model")
+    if selected:
+        active = read(Path(selected["state_path"]))
+        if active["dataset_id"] != selected["dataset_id"] or active["model_profile"] != selected["model_profile"]:
+            raise ValueError("Cấu hình model và dữ liệu không khớp.")
+        return active, selected
+    return current, None
+
+
 def command_for(task, steps):
     if task not in TASKS:
         raise ValueError("Tác vụ không hợp lệ.")
@@ -22,21 +33,25 @@ def command_for(task, steps):
     if task in (TASKS[2], TASKS[4]) and (isinstance(steps, bool) or int(steps) != steps or not 1 <= int(steps) <= 96):
         raise ValueError("Số bước GRPO phải từ 1 đến 96.")
     if task == TASKS[4]:
+        if active_context()[1]:
+            raise ValueError("Lượt gộp SFT + GRPO dành cho bản dữ liệu cũ. Chọn Huấn luyện GRPO trên Train để học từ checkpoint hiện tại.")
         return [str(PYTHON), "-B", str(PROJECT / "scripts/apps_round.py"), "--grpo-steps", str(int(steps))], False
     command = [str(PYTHON), "-B", str(PROJECT / "scripts/apps_model_runner.py")]
     if task == TASKS[2]:
         command += ["train", "--steps", str(int(steps))]
-        state = read(PROJECT / "APPS_STATE.json")
+        state, selected = active_context()
+        if selected:
+            command += ["--reward-profile", state["reward_profile"], "--prompt-version", selected["prompt_version"]]
         parent = state.get("selected_sft_training") or state.get("sft_training")
         if parent:
             if digest(Path(parent["adapter_path"]) / "adapter_model.safetensors") != parent["adapter_sha256"]:
                 raise ValueError("Adapter SFT đã thay đổi.")
-            baseline = state.get("selected_sft_train_probe") or state["sft_validation"]
+            baseline = state.get("selected_sft_validation") or state.get("selected_sft_train_probe") or state["sft_validation"]
             command += ["--init-adapter", parent["adapter_path"], "--baseline-run", baseline["path"]]
     else:
         command += ["evaluate"]
         if task == TASKS[3]:
-            record = read(PROJECT / "APPS_STATE.json").get("pilot_training")
+            record = active_context()[0].get("pilot_training")
             if not record:
                 raise ValueError("Chưa có adapter APPS để chấm.")
             adapter = Path(record["adapter_path"])
@@ -51,6 +66,9 @@ def snapshot():
         job = CURRENT
         if job is None:
             records = sorted((ASSETS / "evidence/ui-jobs").glob("apps-*/job.json"), reverse=True)
+            selected = active_context()[1]
+            if selected:
+                records = [path for path in records if (read(path).get("model_context") or {}).get("dataset_id") == selected["dataset_id"]]
             if not records:
                 return "Chưa có tác vụ đang chạy.", "", ""
             record = records[0]
@@ -66,6 +84,10 @@ def worker(job, shared_lock, needs_audit):
     environment = os.environ.copy()
     environment.update(PYTHONUTF8="1", PYTHONUNBUFFERED="1", PYTHONDONTWRITEBYTECODE="1", HF_HUB_OFFLINE="1",
                        TEMP=str(ASSETS / "temp"), TMP=str(ASSETS / "temp"), HF_HOME=str(ASSETS / "cache/huggingface"))
+    selected = job.get("model_context")
+    if selected:
+        environment.update(TTNT_APPS_DATA_DIR=selected["dataset_path"], TTNT_APPS_STATE_PATH=selected["state_path"],
+                           TTNT_MODEL_PROFILE=selected["model_profile"])
     command = job["command"]
     outcome = "failed"
     try:
@@ -125,7 +147,8 @@ def start(task, steps, shared_lock, busy):
         folder.mkdir(parents=True, exist_ok=False)
         job = {"task": task, "command": command, "folder": folder, "status": "Đang chuẩn bị · " + task,
                "started_at": datetime.now().astimezone().isoformat(), "stopping": False, "process": None, "done": False}
-        write(folder / "plan.json", {"task": task, "command": command, "started_at": job["started_at"]})
+        job["model_context"] = active_context()[1]
+        write(folder / "plan.json", {"task": task, "command": command, "started_at": job["started_at"], "model_context": job["model_context"]})
         with GUARD:
             CURRENT = job
         threading.Thread(target=worker, args=(job, shared_lock, needs_audit), daemon=True).start()

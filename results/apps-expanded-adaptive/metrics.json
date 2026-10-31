@@ -1,0 +1,188 @@
+{
+  "dataset_id": "apps-intro-expanded-v4-0b00cd05b256",
+  "training_seed": 42,
+  "generation_seeds": [
+    42,
+    43,
+    44
+  ],
+  "tests_per_case": 4,
+  "train_problems": 58,
+  "train_cases": 145,
+  "validation_problems": 5,
+  "validation_cases": 15,
+  "test_problems": 7,
+  "test_cases": 18,
+  "sft_steps": 840,
+  "grpo_rounds": 2,
+  "steps_per_round": 32,
+  "reward_profile": "equal-v1",
+  "selected_before_test": "sft",
+  "validation": {
+    "base": {
+      "valid_tests": {
+        "mean": 35.333333333333336,
+        "sample_sd": 0.5773502691896257
+      },
+      "correct_expected": {
+        "mean": 14.666666666666666,
+        "sample_sd": 2.516611478423583
+      },
+      "bug_detecting_tests": {
+        "mean": 3.6666666666666665,
+        "sample_sd": 0.5773502691896257
+      },
+      "cases_detected": {
+        "mean": 3.3333333333333335,
+        "sample_sd": 0.5773502691896257
+      }
+    },
+    "sft": {
+      "valid_tests": {
+        "mean": 55,
+        "sample_sd": 2.6457513110645907
+      },
+      "correct_expected": {
+        "mean": 31.666666666666668,
+        "sample_sd": 1.5275252316519468
+      },
+      "bug_detecting_tests": {
+        "mean": 14.333333333333334,
+        "sample_sd": 0.5773502691896257
+      },
+      "cases_detected": {
+        "mean": 8.333333333333334,
+        "sample_sd": 0.5773502691896257
+      }
+    },
+    "control": {
+      "valid_tests": {
+        "mean": 53.666666666666664,
+        "sample_sd": 3.0550504633038935
+      },
+      "correct_expected": {
+        "mean": 30,
+        "sample_sd": 1.0
+      },
+      "bug_detecting_tests": {
+        "mean": 13.666666666666666,
+        "sample_sd": 2.309401076758503
+      },
+      "cases_detected": {
+        "mean": 8,
+        "sample_sd": 1.0
+      }
+    },
+    "adaptive": {
+      "valid_tests": {
+        "mean": 54,
+        "sample_sd": 3.0
+      },
+      "correct_expected": {
+        "mean": 28.666666666666668,
+        "sample_sd": 1.1547005383792515
+      },
+      "bug_detecting_tests": {
+        "mean": 13.333333333333334,
+        "sample_sd": 1.1547005383792515
+      },
+      "cases_detected": {
+        "mean": 7.666666666666667,
+        "sample_sd": 0.5773502691896257
+      }
+    }
+  },
+  "test": {
+    "base": {
+      "valid_tests": {
+        "mean": 46.666666666666664,
+        "sample_sd": 3.511884584284246
+      },
+      "correct_expected": {
+        "mean": 14,
+        "sample_sd": 2.6457513110645907
+      },
+      "bug_detecting_tests": {
+        "mean": 7,
+        "sample_sd": 1.0
+      },
+      "cases_detected": {
+        "mean": 5,
+        "sample_sd": 1.0
+      }
+    },
+    "sft": {
+      "valid_tests": {
+        "mean": 63.333333333333336,
+        "sample_sd": 4.509249752822894
+      },
+      "correct_expected": {
+        "mean": 24.666666666666668,
+        "sample_sd": 5.131601439446884
+      },
+      "bug_detecting_tests": {
+        "mean": 14.333333333333334,
+        "sample_sd": 2.0816659994661326
+      },
+      "cases_detected": {
+        "mean": 8.666666666666666,
+        "sample_sd": 0.5773502691896257
+      }
+    },
+    "control": {
+      "valid_tests": {
+        "mean": 64,
+        "sample_sd": 3.605551275463989
+      },
+      "correct_expected": {
+        "mean": 24.666666666666668,
+        "sample_sd": 2.8867513459481287
+      },
+      "bug_detecting_tests": {
+        "mean": 13.333333333333334,
+        "sample_sd": 2.516611478423583
+      },
+      "cases_detected": {
+        "mean": 7.666666666666667,
+        "sample_sd": 1.5275252316519468
+      }
+    },
+    "adaptive": {
+      "valid_tests": {
+        "mean": 64.33333333333333,
+        "sample_sd": 3.0550504633038935
+      },
+      "correct_expected": {
+        "mean": 24.666666666666668,
+        "sample_sd": 2.516611478423583
+      },
+      "bug_detecting_tests": {
+        "mean": 14,
+        "sample_sd": 1.7320508075688772
+      },
+      "cases_detected": {
+        "mean": 8.333333333333334,
+        "sample_sd": 0.5773502691896257
+      }
+    }
+  },
+  "rounds": [
+    [
+      1,
+      416,
+      20,
+      17,
+      4
+    ],
+    [
+      2,
+      392,
+      11,
+      13,
+      8
+    ]
+  ],
+  "official_apps_test_used": false,
+  "evidence_path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-expanded-adaptive-study-20261031-064029-131442",
+  "final_protocol_path": "D:\\DA\\TTNT_De19_Assets\\evidence\\apps-final-protocol-20261031-070144-205405"
+}

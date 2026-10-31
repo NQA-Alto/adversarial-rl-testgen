@@ -180,8 +180,8 @@ if __name__ == "__main__":
     active_order = read(Path(__file__).resolve().parents[1] / "configs/active-dataset.json").get("sft_target_order", "sorted-v1")
     parser.add_argument("--target-order", choices=("sorted-v1", "input-first-v1"), default=active_order)
     args = parser.parse_args()
-    if not 1 <= args.steps <= 256 or any(not 1 <= step <= args.steps for step in args.checkpoint_steps):
-        parser.error("SFT steps must be 1..256 and checkpoint steps must be within that budget")
+    if not 1 <= args.steps <= 1024 or any(not 1 <= step <= args.steps for step in args.checkpoint_steps):
+        parser.error("SFT steps must be 1..1024 and checkpoint steps must be within that budget")
     if args.reference_adapter and 64 not in args.checkpoint_steps:
         parser.error("Reference replay requires a checkpoint at step 64")
     import os

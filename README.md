@@ -6,47 +6,46 @@ Sinh ca kiểm thử cho hàm Python bằng Qwen3.5-2B chạy trên máy cá nh�
 
 ## Dữ liệu
 
-Từ APPS Train, chọn 29 bài dạng gọi hàm và tạo 74 phiên bản code lỗi bằng đột biến AST. Miền input được giới hạn để kiểm tra toàn bộ bằng hai lời giải tham chiếu.
+Tập con APPS Introductory dạng gọi hàm Python. Miền input được giới hạn để kiểm tra bằng hai lời giải tham chiếu. Code lỗi ban đầu tạo bằng đột biến AST; code bổ sung được model local sinh và lọc trong các vòng đối kháng.
 
-| Tập | Số bài | Số code lỗi |
+| Tập | Bài toán | Code lỗi |
 |---|---:|---:|
-| Train | 17 | 41 |
+| Train | 58 | 145 |
 | Validation | 5 | 15 |
 | Test | 7 | 18 |
 
-Các tập được chia theo bài và URL nguồn. Tập Test này là phần giữ lại từ APPS Train; APPS Test chính thức là tập khác và chưa được sử dụng.
+Các tập tách theo bài và URL nguồn trong APPS Train. Tập Test ở đây là holdout của đồ án, khác APPS Test chính thức.
 
 ## Kết quả
 
-Kết quả Validation, trung bình trên ba seed sinh test 42, 43 và 44. Mỗi code sinh bốn test, tương ứng 60 test cho mỗi lượt đánh giá.
+Đánh giá cuối trên Test, trung bình ba seed sinh 42/43/44; bốn test cho mỗi code.
 
-| Cấu hình | Expected đúng /60 | Test phát hiện lỗi /60 | Code phát hiện /15 |
+| Phiên bản | Expected đúng /72 | Test bắt lỗi /72 | Code phát hiện /18 |
 |---|---:|---:|---:|
-| SFT 64 bước | 19,00 | 5,33 | 4,00 |
-| SFT 256 bước | **26,00** | **10,33** | **7,00** |
-| SFT 256 + GRPO 96 bước | 24,67 | 8,67 | 6,00 |
+| Qwen gốc | 14.00 | 7.00 | 5.00 |
+| Sau SFT | **24.67** | **14.33** | **8.67** |
+| GRPO cố định | **24.67** | **13.33** | **7.67** |
+| GRPO đối kháng | **24.67** | **14.00** | **8.33** |
 
-Hai mốc SFT 64 và 256 được lấy từ cùng một lượt học. Tăng thời lượng SFT cải thiện cả expected lẫn khả năng phát hiện lỗi. Lượt GRPO tiếp theo chưa cải thiện thêm, nên demo hiện dùng SFT256 làm mốc so sánh tốt nhất.
+Phiên bản sử dụng được chọn trên Validation trước khi mở Test: **Sau SFT**.
 
-Trong thí nghiệm đối kháng riêng, hai nhánh cùng bắt đầu từ SFT64 và học hai vòng, mỗi vòng 48 bước. Cả hai phát hiện trung bình 4/15 code. Kết quả hiện tại chưa cho thấy lợi ích của curriculum đối kháng ở cấu hình đã thử.
+Phép so sánh GRPO dùng cùng SFT 840 cha, cùng reward và hai vòng × 32 bước mỗi nhánh. Ba seed sinh chỉ phản ánh biến động lấy mẫu; mỗi cấu hình có một seed huấn luyện.
 
-Mỗi cấu hình mới được huấn luyện với một seed. Ba seed sinh test chỉ phản ánh biến động khi lấy mẫu. Toàn bộ kết quả trên đây thuộc Validation; model chưa được đánh giá trên Test.
+[Thiết lập, số liệu Validation và phân tích giới hạn](results/apps-expanded-adaptive/README.md)
 
-[Bảng thực nghiệm và cách tính chỉ số](docs/EXPERIMENTS.md)
+![Kết quả Test](results/apps-expanded-adaptive/test.png)
 
-![So sánh trước và sau GRPO](results/apps-sft256-grpo/comparison.png)
-
-Hình 1. Kết quả SFT256 và SFT256 + GRPO96 trên Validation. Thanh sai số là độ lệch chuẩn qua ba seed sinh test.
+Hình 1. Expected đúng và code lỗi phát hiện trên Test. Thanh sai số là độ lệch chuẩn qua ba seed sinh.
 
 ## Chạy demo
 
-Bản chạy hiện tại dùng Windows và lưu model, dữ liệu, adapter tại `D:/DA/TTNT_De19_Assets`.
+Bản chạy hiện tại dùng Windows; model, dữ liệu và adapter lưu ở `D:/DA/TTNT_De19_Assets`.
 
 1. Chạy `MO_GIAO_DIEN.cmd`.
-2. Mở [Gradio](http://127.0.0.1:7860/?__theme=light).
-3. Chọn bài toán để xem code, input, expected và kết quả kiểm tra.
+2. Mở [demo](http://127.0.0.1:7860/?__theme=light).
+3. Chọn bài và phiên bản, xem kết quả đã lưu hoặc bấm **Sinh 4 test mới**.
 
-Giao diện có phần xem kết quả đã lưu, sinh test trực tiếp, chạy thực nghiệm và theo dõi huấn luyện. TensorBoard ở [cổng 6006](http://127.0.0.1:6006). Chạy `DONG_GIAO_DIEN.cmd` để dừng các dịch vụ.
+Tab Kết quả hiển thị đối chứng và đánh giá cuối. Tab Thực nghiệm cho phép chạy kiểm tra dữ liệu, GRPO trên Train và xem đường học. [TensorBoard](http://127.0.0.1:6006) chạy cùng bộ công cụ. Dùng `DONG_GIAO_DIEN.cmd` để dừng dịch vụ.
 
 ## Môi trường
 
@@ -63,22 +62,21 @@ Giao diện có phần xem kết quả đã lưu, sinh test trực tiếp, chạ
 
 Các lệnh khởi chạy còn dùng đường dẫn của máy thực nghiệm. Model nền và checkpoint không được đưa vào Git; việc cài lại trên máy khác chưa được kiểm tra.
 
-## Tài liệu và mã nguồn
+## Mã nguồn và tài liệu
 
-- [Chuẩn bị dữ liệu](docs/APPS_DATASET.md)
-- [Chạy và huấn luyện](docs/APPS_TRAINING.md)
-- [Các thí nghiệm](docs/EXPERIMENTS.md)
-- [Phần triển khai so với ATGen](docs/ATGEN_ALIGNMENT.md)
-- [Ví dụ demo](docs/DEMO.md)
+- [Dữ liệu](docs/APPS_DATASET.md)
+- [Cách dùng demo](docs/DEMO.md)
+- [Phương pháp tham khảo](docs/ATGEN_ALIGNMENT.md)
+- [Thực nghiệm cuối](results/apps-expanded-adaptive/README.md)
 
-Các script chính nằm trong `scripts/`: `apps_core.py` chứa bộ chấm, `apps_sft.py` thực hiện SFT, `apps_model_runner.py` chạy GRPO và đánh giá, `apps_adversarial_round.py` điều phối curriculum đối kháng, `apps_ui.py` tạo giao diện Gradio. Bảng số liệu và biểu đồ nằm trong `results/`.
+`apps_core.py` chứa prompt và bộ chấm; `restricted_python.py` thực thi tập con Python; `apps_model_runner.py` chạy GRPO và đánh giá; `apps_adversary.py` sinh và lọc code; `apps_ui.py` cùng `apps_presentation.py` tạo giao diện Gradio.
 
-## Phạm vi
+## Giới hạn
 
-Chương trình xử lý hàm Python trong tập cú pháp và miền input đã khai báo. Đây chưa phải hệ thống chấm mọi chương trình được nhập vào hoặc benchmark đầy đủ APPS. Kết quả trên năm bài Validation còn nhỏ; expected sai vẫn là nguồn thất bại chính.
+Hỗ trợ hàm Python trong cú pháp và miền input đã khai báo. Chưa phải hệ thống chấm mọi chương trình hoặc benchmark APPS đầy đủ. Bộ dữ liệu và holdout nhỏ; expected sai vẫn là một nguồn thất bại. Việc chạy lại trên máy khác chưa được kiểm tra.
 
 ## Tham khảo
 
-- [ATGen: Adversarial Reinforcement Learning for Test Case Generation](https://arxiv.org/abs/2510.14635)
+- [ATGen](https://arxiv.org/abs/2510.14635)
 - [APPS](https://github.com/hendrycks/apps) và [codeparrot/apps](https://huggingface.co/datasets/codeparrot/apps)
 - [TRL GRPOTrainer](https://huggingface.co/docs/trl/grpo_trainer)

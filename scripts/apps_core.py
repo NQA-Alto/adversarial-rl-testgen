@@ -3,6 +3,7 @@ import copy
 import hashlib
 import itertools
 import json
+import os
 from pathlib import Path
 
 from restricted_python import RestrictedCodeError, RestrictedFunction
@@ -11,7 +12,7 @@ from restricted_python import RestrictedCodeError, RestrictedFunction
 ASSETS = Path(r"D:\DA\TTNT_De19_Assets")
 REVISION = "21e74ddf8de1a21436da12e3e653065c5213e9d1"
 SOURCE = ASSETS / "data/apps-source" / REVISION
-DATA = ASSETS / "data/apps-introductory-v2"
+DATA = Path(os.environ.get("TTNT_APPS_DATA_DIR", str(ASSETS / "data/apps-introductory-v2")))
 PROMPT_VERSION = "apps-call-v1"
 
 
