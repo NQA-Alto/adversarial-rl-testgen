@@ -18,9 +18,3 @@ Dùng JSON trực tiếp, không có thẻ suy luận; Python và input hữu h�
 ## Cập nhật curriculum
 
 Vòng thích nghi kiểm tra policy trên code đang có trong pool. Chỉ vị trí đã bị test hiện tại bắt lỗi mới tìm code thay thế; các code còn vượt qua test được giữ lại. Bộ lọc loại cả hành vi trùng với AST ban đầu và code đang học. Lịch cân bằng lấy một nửa số nhóm từ các vị trí đối kháng, dùng cùng case ID cho nhánh cố định.
-
-## Ca kiểm thử và prompt
-
-Ca kiểm thử chức năng gồm input và expected; reference đóng vai trò oracle để chấm. Code lỗi AST tạo mốc mutation testing, còn code sinh tự nhiên dùng để thử curriculum đối kháng. Chỉ số bắt lỗi không phải độ bao phủ dòng lệnh.
-
-Prompt `apps-call-v2` có một ví dụ JSON của phép cộng không liên quan để minh họa định dạng. Không đưa test đáp án của bài đang đánh giá vào prompt. Model phải tự chọn input và tính expected từ đặc tả.

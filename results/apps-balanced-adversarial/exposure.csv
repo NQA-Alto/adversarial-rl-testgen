@@ -1,5 +1,0 @@
-training_seed,round,arm,focus_slots,focus_groups,focus_tests,focus_groups_with_update
-42,1,control,17,32,128,27
-42,1,adaptive,17,32,128,22
-42,2,control,25,32,128,27
-42,2,adaptive,25,32,128,25

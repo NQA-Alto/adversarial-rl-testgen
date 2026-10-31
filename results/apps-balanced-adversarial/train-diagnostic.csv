@@ -1,7 +1,0 @@
-variant,generation_seed,generated_tests,valid_tests,correct_expected,bug_detecting_tests,cases_detected
-sft,43,60,60,47,14,8
-sft,44,60,59,39,6,5
-control,43,60,60,48,15,8
-control,44,60,59,43,8,6
-adaptive,43,60,60,47,16,9
-adaptive,44,60,59,42,7,5

@@ -37,8 +37,6 @@ Phép so sánh GRPO dùng cùng SFT 840 cha, cùng reward và hai vòng × 32 b�
 
 Hình 1. Expected đúng và code lỗi phát hiện trên Test. Thanh sai số là độ lệch chuẩn qua ba seed sinh.
 
-Một phép thử tiếp theo tăng tỷ trọng học trên code đối kháng lên 50% và sửa vòng thích nghi để kiểm tra đúng curriculum hiện tại. Cả hai nhánh vẫn phát hiện trung bình 8,33/15 code trên Validation; nhánh đối kháng chưa vượt SFT. Vì pilot chưa đạt điều kiện cải thiện đã chốt, không chạy seed xác nhận và giữ nguyên bản sử dụng. [Cấu hình và kết quả](results/apps-balanced-adversarial/README.md).
-
 ## Chạy demo
 
 Bản chạy hiện tại dùng Windows; model, dữ liệu và adapter lưu ở `D:/DA/TTNT_De19_Assets`.

@@ -2,7 +2,6 @@
 
 | Kết quả | Phạm vi |
 |---|---|
-| [Curriculum cân bằng](apps-balanced-adversarial/README.md) | Hai vòng GRPO, kiểm tra code hiện tại và lấy mẫu đối kháng 50%; Validation |
 | [APPS mở rộng](apps-expanded-adaptive/README.md) | SFT 840, hai nhánh GRPO, Validation và Test đã khóa |
 | [Ngân sách SFT](apps-shared-sft-budget/README.md) | Mốc SFT 64 và 256 trên cùng quỹ đạo, tập Train cũ |
 | [GRPO từ SFT 256](apps-sft256-grpo/README.md) | Đối chứng trước và sau RL trên Validation cũ |
