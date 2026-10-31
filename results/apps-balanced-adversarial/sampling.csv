@@ -1,0 +1,3 @@
+training_seed,round,sampled_candidates,accepted_candidates,eligible_slots,replaced_slots,retained_adversarial_slots
+42,1,416,20,96,17,0
+42,2,368,5,82,8,17

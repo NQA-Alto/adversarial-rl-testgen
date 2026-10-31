@@ -32,3 +32,5 @@ Các phép thử mới chỉ dùng Train/Validation. Test cũ giữ nguyên đ�
 Đây là kết quả lịch sử trên tập Train nhỏ hơn, không gộp với tập mở rộng. Các lượt không cải thiện được giữ lại trong nhật ký và phân tích riêng.
 
 Output gốc, adapter, mã nguồn đóng băng và các phép chấm lại được lưu trong `D:/DA/TTNT_De19_Assets/evidence`. Git giữ mã nguồn, cấu hình, bảng tổng hợp và biểu đồ.
+
+[Kết quả lấy mẫu cân bằng](../results/apps-balanced-adversarial/README.md): pilot seed 42 đã hoàn tất, hai nhánh cùng phát hiện 8,33/15 code. Expected của nhánh đối kháng thấp hơn 0,33/60. Điều kiện chạy seed xác nhận chưa đạt. Trong phép chẩn đoán code Train đã học, cả hai nhánh RL tăng nhẹ so với SFT, chưa có lợi thế riêng của đối kháng.
