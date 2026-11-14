@@ -38,7 +38,7 @@
   },
   "runs": {
     "base": {
-      "label": "Qwen gốc",
+      "label": "Base Qwen",
       "result": {
         "status": "evaluation_completed",
         "action": "evaluate",
@@ -172,7 +172,7 @@
       }
     },
     "control": {
-      "label": "SFT + GRPO cố định",
+      "label": "SFT + Fixed GRPO",
       "result": {
         "status": "evaluation_completed",
         "action": "evaluate",
@@ -241,7 +241,7 @@
       }
     },
     "adaptive": {
-      "label": "SFT + GRPO đối kháng",
+      "label": "SFT + Adversarial GRPO",
       "result": {
         "status": "evaluation_completed",
         "action": "evaluate",

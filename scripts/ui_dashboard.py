@@ -16,10 +16,10 @@ EVIDENCE = ASSETS / "evidence"
 TRAIN_PYTHON = ASSETS / "env/Scripts/python.exe"
 SCRIPTS = PROJECT / "scripts"
 TASKS = {
-    "Kiểm tra GRPO với seed huấn luyện 43 và 44": "run_grpo_replicates.py",
-    "Sinh 256 ứng viên đối kháng sau SFT": "sample_post_warmup_pool.py",
-    "Huấn luyện hai nhánh GRPO — 96 bước mỗi nhánh": "run_post_warmup_round.py",
-    "Kiểm tra model local": "check_local_model.py",
+    "Evaluate GRPO with training seeds 43 and 44": "run_grpo_replicates.py",
+    "Generate 256 adversarial candidates after SFT": "sample_post_warmup_pool.py",
+    "Train two GRPO arms — 96 steps each": "run_post_warmup_round.py",
+    "Check local model": "check_local_model.py",
 }
 for key, value in {"GRADIO_ANALYTICS_ENABLED": "False", "GRADIO_TEMP_DIR": str(ASSETS / "temp/gradio"),
     "MPLCONFIGDIR": str(ASSETS / "cache/matplotlib-ui"), "HF_HUB_OFFLINE": "1", "PYTHONDONTWRITEBYTECODE": "1",
@@ -51,7 +51,7 @@ def folders():
 def selected_folder(name):
     folder = (EVIDENCE / (name or "")).resolve()
     if not name or not folder.is_relative_to(EVIDENCE.resolve()) or not (folder / "result.json").is_file():
-        raise ValueError("Chọn một lượt chạy trong danh sách")
+        raise ValueError("Select a run from the list")
     return folder
 
 
@@ -67,12 +67,12 @@ def overview():
             continue
         sources = [(result.get("model_variant", ""), result.get("metrics"))]
         if result.get("comparison") and not result.get("metrics"):
-            sources = [("Gốc", result["comparison"].get("baseline")), ("Sau GRPO", result["comparison"].get("after_static_grpo"))]
+            sources = [("Base", result["comparison"].get("baseline")), ("After GRPO", result["comparison"].get("after_static_grpo"))]
         for variant, metrics in sources:
             if not metrics:
                 continue
             split = result.get("split") or ("Train" if folder.name.startswith("train-diagnostic-") else "Validation")
-            variant = {"original_base": "Gốc", "base_plus_adapter": "Có adapter (xem log)"}.get(variant, variant)
+            variant = {"original_base": "Base", "base_plus_adapter": "With adapter (see log)"}.get(variant, variant)
             table.append([folder.name, variant, result.get("prompt_version", ""), split, metrics.get("generated_tests"), percent(metrics.get("valid_rate")),
                           percent(metrics.get("io_accuracy")), percent(metrics.get("attack_rate")),
                           str(metrics.get("cases_detected_with_up_to_4_tests")) + "/" + str(metrics.get("evaluated_cases"))])
@@ -94,15 +94,15 @@ def curves(name):
     series = scalar_rows(folder)
     figure, axes = plt.subplots(1, 2, figsize=(11, 4), facecolor="#fcfcfa")
     sft = (folder / "sft-steps.jsonl").exists()
-    for axis, tag, title, color in ((axes[0], "sft/loss" if sft else "rollout/reward_mean", "Loss SFT" if sft else "Reward trung bình", "#546d58"),
-                                    (axes[1], "gradient/norm_observed", "Độ lớn gradient", "#7e8a76")):
+    for axis, tag, title, color in ((axes[0], "sft/loss" if sft else "rollout/reward_mean", "Loss SFT" if sft else "Mean reward", "#546d58"),
+                                    (axes[1], "gradient/norm_observed", "Gradient norm", "#7e8a76")):
         points = [(step, value) for key, step, value in series if key == tag]
         if points:
             axis.plot([p[0] for p in points], [p[1] for p in points], color=color, linewidth=1.8)
         else:
             axis.text(0.5, 0.5, "No training scalars in this run", ha="center", va="center", transform=axis.transAxes)
         axis.set_title(title, fontsize=12, color="#3d4936", loc="left", pad=16)
-        axis.set_xlabel("Nhóm" if axis is axes[0] and not sft else "Bước cập nhật", fontsize=10, color="#8a9381")
+        axis.set_xlabel("Group" if axis is axes[0] and not sft else "Update step", fontsize=10, color="#8a9381")
         axis.set_facecolor("#fcfcfa")
         axis.tick_params(colors="#8a9381", labelsize=9, length=0, pad=8)
         axis.grid(axis="y", alpha=0.12)
@@ -124,14 +124,14 @@ class Jobs:
 
     def start(self, task):
         if task not in TASKS:
-            raise ValueError("Tác vụ không hợp lệ")
+            raise ValueError("Invalid task")
         return self.launch(task, SCRIPTS / TASKS[task])
 
     def start_demo(self, key, seed):
         from ui_demo import catalog
         data = catalog()
         if key not in data["cases"] or int(seed) not in (42, 43, 44):
-            raise ValueError("Lựa chọn Demo không hợp lệ")
+            raise ValueError("Invalid demo selection")
         pointer = read_json(PROJECT / "DEMO_CATALOG.json")
         return self.launch("Demo · " + data["cases"][key]["title"], SCRIPTS / "live_demo_worker.py",
                            {"case_key": key, "seed": int(seed), "catalog_path": pointer["path"], "catalog_sha256": pointer["sha256"]})
@@ -139,9 +139,9 @@ class Jobs:
     def launch(self, task, target, request=None):
         with self.lock:
             if self.process is not None and self.process.poll() is None:
-                raise ValueError("Một tác vụ đang chạy. Hãy đợi tác vụ đó hoàn tất.")
+                raise ValueError("A job is already running. Wait for it to finish.")
             if not target.is_file() or not TRAIN_PYTHON.is_file():
-                raise ValueError("Không tìm thấy Python hoặc chương trình của đồ án")
+                raise ValueError("Python or project script not found")
             self.session = EVIDENCE / "ui-jobs" / datetime.now().strftime("%Y%m%d-%H%M%S-%f")
             self.session.mkdir(parents=True, exist_ok=False)
             self.log = self.session / "console.txt"
@@ -149,7 +149,7 @@ class Jobs:
             if request is not None:
                 shutil.copy2(request["catalog_path"], self.session / "catalog.json")
                 if hashlib.sha256((self.session / "catalog.json").read_bytes()).hexdigest() != request["catalog_sha256"]:
-                    raise ValueError("Dữ liệu Demo đã thay đổi")
+                    raise ValueError("Demo data has changed")
                 request["created_at"] = datetime.now().astimezone().isoformat()
                 (self.session / "request.json").write_text(json.dumps(request, ensure_ascii=False, indent=2), encoding="utf-8")
                 command += ["--root", str(self.session)]
@@ -171,7 +171,7 @@ class Jobs:
                 parent = psutil.Process(self.process.pid)
                 metadata = read_json(self.session / "launch.json")
                 if abs(parent.create_time() - metadata["create_time"]) > 0.1 or parent.cmdline() != metadata["command"]:
-                    raise RuntimeError("Tiến trình không còn khớp lượt đã khởi chạy; không tự động dừng.")
+                    raise RuntimeError("The process no longer matches the launched job and will not be stopped automatically.")
                 processes = list(reversed(parent.children(recursive=True))) + [parent]
                 for process in processes:
                     try:
@@ -186,23 +186,23 @@ class Jobs:
                         pass
                 _, alive = psutil.wait_procs(alive, timeout=3)
                 if alive:
-                    raise RuntimeError("Chưa dừng được tác vụ; kiểm tra tiến trình trước khi chạy lượt khác.")
+                    raise RuntimeError("Could not stop the job. Check the process before starting another run.")
                 self.stopped = True
                 (self.session / "stopped.json").write_text(json.dumps({"stopped_at": datetime.now().astimezone().isoformat(), "returncode": self.process.poll()}), encoding="utf-8")
         return self.status()
 
     def status(self):
         if self.process is None:
-            return "Sẵn sàng — chưa có tác vụ được chạy từ giao diện.", ""
+            return "Ready — no jobs have been started from the interface.", ""
         code = self.process.poll()
         if code is None:
-            state = "Đang chạy"
+            state = "Running"
         elif self.stopped:
-            state = "Đã yêu cầu dừng; chỉ kết quả đã ghi được giữ"
+            state = "Stop requested; only saved results are retained"
         elif code == 0:
-            state = "Đã hoàn tất"
+            state = "Completed"
         else:
-            state = "Có lỗi; xem log bên dưới (mã " + str(code) + ")"
+            state = "Error; see the log below (code " + str(code) + ")"
         return state + " · " + self.task, tail(self.log)
 
 
@@ -227,35 +227,35 @@ def build_ui():
         return list(dict.fromkeys(latest + replicated + older))
     training_runs = training_choices()
     def training_options():
-        labels = ("GRPO đối kháng sau SFT · 96 bước", "GRPO cố định sau SFT · 96 bước", "SFT khởi động · 72 bước")
+        labels = ("Adversarial GRPO after SFT · 96 steps", "Fixed GRPO after SFT · 96 steps", "SFT warm-up · 72 steps")
         choices = []
         for i, name in enumerate(training_choices()):
             parts = Path(name).parts
             label = labels[i] if i < 3 else name
             if len(parts) == 3 and parts[1] in ("seed-43", "seed-44") and parts[2] in ("train-control", "train-adversarial"):
-                arm = "cố định" if parts[2] == "train-control" else "đối kháng"
-                label = f"GRPO {arm} · seed train {parts[1][5:]} · 96 bước"
+                arm = "fixed" if parts[2] == "train-control" else "adversarial"
+                label = f"GRPO {arm} · training seed {parts[1][5:]} · 96 steps"
             choices.append((label, name))
         return choices
     training = training_runs[0] if training_runs else None
     initial, log, running = workbench(EVIDENCE, JOBS)
-    with gr.Blocks(title="Sinh test đối kháng", analytics_enabled=False) as app:
-        gr.HTML('<h1>Sinh test đối kháng</h1>', elem_id="app-header")
+    with gr.Blocks(title="Adversarial Test Generation", analytics_enabled=False) as app:
+        gr.HTML('<h1>Adversarial Test Generation</h1>', elem_id="app-header")
         with gr.Tab("Demo"):
             with gr.Row(elem_id="demo-selectors"):
-                case = gr.Dropdown(ui_demo.choices(), value=ui_demo.EXAMPLES[0][1], label="Bài toán", scale=5)
+                case = gr.Dropdown(ui_demo.choices(), value=ui_demo.EXAMPLES[0][1], label="Problem", scale=5)
                 seed = gr.Radio([42, 43, 44], value=42, label="Seed sinh test", scale=1, min_width=220)
             with gr.Row(elem_id="example-buttons"):
                 example_buttons = [gr.Button(label, size="sm") for label, _, _ in ui_demo.EXAMPLES]
             context = gr.HTML(ui_demo.context(ui_demo.EXAMPLES[0][1]))
-            mode = gr.Radio(["Bản ghi đã lưu", "Chạy trên máy"], value="Bản ghi đã lưu", show_label=False, container=False)
+            mode = gr.Radio(["Saved records", "Local inference"], value="Saved records", show_label=False, container=False)
             cached = gr.HTML(ui_demo.saved(ui_demo.EXAMPLES[0][1], 42))
             with gr.Group(visible=False, elem_id="live-demo-panel") as live_group:
                 with gr.Row():
-                    run_demo = gr.Button("Chạy ba model", variant="primary", elem_id="run-demo")
-                    stop_demo = gr.Button("Dừng lượt chạy", interactive=False)
+                    run_demo = gr.Button("Run three models", variant="primary", elem_id="run-demo")
+                    stop_demo = gr.Button("Stop run", interactive=False)
                 live_result = gr.HTML(ui_demo.live_view(None))
-            with gr.Accordion("Log chạy trực tiếp", open=False):
+            with gr.Accordion("Live inference log", open=False):
                 demo_log = gr.Textbox(show_label=False, lines=10, interactive=False)
 
             def selection(key, value):
@@ -264,7 +264,7 @@ def build_ui():
             seed.change(selection, [case, seed], [context, cached])
             for button, (_, key, value) in zip(example_buttons, ui_demo.EXAMPLES):
                 button.click(lambda k=key, s=value: (k, s), outputs=[case, seed])
-            mode.change(lambda value: (gr.HTML(visible=value == "Bản ghi đã lưu"), gr.Group(visible=value == "Chạy trên máy")), mode, [cached, live_group])
+            mode.change(lambda value: (gr.HTML(visible=value == "Saved records"), gr.Group(visible=value == "Local inference")), mode, [cached, live_group])
 
             def refresh_demo(key, value):
                 active = JOBS.process is not None and JOBS.process.poll() is None
@@ -289,29 +289,29 @@ def build_ui():
             run_demo.click(launch_demo, [case, seed], demo_outputs, concurrency_limit=1)
             stop_demo.click(lambda key, value: (JOBS.stop(), refresh_demo(key, value))[1], [case, seed], demo_outputs, queue=False)
             gr.Timer(2).tick(refresh_demo, [case, seed], demo_outputs, show_progress="hidden", queue=False)
-        with gr.Tab("Kết quả"):
-            metric_seed = gr.Radio(["Trung bình 3 seed", "42", "43", "44"], value="Trung bình 3 seed", label="Kết quả sinh test")
-            summary = gr.HTML(ui_demo.comparison("Trung bình 3 seed"))
+        with gr.Tab("Results"):
+            metric_seed = gr.Radio(["Mean across 3 seeds", "42", "43", "44"], value="Mean across 3 seeds", label="Test generation results")
+            summary = gr.HTML(ui_demo.comparison("Mean across 3 seeds"))
             metric_seed.change(ui_demo.comparison, metric_seed, summary)
-            with gr.Accordion("Kết quả khi thay seed huấn luyện", open=False):
+            with gr.Accordion("Training seed sensitivity", open=False):
                 stability = gr.HTML(ui_demo.training_stability(), elem_id="training-stability")
-                refresh_stability = gr.Button("Cập nhật kết quả seed train", size="sm")
+                refresh_stability = gr.Button("Refresh training seed results", size="sm")
                 refresh_stability.click(ui_demo.training_stability, outputs=stability)
-            with gr.Accordion("Phạm vi và cấu hình", open=False):
-                gr.Markdown("Hai nhánh GRPO bắt đầu từ cùng adapter SFT, mỗi nhánh 96 bước và 384 mẫu sinh. Nhánh đối kháng thay 20/96 lượt bằng 11 chương trình do adversary sinh. Adversary giữ nguyên trọng số; protagonist được cập nhật bằng reward.\n\nSau SFT kế thừa một lượt GRPO sơ bộ trước đó, vì vậy đây là so sánh ba mốc sau khởi động. Các bài toán là dữ liệu Python nhỏ tự xây dựng, chưa tái hiện benchmark lớn của bài báo.\n\nSeed huấn luyện: 42. Seed sinh test: 42, 43, 44. Chưa đánh giá tập Test. Các ví dụ trong Demo dùng để minh họa; bảng này tổng hợp toàn bộ Validation.")
-            with gr.Accordion("Lịch sử cũ", open=False):
-                gr.Dataframe(value=overview(), headers=["Lượt chạy", "Model", "Prompt", "Tập", "Số test", "Hợp lệ (%)", "Expected đúng (%)", "Test bắt lỗi (%)", "Phiên bản phát hiện"], interactive=False, wrap=True)
-        with gr.Tab("Thực nghiệm"):
+            with gr.Accordion("Scope and configuration", open=False):
+                gr.Markdown("Both GRPO arms start from the same SFT adapter, with 96 steps and 384 generated samples per arm. The adversarial arm replaces 20/96 slots with 11 adversary-generated programs. Adversary weights remain fixed; the protagonist is updated from rewards.\n\nThe SFT checkpoint inherits an earlier GRPO pilot, so this comparison covers three post-warm-up checkpoints. These small, internally constructed Python problems do not reproduce the large benchmarks in the paper.\n\nTraining seed: 42. Generation seeds: 42, 43, 44. Test has not been evaluated for this study. Demo cases are illustrative; the table covers all Validation cases.")
+            with gr.Accordion("Earlier runs", open=False):
+                gr.Dataframe(value=overview(), headers=["Run", "Model", "Prompt", "Split", "Tests", "Valid (%)", "Correct expected outputs (%)", "Bug-detecting tests (%)", "Cases detected"], interactive=False, wrap=True)
+        with gr.Tab("Experiments"):
             with gr.Row(elem_id="workspace-row"):
                 with gr.Column(scale=0, min_width=290, elem_id="controls"):
-                    gr.Markdown("### Tác vụ")
+                    gr.Markdown("### Task")
                     task = gr.Dropdown(list(TASKS), value=next(iter(TASKS)), show_label=False, container=False)
-                    start = gr.Button("Bắt đầu", variant="primary", elem_id="start-run", interactive=not running)
-                    stop = gr.Button("Dừng", elem_id="stop-run", interactive=running)
+                    start = gr.Button("Start", variant="primary", elem_id="start-run", interactive=not running)
+                    stop = gr.Button("Stop", elem_id="stop-run", interactive=running)
                     gr.HTML('<div class="model-line"><span>Model</span><strong>Qwen3.5 · 2B</strong></div>', elem_id="model-caption")
                 with gr.Column(scale=1, min_width=360, elem_id="workspace-column"):
                     progress = gr.HTML(initial, elem_id="workbench-view")
-                    with gr.Accordion("Log chi tiết", open=False, elem_id="log-details"):
+                    with gr.Accordion("Detailed log", open=False, elem_id="log-details"):
                         live = gr.Textbox(value=log, show_label=False, lines=12, max_lines=18, interactive=False, container=False)
             def refresh_job():
                 value, text, active = workbench(EVIDENCE, JOBS)
@@ -329,18 +329,18 @@ def build_ui():
             start.click(start_job, task, outputs, concurrency_limit=1)
             stop.click(stop_job, outputs=outputs, queue=False)
             gr.Timer(2).tick(refresh_job, outputs=outputs, show_progress="hidden", queue=False)
-        with gr.Tab("Huấn luyện"):
+        with gr.Tab("Training"):
             with gr.Row():
-                selected = gr.Dropdown(training_options(), value=training, label="Lượt chạy", scale=4)
-                refresh_choices = gr.Button("Cập nhật", scale=0)
+                selected = gr.Dropdown(training_options(), value=training, label="Run", scale=4)
+                refresh_choices = gr.Button("Refresh", scale=0)
             plot = gr.Plot(value=curves(training) if training else None, show_label=False, elem_id="training-plot")
-            with gr.Accordion("Thông tin và log chi tiết", open=False):
-                data = gr.JSON(label="Thông tin lượt chạy", value=details(training)[0] if training else {})
-                console = gr.Textbox(label="Phần cuối log", lines=10, value=details(training)[1] if training else "", interactive=False)
+            with gr.Accordion("Run details and log", open=False):
+                data = gr.JSON(label="Run information", value=details(training)[0] if training else {})
+                console = gr.Textbox(label="Log tail", lines=10, value=details(training)[1] if training else "", interactive=False)
             selected.change(lambda value: (curves(value), *details(value)), selected, [plot, data, console])
             refresh_choices.click(lambda: gr.Dropdown(choices=training_options()), outputs=selected)
         with gr.Tab("TensorBoard"):
-            gr.HTML('<a href="http://127.0.0.1:6006" target="_blank" rel="noopener">Mở trong tab mới ↗</a>', elem_id="tensorboard-link")
+            gr.HTML('<a href="http://127.0.0.1:6006" target="_blank" rel="noopener">Open in new tab ↗</a>', elem_id="tensorboard-link")
             gr.HTML('<iframe title="TensorBoard" src="http://127.0.0.1:6006" style="width:100%;height:760px;border:1px solid #e0e5da;background:white"></iframe>')
     return app
 
@@ -367,7 +367,7 @@ def main():
     app.launch(server_name="127.0.0.1", server_port=args.port, share=False, inbrowser=False,
                theme=gr.themes.Base(primary_hue="slate", neutral_hue="slate", radius_size="sm", font=["Segoe UI", "Arial", "sans-serif"], font_mono=["Consolas", "monospace"]),
                css=stylesheet,
-               js="() => { document.documentElement.classList.remove('dark'); const b = document.getElementById('stop-run'); if (b) b.title = 'Dừng lượt đang chạy. Chỉ kết quả đã lưu được giữ.'; }", footer_links=[])
+               js="() => { document.documentElement.classList.remove('dark'); const b = document.getElementById('stop-run'); if (b) b.title = 'Stop the active run. Only saved results are retained.'; }", footer_links=[])
 
 
 if __name__ == "__main__":

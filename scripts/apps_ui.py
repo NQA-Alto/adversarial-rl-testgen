@@ -5,14 +5,14 @@ import threading
 from pathlib import Path
 
 from apps_core import ASSETS, DATA, digest, load_cases, read
-from apps_presentation import comparison, problem, result_card, selected_key, study, summary_table, variants
+from apps_presentation import case_title, comparison, problem, result_card, selected_key, study, summary_table, variants
 
 
 PROJECT = Path(__file__).resolve().parents[1]
 STATE = PROJECT / "APPS_STATE.json"
 TRAIN_PYTHON = ASSETS / "env/Scripts/python.exe"
 LOCK = threading.Lock()
-TITLE = "Huấn luyện tăng cường đối kháng để sinh ca kiểm thử"
+TITLE = "Adversarial Reinforcement Learning for Test Generation"
 CSS = """
 .gradio-container { max-width: 1180px !important; margin: auto; background: #fafaf7; --block-label-text-color: #59665c; --button-primary-background-fill: #365b46; --button-primary-background-fill-hover: #284b37; --button-primary-border-color: #365b46; }
 .gradio-container button { box-shadow: none !important; }
@@ -112,8 +112,8 @@ def training_plot(folder):
     figure, axes = plt.subplots(1, 2, figsize=(10, 3.4), facecolor="#fafaf7")
     rows = scalar_rows(Path(folder))
     for axis, tag, title, xlabel, ylabel in (
-        (axes[0], "rollout/reward_mean", "Reward", "Nhóm sinh test", "Reward trung bình (0–1)"),
-        (axes[1], "gradient/norm_observed", "Cập nhật adapter", "Bước cập nhật", "Độ lớn gradient"),
+        (axes[0], "rollout/reward_mean", "Reward", "Generation group", "Mean reward (0–1)"),
+        (axes[1], "gradient/norm_observed", "Adapter updates", "Update step", "Gradient norm"),
     ):
         points = [(step, value) for key, step, value in rows if key == tag]
         if points:
@@ -136,22 +136,22 @@ def training_view():
     if report:
         records.append(report["last_training"])
     if not records:
-        return "Chưa có lượt huấn luyện.", None, {}
+        return "No training runs available.", None, {}
     record = max(records, key=lambda item: read(Path(item["path"]) / "result.json").get("started_at", ""))
     result = read(Path(record["path"]) / "result.json")
-    text = f'**GRPO · {result["optimizer_steps"]} bước** · {result["nonzero_gradient_steps"]} bước có cập nhật gradient'
+    text = f'**GRPO · {result["optimizer_steps"]} steps** · {result["nonzero_gradient_steps"]} steps with nonzero gradients'
     if report and record["path"] == report["last_training"]["path"]:
-        text = f'**GRPO đối kháng · vòng 2/2 · {result["optimizer_steps"]} bước** · {result["nonzero_gradient_steps"]} bước có cập nhật gradient'
+        text = f'**Adversarial GRPO · round 2/2 · {result["optimizer_steps"]} steps** · {result["nonzero_gradient_steps"]} steps with nonzero gradients'
     return text, training_plot(record["path"]), result
 
 
 def run_live(identity, variant):
     if not LOCK.acquire(blocking=False):
-        yield "Một tác vụ đang chạy.", ""
+        yield "A job is already running.", ""
         return
     try:
         if gpu_busy():
-            yield "GPU đang chạy thực nghiệm. Hãy đợi lượt hiện tại hoàn tất.", ""
+            yield "An experiment is using the GPU. Wait for it to finish.", ""
             return
         current = state()
         if variant == current.get("selected_local_model", {}).get("label"):
@@ -162,7 +162,7 @@ def run_live(identity, variant):
         if version["adapter"]:
             adapter = Path(version["adapter"])
             if version.get("adapter_sha256") and digest(adapter / "adapter_model.safetensors") != version["adapter_sha256"]:
-                raise ValueError("Adapter không khớp bản đã lưu.")
+                raise ValueError("The adapter does not match the saved snapshot.")
             command += ["--adapter", str(adapter)]
         environment = dict(os.environ, PYTHONUTF8="1", PYTHONDONTWRITEBYTECODE="1", HF_HUB_OFFLINE="1",
                            TEMP=str(ASSETS / "temp"), TMP=str(ASSETS / "temp"))
@@ -177,15 +177,15 @@ def run_live(identity, variant):
             if line.startswith("EVIDENCE: "):
                 folder = Path(line.removeprefix("EVIDENCE: ").strip())
                 if not folder.resolve().is_relative_to((ASSETS / "evidence").resolve()):
-                    raise ValueError("Đường dẫn kết quả không hợp lệ.")
-            yield "Đang sinh test…", log
+                    raise ValueError("Invalid result path.")
+            yield "Generating tests…", log
         if process.wait() != 0 or folder is None:
-            yield "Lượt chạy chưa hoàn tất. Xem nhật ký bên dưới.", log
+            yield "The run did not complete. Check the log below.", log
             return
         result = read(folder / "result.json")
         if result["status"] != "evaluation_completed":
-            raise ValueError("Lượt chạy chưa hoàn tất.")
-        yield card(version["label"] + " · chạy trực tiếp", predictions(folder).get(identity)), log
+            raise ValueError("The run did not complete.")
+        yield card(version["label"] + " · live inference", predictions(folder).get(identity)), log
     finally:
         LOCK.release()
 
@@ -195,7 +195,7 @@ def build_ui():
     import apps_jobs
     current, report = state(), study()
     cases = validation_cases()
-    choices = [(case["title"] + " · Lỗi " + case["case_id"].rsplit("/m", 1)[-1], case["case_id"]) for case in cases]
+    choices = [(case_title(case) + " · Fault " + case["case_id"].rsplit("/m", 1)[-1], case["case_id"]) for case in cases]
     identity = next((case["case_id"] for case in cases if case["case_id"] == "apps-train-2968/m1"), cases[0]["case_id"])
     versions = variants(current)
     selected_model = current.get("selected_local_model")
@@ -203,70 +203,70 @@ def build_ui():
     with gr.Blocks(title=TITLE, analytics_enabled=False) as app:
         gr.HTML('<header class="apps-header"><h1>' + TITLE + '</h1><p>APPS Introductory · Qwen3.5-2B</p></header>')
         with gr.Tab("Demo"):
-            selected = gr.Dropdown(choices, value=identity, label="Bài toán")
+            selected = gr.Dropdown(choices, value=identity, label="Problem")
             details = gr.HTML(context(identity))
             with gr.Row():
-                version = gr.Radio([(v["label"], v["key"]) for v in versions], value=selected_key(current), label="Phiên bản", scale=4)
-                button = gr.Button("Sinh 4 test mới", variant="primary", scale=1)
-            gr.Markdown("#### Kết quả đã lưu · Validation")
+                version = gr.Radio([(v["label"], v["key"]) for v in versions], value=selected_key(current), label="Variant", scale=4)
+                button = gr.Button("Generate 4 tests", variant="primary", scale=1)
+            gr.Markdown("#### Saved results · Validation")
             comparison_view = gr.HTML(saved(identity))
             live = gr.HTML()
-            with gr.Accordion("Nhật ký chạy trực tiếp", open=False):
+            with gr.Accordion("Live inference log", open=False):
                 log = gr.Textbox(lines=8, max_lines=8, interactive=False, show_label=False)
             selected.change(lambda name, key: (context(name), saved(name, key), "", ""), [selected, version], [details, comparison_view, live, log])
             version.change(lambda name, key: (saved(name, key), "", ""), [selected, version], [comparison_view, live, log])
             button.click(run_live, [selected, version], [live, log], concurrency_limit=1)
-        with gr.Tab("Kết quả"):
+        with gr.Tab("Results"):
             if report:
-                gr.Markdown("### Đánh giá cuối trên Test")
+                gr.Markdown("### Final held-out Test evaluation")
                 chosen_label = next(item["label"] for item in versions if item["key"] == report["selected_variant"])
-                gr.Markdown("Phiên bản sử dụng: **" + chosen_label + "**, chọn trên Validation.")
+                gr.Markdown("Selected variant: **" + chosen_label + "**, selected on Validation.")
                 gr.HTML(summary_table(report, "test"))
                 gr.Image(report["test_chart_path"], show_label=False, interactive=False)
-                gr.Markdown("Trung bình ± SD qua ba seed sinh 42/43/44; một seed huấn luyện. Mỗi code sinh 4 test. Mẫu không hợp lệ vẫn tính trong mẫu số.")
-                with gr.Accordion("Validation và thiết lập so sánh", open=False):
+                gr.Markdown("Mean ± SD across generation seeds 42/43/44; one training seed. Four tests per case. Invalid outputs remain in the denominator.")
+                with gr.Accordion("Validation and comparison setup", open=False):
                     gr.HTML(summary_table(report, "validation"))
                     gr.Image(report["validation_chart_path"], show_label=False, interactive=False)
-                    gr.Markdown("Hai nhánh GRPO dùng cùng SFT840 cha, cùng reward và cùng 2 × 32 bước học. Nhánh đối kháng làm mới code sau vòng đầu. Checkpoint được chọn trên Validation trước khi mở Test.")
-                    gr.Dataframe(value=report["round_rows"], headers=["Vòng", "Code ứng viên", "Được nhận", "Vị trí đối kháng /145", "Test tiếp xúc khi học"], interactive=False)
-                with gr.Accordion("Phân tích kết quả test", open=False):
-                    gr.Dataframe(value=report["test_error_rows"], headers=["Phiên bản", "Phát hiện lỗi", "Đúng, chưa bắt lỗi", "Expected sai", "Không hợp lệ"], interactive=False)
-                    gr.Markdown("Số lượng trên 216 test mỗi phiên bản, gộp ba seed sinh.")
+                    gr.Markdown("Both GRPO arms use the same SFT840 parent, reward and 2 × 32 training steps. The adversarial arm refreshes code after the first round. The checkpoint was selected on Validation before Test evaluation.")
+                    gr.Dataframe(value=report["round_rows"], headers=["Round", "Candidate programs", "Accepted", "Adversarial slots /145", "Test exposure during training"], interactive=False)
+                with gr.Accordion("Test error analysis", open=False):
+                    gr.Dataframe(value=report["test_error_rows"], headers=["Variant", "Bug detected", "Correct, no bug detected", "Wrong expected output", "Invalid"], interactive=False)
+                    gr.Markdown("Counts over 216 tests per variant, pooled across three generation seeds.")
             else:
-                gr.Markdown("### Kiểm chứng checkpoint")
+                gr.Markdown("### Checkpoint evaluation")
                 if selected_model:
                     values = selected_model["mean"]
-                    gr.Dataframe(value=[["SFT840", round(values["correct_expected"], 2), round(values["cases_detected"], 2)]], headers=["Phiên bản", "Expected đúng /60", "Code phát hiện /15"], interactive=False)
+                    gr.Dataframe(value=[["SFT840", round(values["correct_expected"], 2), round(values["cases_detected"], 2)]], headers=["Variant", "Correct expected outputs /60", "Cases detected /15"], interactive=False)
                     gr.Image(selected_model["chart_path"], show_label=False, interactive=False)
-                gr.Markdown("Vòng đối kháng trên tập mở rộng đang chạy. Kết quả sẽ cập nhật sau khi kiểm chứng hoàn tất.")
-        with gr.Tab("Dữ liệu"):
-            gr.Dataframe(value=[[name, spec["problems"], spec["cases"]] for name, spec in manifest["splits"].items()], headers=["Tập dữ liệu", "Bài toán", "Code lỗi"], interactive=False)
-            gr.Markdown("Nguồn: [APPS — codeparrot/apps](https://huggingface.co/datasets/codeparrot/apps), mức Introductory. Dùng tập con Python dạng gọi hàm, với miền input hữu hạn. Các tập chia theo bài toán trong APPS Train; đây không phải toàn bộ benchmark APPS.")
-            with gr.Accordion("Chuẩn bị và chia dữ liệu", open=False):
-                gr.Markdown("Code lỗi ban đầu tạo bằng thay đổi AST từ lời giải nguồn. Hai lời giải phải qua test gốc và đồng ý trên miền thực nghiệm. Code đối kháng sinh trong lúc học được lọc riêng. Tập Test chính thức của APPS không được sử dụng.")
+                gr.Markdown("No completed expanded adversarial study is available in the configured local assets.")
+        with gr.Tab("Data"):
+            gr.Dataframe(value=[[name, spec["problems"], spec["cases"]] for name, spec in manifest["splits"].items()], headers=["Dataset split", "Problem", "Faulty programs"], interactive=False)
+            gr.Markdown("Source: [APPS — codeparrot/apps](https://huggingface.co/datasets/codeparrot/apps), Introductory level. This Python function-call subset uses finite input domains. Problems are split within APPS Train; this is not the full APPS benchmark.")
+            with gr.Accordion("Dataset preparation and splits", open=False):
+                gr.Markdown("Initial faulty programs are AST mutations of source solutions. Two reference solutions must pass the original tests and agree across the experimental domain. Adversarial code generated during training is filtered separately. The official APPS Test split is not used.")
                 gr.JSON(manifest, show_label=False)
-        with gr.Tab("Thực nghiệm"):
-            gr.Markdown("### Chạy tác vụ")
+        with gr.Tab("Experiments"):
+            gr.Markdown("### Run a job")
             tasks = apps_jobs.TASKS[:4] if selected_model else apps_jobs.TASKS
-            task = gr.Dropdown(tasks, value=tasks[0], label="Tác vụ")
-            steps = gr.Slider(minimum=1, maximum=96, step=1, value=32, label="Số bước GRPO", visible=False)
-            scope = gr.Markdown("GRPO trên code Train cố định, khởi tạo từ adapter SFT đã lưu.", visible=False)
+            task = gr.Dropdown(tasks, value=tasks[0], label="Task")
+            steps = gr.Slider(minimum=1, maximum=96, step=1, value=32, label="GRPO steps", visible=False)
+            scope = gr.Markdown("GRPO on fixed Train code, initialized from the saved SFT adapter.", visible=False)
             task.change(lambda value: (gr.update(visible=value == apps_jobs.TASKS[2]), gr.update(visible=value == apps_jobs.TASKS[2])), task, [steps, scope])
             with gr.Row():
-                start = gr.Button("Bắt đầu", variant="primary")
-                stop = gr.Button("Dừng")
-            status = gr.Textbox(value=apps_jobs.snapshot()[0], label="Trạng thái", interactive=False)
-            with gr.Accordion("Nhật ký và kết quả", open=False):
-                automatic = gr.Checkbox(value=True, label="Tự cập nhật")
+                start = gr.Button("Start", variant="primary")
+                stop = gr.Button("Stop")
+            status = gr.Textbox(value=apps_jobs.snapshot()[0], label="Status", interactive=False)
+            with gr.Accordion("Logs and results", open=False):
+                automatic = gr.Checkbox(value=True, label="Auto-refresh")
                 console = gr.Textbox(value=apps_jobs.snapshot()[1], lines=12, max_lines=12, label="Log", interactive=False, autoscroll=False, elem_id="apps-job-log")
                 with gr.Row():
-                    first = gr.Button("Đầu log")
-                    last = gr.Button("Cuối log")
-                    refresh = gr.Button("Cập nhật")
+                    first = gr.Button("Top of log")
+                    last = gr.Button("Bottom of log")
+                    refresh = gr.Button("Refresh")
                 first.click(fn=None, js="() => { const el = document.querySelector('#apps-job-log textarea'); if (el) el.scrollTop = 0; }")
                 last.click(fn=None, js="() => { const el = document.querySelector('#apps-job-log textarea'); if (el) el.scrollTop = el.scrollHeight; }")
-                folder = gr.Textbox(value=apps_jobs.snapshot()[2], label="Nơi lưu", interactive=False)
-                gr.Markdown("Dừng sẽ giữ kết quả đã lưu; cập nhật chưa lưu của lượt hiện tại sẽ mất.")
+                folder = gr.Textbox(value=apps_jobs.snapshot()[2], label="Output directory", interactive=False)
+                gr.Markdown("Stopping preserves saved results. Unsaved updates from the current run will be lost.")
             outputs = [status, console, folder]
             start.click(lambda name, count: apps_jobs.start(name, count, LOCK, gpu_busy), [task, steps], outputs, concurrency_limit=1)
             stop.click(apps_jobs.stop, outputs=outputs, queue=False)
@@ -275,13 +275,13 @@ def build_ui():
                 a, b, c = apps_jobs.snapshot()
                 return a, b if enabled else gr.skip(), c
             gr.Timer(2).tick(poll, automatic, outputs, show_progress="hidden", queue=False)
-            with gr.Accordion("Đường học GRPO", open=False):
+            with gr.Accordion("GRPO learning curves", open=False):
                 text, figure, info = training_view()
                 summary = gr.Markdown(text)
                 plot = gr.Plot(figure, show_label=False)
-                update = gr.Button("Cập nhật lượt học")
-                with gr.Accordion("Thông số", open=False):
+                update = gr.Button("Refresh training run")
+                with gr.Accordion("Parameters", open=False):
                     raw = gr.JSON(info, show_label=False)
-                    gr.Markdown("[Mở TensorBoard](http://127.0.0.1:6006)")
+                    gr.Markdown("[Open TensorBoard](http://127.0.0.1:6006)")
                 update.click(training_view, outputs=[summary, plot, raw])
     return app

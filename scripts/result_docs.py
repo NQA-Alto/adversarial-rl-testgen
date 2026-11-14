@@ -67,7 +67,7 @@ NOTES = {'apps-pilot': ('Initial APPS pilot',
                             'initialization and the first 64 steps. Validation uses three generation seeds.',
                             'The 256-step checkpoint improved correct outputs and bug detection over the '
                             '64-step checkpoint in this run.',
-                            ['learning-curve.png']),
+                            ['comparison.png']),
  'apps-sft256-grpo': ('GRPO after SFT256',
                       'A 96-step GRPO stage starts from the SFT256 adapter and uses fixed Train code. Parent '
                       'and child are evaluated with the same three generation seeds.',
@@ -79,13 +79,13 @@ NOTES = {'apps-pilot': ('Initial APPS pilot',
                      'training run retains its own 64-step checkpoint for comparison.',
                      'SFT256 increased correct expected outputs but detected fewer functions. This trial '
                      'uses the earlier expected-first labels.',
-                     ['validation-comparison.png', 'learning-curve.png']),
+                     ['validation-comparison.png']),
  'apps-reward-ablation': ('GRPO reward weights',
                           'Both runs start from the same expected-first SFT64 adapter and use 96 GRPO steps. '
                           'Component weights 0.1/0.2/0.7 are compared with equal weights of 1/3.',
                           'Equal weights improved the seed-42 result slightly, but the gain was not '
                           'consistent when resampled with seeds 43/44.',
-                          ['validation-comparison.png', 'training-components.png']),
+                          ['validation-comparison.png']),
  'apps-error-analysis': ('Output errors in the initial adversarial trial',
                          'Validation outputs from expected-first checkpoints are classified by failure type '
                          'and compared with inputs that could expose a bug.',

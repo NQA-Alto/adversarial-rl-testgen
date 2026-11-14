@@ -65,7 +65,7 @@ def stop():
             except psutil.Error:
                 pass
     STATE.write_text(json.dumps({"processes": [], "stopped_at": time.time()}), encoding="utf-8")
-    print("Da dong giao dien va cac tien trinh do bo cong cu nay khoi chay.")
+    print("Stopped the interface and processes started by this launcher.")
 
 
 def ready(url):
@@ -78,7 +78,7 @@ def ready(url):
 
 def start(open_browser):
     if healthy():
-        print("Giao dien dang chay:", URL)
+        print("Interface is running:", URL)
         if open_browser:
             webbrowser.open(URL)
         return
@@ -86,7 +86,7 @@ def start(open_browser):
     for port in (7860, 6006):
         with socket.socket() as connection:
             if connection.connect_ex(("127.0.0.1", port)) == 0:
-                raise RuntimeError("Cong " + str(port) + " dang duoc ung dung khac su dung. Khong tu dong dong ung dung do.")
+                raise RuntimeError("Port " + str(port) + " is in use by another application. That application will not be stopped.")
     TOOLS.mkdir(parents=True, exist_ok=True)
     (ASSETS / "temp/gradio").mkdir(parents=True, exist_ok=True)
     (ASSETS / "evidence/tensorboard").mkdir(parents=True, exist_ok=True)
@@ -118,9 +118,9 @@ def start(open_browser):
                     webbrowser.open(URL)
                 return
             if not healthy():
-                raise RuntimeError("Mot dich vu da dung som. Xem log tai " + str(TOOLS))
+                raise RuntimeError("A service exited early. Check the logs at " + str(TOOLS))
             time.sleep(1)
-        raise RuntimeError("Dich vu chua san sang. Xem log tai " + str(TOOLS))
+        raise RuntimeError("Services are not ready. Check the logs at " + str(TOOLS))
     except BaseException:
         stop()
         raise

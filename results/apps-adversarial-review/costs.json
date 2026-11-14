@@ -1,7 +1,7 @@
 {
   "rows": [
     {
-      "stage": "SFT64 dùng chung",
+      "stage": "Shared SFT64",
       "arm": "shared",
       "kind": "sft",
       "seconds": 186.095,
@@ -11,7 +11,7 @@
       "measurement": "training_seconds"
     },
     {
-      "stage": "Probe Train vòng 1",
+      "stage": "Train probe, round 1",
       "arm": "adaptive",
       "kind": "probe",
       "seconds": 57.264,
@@ -21,7 +21,7 @@
       "measurement": "elapsed_seconds"
     },
     {
-      "stage": "Sinh và lọc code vòng 1",
+      "stage": "Code generation and filtering, round 1",
       "arm": "adaptive",
       "kind": "code_generation",
       "seconds": 148.055,
@@ -31,7 +31,7 @@
       "measurement": "elapsed_seconds"
     },
     {
-      "stage": "GRPO vòng 1",
+      "stage": "GRPO round 1",
       "arm": "control",
       "kind": "grpo",
       "seconds": 205.6885,
@@ -41,7 +41,7 @@
       "measurement": "Trainer train_runtime"
     },
     {
-      "stage": "Validation vòng 1",
+      "stage": "Validation round 1",
       "arm": "control",
       "kind": "evaluation",
       "seconds": 21.428,
@@ -51,7 +51,7 @@
       "measurement": "elapsed_seconds"
     },
     {
-      "stage": "GRPO vòng 1",
+      "stage": "GRPO round 1",
       "arm": "adaptive",
       "kind": "grpo",
       "seconds": 262.9781,
@@ -61,7 +61,7 @@
       "measurement": "Trainer train_runtime"
     },
     {
-      "stage": "Validation vòng 1",
+      "stage": "Validation round 1",
       "arm": "adaptive",
       "kind": "evaluation",
       "seconds": 19.968,
@@ -71,7 +71,7 @@
       "measurement": "elapsed_seconds"
     },
     {
-      "stage": "Probe Train vòng 2",
+      "stage": "Train probe, round 2",
       "arm": "adaptive",
       "kind": "probe",
       "seconds": 81.758,
@@ -81,7 +81,7 @@
       "measurement": "elapsed_seconds"
     },
     {
-      "stage": "Sinh và lọc code vòng 2",
+      "stage": "Code generation and filtering, round 2",
       "arm": "adaptive",
       "kind": "code_generation",
       "seconds": 367.976,
@@ -91,7 +91,7 @@
       "measurement": "elapsed_seconds"
     },
     {
-      "stage": "GRPO vòng 2",
+      "stage": "GRPO round 2",
       "arm": "control",
       "kind": "grpo",
       "seconds": 316.8161,
@@ -101,7 +101,7 @@
       "measurement": "Trainer train_runtime"
     },
     {
-      "stage": "Validation vòng 2",
+      "stage": "Validation round 2",
       "arm": "control",
       "kind": "evaluation",
       "seconds": 23.209,
@@ -111,7 +111,7 @@
       "measurement": "elapsed_seconds"
     },
     {
-      "stage": "GRPO vòng 2",
+      "stage": "GRPO round 2",
       "arm": "adaptive",
       "kind": "grpo",
       "seconds": 271.6463,
@@ -121,7 +121,7 @@
       "measurement": "Trainer train_runtime"
     },
     {
-      "stage": "Validation vòng 2",
+      "stage": "Validation round 2",
       "arm": "adaptive",
       "kind": "evaluation",
       "seconds": 21.2,

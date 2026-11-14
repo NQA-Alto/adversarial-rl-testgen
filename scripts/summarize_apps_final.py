@@ -11,7 +11,7 @@ from result_docs import write_result_readme
 
 
 FIELDS = ("valid_tests", "correct_expected", "bug_detecting_tests", "cases_detected")
-LABELS = {"base":"Qwen gốc", "sft":"SFT input-first", "grpo96":"GRPO 96 bước", "control":"GRPO cố định · 2 vòng", "adaptive":"GRPO đối kháng · 2 vòng"}
+LABELS = {"base":"Base Qwen", "sft":"SFT input-first", "grpo96":"GRPO · 96 steps", "control":"Fixed GRPO · 2 rounds", "adaptive":"Adversarial GRPO · 2 rounds"}
 
 
 def summarize(root):
@@ -73,7 +73,7 @@ def summarize(root):
     import matplotlib.pyplot as plt
     fig, axes = plt.subplots(2,2,figsize=(12,7.5),facecolor="white")
     names = list(summary)
-    for ax,f,title,maximum in zip(axes.flat,FIELDS,("Test hợp lệ","Test có expected đúng","Test bắt lỗi","Code phát hiện với tối đa 4 test"),(slots,slots,slots,total),strict=True):
+    for ax,f,title,maximum in zip(axes.flat,FIELDS,("Valid tests","Tests with correct expected outputs","Bug-detecting tests","Cases detected with up to 4 tests"),(slots,slots,slots,total),strict=True):
         values = [summary[name][f] for name in names]
         bars = ax.bar(range(len(names)),[v["mean"] for v in values],yerr=[v["sample_sd"] for v in values],capsize=4,
                       color=["#b5b7a9","#91a39a","#788f9b","#a29a7b","#38654e"][:len(names)])
@@ -82,12 +82,12 @@ def summarize(root):
                 bar.set_edgecolor("#29372f")
                 bar.set_linewidth(1.8)
             ax.annotate(f'{value["mean"]:.2f}',(bar.get_x()+bar.get_width()/2,value["mean"]+value["sample_sd"]),xytext=(0,5),textcoords="offset points",ha="center",fontsize=9)
-        ax.set(xticks=range(len(names)),xticklabels=[LABELS.get(n,n).replace(" · ","\n") for n in names],title=title,ylabel=f'Số lượng /{maximum}',ylim=(0,maximum))
+        ax.set(xticks=range(len(names)),xticklabels=[LABELS.get(n,n).replace(" · ","\n") for n in names],title=title,ylabel=f'Count /{maximum}',ylim=(0,maximum))
         ax.tick_params(axis="x",labelsize=8,rotation=12)
         ax.grid(axis="y",alpha=.15)
         ax.set_axisbelow(True)
         ax.spines[["top","right"]].set_visible(False)
-    fig.suptitle("Test phát triển · model được chọn từ Validation có viền đậm",fontsize=12)
+    fig.suptitle("Held-out Test · Validation-selected model outlined in bold",fontsize=12)
     fig.tight_layout(rect=(0,0,1,.96))
     fig.savefig(output / "comparison.png",dpi=180,facecolor="white")
     plt.close(fig)

@@ -100,24 +100,24 @@ def main():
         metric = result["aggregate"][arm]["empirical_case_detection_at_4"]
         axes[0].bar(index, 100 * metric["mean"], yerr=100 * metric["sample_std"], width=.55, color=colors[index], capsize=5)
         axes[0].text(index, min(97, 100 * (metric["mean"] + metric["sample_std"]) + 3), f'{100 * metric["mean"]:.2f}%', ha="center", fontsize=11)
-    axes[0].set_xticks([0, 1], ["GRPO cố định", "GRPO đối kháng"])
+    axes[0].set_xticks([0, 1], ["Fixed GRPO", "Adversarial GRPO"])
     axes[0].set_ylim(0, 100)
-    axes[0].set_ylabel("Code lỗi phát hiện với tối đa 4 test (%)")
+    axes[0].set_ylabel("Cases detected with up to 4 tests (%)")
     baseline = result["all_metrics"]["42"]["parent_warmup"]["empirical_case_detection_at_4"] * 100
-    axes[0].axhline(baseline, color="#9b947f", linestyle="--", linewidth=1, label="Sau SFT (cố định)")
+    axes[0].axhline(baseline, color="#9b947f", linestyle="--", linewidth=1, label="After SFT (fixed)")
     axes[0].legend(frameon=False, loc="upper right", fontsize=9)
-    axes[0].set_title("Trung bình và độ lệch chuẩn giữa 3 seed train", loc="left", fontsize=11, pad=16)
+    axes[0].set_title("Mean and SD across 3 training seeds", loc="left", fontsize=11, pad=16)
     for index, arm in enumerate(("control", "adversarial")):
         values = [result["all_metrics"][str(seed)][arm]["cases_detected_with_up_to_4_tests"] for seed in (42, 43, 44)]
         positions = [position + (index - .5) * .3 for position in range(3)]
-        label = "GRPO cố định" if arm == "control" else "GRPO đối kháng"
+        label = "Fixed GRPO" if arm == "control" else "Adversarial GRPO"
         axes[1].bar(positions, values, width=.28, color=colors[index], label=label)
         for position, value in zip(positions, values):
             axes[1].text(position, value + .4, str(value), ha="center", fontsize=10)
-    axes[1].set_xticks([0, 1, 2], ["Seed train 42", "Seed train 43", "Seed train 44"])
+    axes[1].set_xticks([0, 1, 2], ["Training seed 42", "Training seed 43", "Training seed 44"])
     axes[1].set_ylim(0, 18.8)
-    axes[1].set_ylabel("Số code lỗi phát hiện / 18")
-    axes[1].set_title("Code lỗi phát hiện trong từng seed train", loc="left", fontsize=11, pad=16)
+    axes[1].set_ylabel("Cases detected /18")
+    axes[1].set_title("Cases detected by training seed", loc="left", fontsize=11, pad=16)
     axes[1].set_yticks(range(0, 19, 3))
     axes[1].legend(frameon=False, loc="upper right")
     for axis in axes:
@@ -126,7 +126,7 @@ def main():
         axis.spines[["left", "bottom"]].set_color("#d4dacd")
         axis.grid(axis="y", alpha=.15)
         axis.set_axisbelow(True)
-    figure.text(.05, .02, "Seed sinh test cố định 42; cùng checkpoint SFT và cùng pool đối kháng. Thanh sai số là SD, không phải khoảng tin cậy.", fontsize=9, color="#6a7363")
+    figure.text(.05, .02, "Generation seed fixed at 42; same SFT checkpoint and adversarial pool. Error bars show SD, not confidence intervals.", fontsize=9, color="#6a7363")
     figure.tight_layout(rect=(0, .07, 1, 1))
     for suffix in ("png", "svg"):
         figure.savefig(output / ("training-seed-stability." + suffix), dpi=180, facecolor=figure.get_facecolor())

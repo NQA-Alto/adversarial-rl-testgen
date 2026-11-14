@@ -16,10 +16,6 @@ Equal weights improved the seed-42 result slightly, but the gain was not consist
 
 Figure 1. GRPO reward weights.
 
-![GRPO reward weights](training-components.png)
-
-Figure 2. GRPO reward weights.
-
 [Resampling across three seeds](SAMPLING.md).
 
 ## Data files

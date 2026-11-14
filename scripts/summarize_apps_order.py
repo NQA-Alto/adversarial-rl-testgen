@@ -12,7 +12,7 @@ from result_docs import write_result_readme
 
 
 FIELDS = ("valid_tests", "correct_expected", "bug_detecting_tests", "cases_detected")
-LABELS = {"sorted-v1": "Expected trước", "input-first-v1": "Input trước"}
+LABELS = {"sorted-v1": "Expected-first", "input-first-v1": "Input-first"}
 
 
 def records(path):
@@ -99,13 +99,13 @@ def summarize(root):
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     fig, axes = plt.subplots(2,2,figsize=(11,7),facecolor="white")
-    for ax,field,title,maximum in zip(axes.flat,FIELDS,("Test hợp lệ","Test có expected đúng","Test bắt lỗi","Code phát hiện với tối đa 4 test"),(60,60,60,15),strict=True):
+    for ax,field,title,maximum in zip(axes.flat,FIELDS,("Valid tests","Tests with correct expected outputs","Bug-detecting tests","Cases detected with up to 4 tests"),(60,60,60,15),strict=True):
         items = [summaries[o][s][field] for o in plan["arms"] for s in ("sft","grpo")]
         bars = ax.bar(range(4),[m["mean"] for m in items],yerr=[m["sample_sd"] for m in items],capsize=4,color=("#b5b7a9","#869481","#7c9b9a","#38654e"))
         for bar,item in zip(bars,items,strict=True):
             ax.annotate(f'{item["mean"]:.2f}',(bar.get_x()+bar.get_width()/2,item["mean"]+item["sample_sd"]),xytext=(0,6),textcoords="offset points",ha="center",fontsize=9,
                         fontweight="bold" if item["mean"] == max(m["mean"] for m in items) else "normal")
-        ax.set(xticks=range(4),xticklabels=[LABELS[o]+"\n"+s.upper() for o in plan["arms"] for s in ("sft","grpo")],title=title,ylabel=f'Số lượng /{maximum}',ylim=(0,maximum))
+        ax.set(xticks=range(4),xticklabels=[LABELS[o]+"\n"+s.upper() for o in plan["arms"] for s in ("sft","grpo")],title=title,ylabel=f'Count /{maximum}',ylim=(0,maximum))
         ax.tick_params(axis="x",labelsize=8)
         ax.grid(axis="y",alpha=.15)
         ax.set_axisbelow(True)

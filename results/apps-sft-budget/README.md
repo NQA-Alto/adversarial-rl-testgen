@@ -16,10 +16,6 @@ SFT256 increased correct expected outputs but detected fewer functions. This tri
 
 Figure 1. Expected-first SFT budget.
 
-![Expected-first SFT budget](learning-curve.png)
-
-Figure 2. Expected-first SFT budget.
-
 ## Data files
 
 [metrics.csv](metrics.csv) · [metrics.json](metrics.json) · [per-case.csv](per-case.csv)

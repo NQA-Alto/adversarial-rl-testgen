@@ -24,7 +24,7 @@ def summarize(folder):
         audit(path)
         if read(path / "result.json")["metrics"] != row["metrics"]:
             raise ValueError("Sampling metrics do not match saved evaluation")
-    labels = {"SFT64_parent": "SFT64 trước RL", "legacy-v1": "GRPO reward hiện tại", "equal-v1": "GRPO reward chia đều"}
+    labels = {"SFT64_parent": "SFT64 before RL", "legacy-v1": "GRPO · original reward", "equal-v1": "GRPO · equal reward weights"}
     fields = ("valid_tests", "correct_expected", "bug_detecting_tests", "cases_detected")
     summaries = {}
     for variant in plan["variants"]:
@@ -57,19 +57,19 @@ def summarize(folder):
     colors = ("#aaa896", "#8da38d", "#38654e")
     for variant, color, marker in zip(plan["variants"], colors, ("o", "s", "^"), strict=True):
         for ax, field, title, denominator in zip(axes, ("correct_expected", "cases_detected"),
-                                               ("Test có expected đúng", "Code phát hiện với tối đa 4 test"), (60, 15), strict=True):
+                                               ("Tests with correct expected outputs", "Cases detected with up to 4 tests"), (60, 15), strict=True):
             values = [indexed[(variant, seed)][field] for seed in plan["generation_seeds"]]
             ax.plot(plan["generation_seeds"], values, color=color, marker=marker, linewidth=1.5, markersize=6, label=labels[variant])
             ax.set_xticks(plan["generation_seeds"])
-            ax.set_xlabel("Seed sinh test · không phải seed huấn luyện")
-            ax.set_ylabel(f'Số lượng /{denominator}')
+            ax.set_xlabel("Generation seed (not training seed)")
+            ax.set_ylabel(f'Count /{denominator}')
             ax.set_title(title, loc="left", fontsize=11)
             ax.set_ylim(0, denominator)
             ax.yaxis.set_major_locator(MaxNLocator(integer=True))
             ax.grid(axis="y", alpha=.15)
             ax.spines[["top", "right"]].set_visible(False)
             ax.legend(frameon=False, fontsize=9)
-    fig.suptitle("Biến động lấy mẫu trên cùng checkpoint · Validation", fontsize=12)
+    fig.suptitle("Sampling variability · same checkpoint, Validation", fontsize=12)
     fig.tight_layout(rect=(0, 0, 1, .93))
     fig.savefig(output / "sampling-variability.png", dpi=180, facecolor="white")
     plt.close(fig)

@@ -16,13 +16,13 @@ def summarize(folder, output=None):
     if result["status"] != "completed" or not result["comparison_prompt_and_seed_match"]:
         raise ValueError("A completed matched comparison is required")
     previous = read(folder / "previous-state.json")
-    runs = [("base", "Qwen gốc", Path(previous["baseline_validation"]["path"])),
+    runs = [("base", "Base Qwen", Path(previous["baseline_validation"]["path"])),
             ("sft", "SFT", Path(result["plan"].get("parent_sft_validation", previous["sft_validation"]["path"])))]
     if output is None and result["plan"].get("parent_sft_validation", previous["sft_validation"]["path"]) != previous["sft_validation"]["path"]:
         raise ValueError("Research-parent comparison requires a separate --output directory")
     final = result["rounds"][-1]["arms"]
     runs += [(arm, label, Path(final[arm]["validation"]["path"])) for arm, label in
-             (("control", "SFT + GRPO cố định"), ("adaptive", "SFT + GRPO đối kháng"))]
+             (("control", "SFT + Fixed GRPO"), ("adaptive", "SFT + Adversarial GRPO"))]
     summary = {"round_folder": str(folder), "plan": result["plan"], "runs": {}, "rounds": [],
                "model_test_evaluation": False, "adversarial_generated_test_exposures": result["adversarial_generated_test_exposures"],
                "limits": "Five Validation source problems, 15 mutated programs, one seed; finite call-based input domains. No official APPS Test evaluation. Matched optimizer-step and generation budgets, not matched total wall-clock or code-sampling compute."}
@@ -95,22 +95,22 @@ def summarize(folder, output=None):
     import matplotlib.pyplot as plt
     fig, axes = plt.subplots(1, 3, figsize=(13, 4.5), facecolor="white")
     keys = list(summary["runs"])
-    labels = ["Qwen gốc", "SFT", "GRPO\ncố định", "GRPO\nđối kháng"]
+    labels = ["Base Qwen", "SFT", "Fixed\nGRPO", "Adversarial\nGRPO"]
     for ax, field, title in zip(axes, ("valid_rate", "io_accuracy", "case_detection_at_4"),
-                               ("Test đúng định dạng và miền input", "Test có expected đúng", "Code lỗi phát hiện với 4 test"), strict=True):
+                               ("Valid format and input domain", "Tests with correct expected outputs", "Cases detected with 4 tests"), strict=True):
         values = [summary["runs"][key]["result"]["metrics"][field] * 100 for key in keys]
         bars = ax.bar(labels, values, color=["#9ca49c", "#b5bea4", "#7d9baf", "#47735b"], width=.65)
         for bar, value in zip(bars, values, strict=True):
             ax.text(bar.get_x() + bar.get_width() / 2, value + 1.5, f'{value:.1f}%', ha="center", fontsize=9,
                     fontweight="bold" if value == max(values) else "normal")
         ax.set_title(title, fontsize=11)
-        ax.set_xlabel("Phiên bản model")
-        ax.set_ylabel("Tỷ lệ (%)")
+        ax.set_xlabel("Model variant")
+        ax.set_ylabel("Rate (%)")
         ax.set_ylim(0, 105)
         ax.grid(axis="y", alpha=.15)
         ax.set_axisbelow(True)
         ax.spines[["top", "right"]].set_visible(False)
-    fig.suptitle("APPS Validation · cùng prompt, seed và ngân sách sinh test", fontsize=12)
+    fig.suptitle("APPS Validation · same prompt, seed and generation budget", fontsize=12)
     fig.tight_layout()
     fig.savefig(output / "validation-comparison.png", dpi=180, facecolor="white")
     fig.savefig(output / "validation-comparison.svg", facecolor="white")

@@ -69,14 +69,14 @@ def analyze():
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
-    labels = {"base": "Qwen gốc", "sft": "SFT64 · input trước", "grpo96": "SFT64 + GRPO96", "control": "GRPO cố định · 2 vòng", "adaptive": "GRPO đối kháng · 2 vòng"}
+    labels = {"base": "Base Qwen", "sft": "SFT64 · input-first", "grpo96": "SFT64 + GRPO96", "control": "Fixed GRPO · 2 rounds", "adaptive": "Adversarial GRPO · 2 rounds"}
     variants = ("base", "sft", "grpo96", "control", "adaptive")
     fig, ax = plt.subplots(figsize=(10, 4.6), facecolor="white")
     left = [0] * len(variants)
-    for field, label, color in (("invalid_or_truncated", "JSON/input không hợp lệ", "#d3c9b9"),
-                                ("wrong_expected", "Input hợp lệ, expected sai", "#b56a58"),
-                                ("correct_without_bug", "Expected đúng, chưa bắt lỗi", "#8ca9af"),
-                                ("bug_detected", "Expected đúng và bắt lỗi", "#437052")):
+    for field, label, color in (("invalid_or_truncated", "Invalid JSON/input", "#d3c9b9"),
+                                ("wrong_expected", "Valid input, wrong expected output", "#b56a58"),
+                                ("correct_without_bug", "Correct expected output, no bug detected", "#8ca9af"),
+                                ("bug_detected", "Correct expected output and bug detected", "#437052")):
         values = [totals[v][field] for v in variants]
         ax.barh([labels[v] for v in variants], values, left=left, label=label, color=color, height=.65)
         for y, n, start in zip(range(len(variants)), values, left, strict=True):
@@ -84,7 +84,7 @@ def analyze():
         left = [a + b for a, b in zip(left, values, strict=True)]
     if left != [180] * len(variants):
         raise ValueError("Error partition must cover every generated output")
-    ax.set(xlim=(0, 180), xlabel="Số test /180 · ba seed sinh, một seed train", ylabel="Checkpoint cố định", title="Expected sai còn làm mất nhiều cơ hội bắt lỗi")
+    ax.set(xlim=(0, 180), xlabel="Tests /180 · three generation seeds, one training seed", ylabel="Fixed checkpoint", title="Wrong expected outputs prevent valid bug detection")
     ax.invert_yaxis()
     ax.spines[["top", "right"]].set_visible(False)
     ax.legend(loc="upper center", bbox_to_anchor=(.5, -.2), ncol=2, frameon=False, fontsize=9)

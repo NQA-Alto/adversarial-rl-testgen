@@ -39,3 +39,9 @@ Start with the expanded study. The other folders preserve earlier experiments an
 - [Thinking and output contracts](apps-tuning/README.md)
 
 Each study links to its stored data. Metric definitions and comparison limits are in the [evaluation guide](../docs/EXPERIMENTS.md).
+
+## Render the figures
+
+With Matplotlib installed, run `python scripts/render_saved_results.py` from the repository root. It reads the committed CSV and JSON summaries without loading a model or running an evaluation. Error bars show sample standard deviation across the seeds stated in each figure.
+
+Per-step training curves require the external training logs and are not included here. Recorded source and artifact hashes refer to the original runs.

@@ -65,13 +65,13 @@ def summarize(root):
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
     fig, axes = plt.subplots(1, 3, figsize=(11, 4), facecolor="white")
-    for ax, f, title, maximum in zip(axes, ("correct_expected", "bug_detecting_tests", "cases_detected"), ("Expected đúng", "Test bắt lỗi", "Code phát hiện @4"), (60, 60, 15), strict=True):
+    for ax, f, title, maximum in zip(axes, ("correct_expected", "bug_detecting_tests", "cases_detected"), ("Correct expected outputs", "Bug-detecting tests", "Cases detected @4"), (60, 60, 15), strict=True):
         values = [summary[v][f]["mean"] for v in summary]
         sd = [summary[v][f]["sample_sd"] for v in summary]
         bars = ax.bar(("SFT256", "+ GRPO96"), values, yerr=sd, capsize=4, color=("#8ba798", "#3e6750"))
         for bar, value, spread in zip(bars, values, sd, strict=True):
             ax.text(bar.get_x()+bar.get_width()/2, value+spread+.5, f'{value:.2f}', ha="center", fontweight="bold" if value == max(values) else "normal")
-        ax.set(title=title, ylabel=f'Số lượng /{maximum}', xlabel="Checkpoint", ylim=(0, maximum))
+        ax.set(title=title, ylabel=f'Count /{maximum}', xlabel="Checkpoint", ylim=(0, maximum))
         ax.spines[["top", "right"]].set_visible(False)
         ax.grid(axis="y", alpha=.15)
     fig.tight_layout()

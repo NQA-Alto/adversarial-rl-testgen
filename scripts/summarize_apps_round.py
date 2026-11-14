@@ -22,7 +22,7 @@ def summarize(folder):
     project = Path(__file__).resolve().parents[1]
     output = project / "results/apps-sft-grpo"
     output.mkdir(parents=True, exist_ok=True)
-    names = [("baseline_validation", "Qwen gốc"), ("sft_validation", "Sau SFT"), ("pilot_validation", "Sau SFT + GRPO")]
+    names = [("baseline_validation", "Base Qwen"), ("sft_validation", "After SFT"), ("pilot_validation", "After SFT + GRPO")]
     runs = {key: read(Path(path) / "result.json") for key, path in result["runs"].items()}
     for key, _ in names:
         review = read(Path(result["runs"][key]) / "review.json")
@@ -93,21 +93,21 @@ def summarize(folder):
     figure, axes = plt.subplots(1, 2, figsize=(11, 4.4), facecolor="white")
     colors = ["#89928b", "#719c80", "#456e92"]
     for axis, field, title, denominator in (
-        (axes[0], "valid_rate", "Test hợp lệ", 60),
-        (axes[1], "case_detection_at_4", "Code lỗi được phát hiện với 4 test", 15),
+        (axes[0], "valid_rate", "Valid tests", 60),
+        (axes[1], "case_detection_at_4", "Cases detected with 4 tests", 15),
     ):
         values = [runs[key]["metrics"][field] * 100 for key, _ in names]
         bars = axis.bar([label for _, label in names], values, color=colors, width=.6)
         for bar, value in zip(bars, values):
             axis.text(bar.get_x() + bar.get_width() / 2, value + 2, f'{value:.1f}%', ha="center", fontsize=10)
         axis.set_title(title, loc="left", fontsize=12)
-        axis.set_ylabel("Tỷ lệ (%)")
-        axis.set_xlabel("Phiên bản model")
+        axis.set_ylabel("Rate (%)")
+        axis.set_xlabel("Model variant")
         axis.set_ylim(0, 105)
         axis.grid(axis="y", alpha=.15)
         axis.set_axisbelow(True)
         axis.spines[["top", "right"]].set_visible(False)
-    figure.suptitle("APPS Validation · cùng prompt v2, seed 42 và ngân sách sinh test", fontsize=12)
+    figure.suptitle("APPS Validation · same prompt v2, seed 42 and generation budget", fontsize=12)
     figure.tight_layout()
     figure.savefig(output / "validation-comparison.png", dpi=180, facecolor="white")
     figure.savefig(output / "validation-comparison.svg", facecolor="white")

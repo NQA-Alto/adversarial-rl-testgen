@@ -77,9 +77,9 @@ def summarize(root):
     events = [json.loads(line) for line in (training / "sft-steps.jsonl").read_text(encoding="utf-8").splitlines()]
     fig, ax = plt.subplots(figsize=(9, 4), facecolor="white")
     ax.plot([r["step"] for r in events], [r["loss"] for r in events], color="#a6b5a9", alpha=.65, label="Loss minibatch")
-    ax.plot([r["step"] for r in events], [statistics.mean(x["loss"] for x in events[max(0, i-7):i+1]) for i in range(len(events))], color="#315f49", label="Trung bình trượt 8 bước")
+    ax.plot([r["step"] for r in events], [statistics.mean(x["loss"] for x in events[max(0, i-7):i+1]) for i in range(len(events))], color="#315f49", label="8-step rolling mean")
     ax.axvline(64, color="#a18b64", linestyle="--", label="Checkpoint64")
-    ax.set(xlabel="Bước cập nhật SFT · 4 ví dụ/bước", ylabel="Loss cross-entropy", title="Học nhãn input-first trên APPS Train")
+    ax.set(xlabel="SFT update step · 4 examples/step", ylabel="Cross-entropy loss", title="Input-first training on APPS Train")
     ax.spines[["top", "right"]].set_visible(False)
     ax.legend(frameon=False)
     fig.tight_layout()

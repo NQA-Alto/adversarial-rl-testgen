@@ -73,19 +73,19 @@ def summarize(folder, publish=False):
     colors = ["#a5b29d", "#47735b"]
     fig, axes = plt.subplots(1, 3, figsize=(12, 4.3), facecolor="white")
     for ax, field, title in zip(axes, ("valid_rate", "io_accuracy", "case_detection_at_4"),
-                               ("Test hợp lệ", "Expected đúng", "Code lỗi phát hiện với 4 test"), strict=True):
+                               ("Valid tests", "Correct expected outputs", "Cases detected with 4 tests"), strict=True):
         values = [record["metrics"][field] * 100 for record in (a, b)]
-        bars = ax.bar(["SFT 64 bước", "SFT 256 bước"], values, color=colors, width=.55)
+        bars = ax.bar(["SFT · 64 steps", "SFT · 256 steps"], values, color=colors, width=.55)
         for bar, value in zip(bars, values, strict=True):
             ax.text(bar.get_x() + bar.get_width() / 2, value + 2, f'{value:.1f}%', ha="center", fontweight="bold" if value == max(values) else "normal")
         ax.set_ylim(0, 105)
         ax.set_title(title, fontsize=11)
-        ax.set_xlabel("Ngân sách khởi động SFT")
-        ax.set_ylabel("Tỷ lệ (%)")
+        ax.set_xlabel("SFT warm-up budget")
+        ax.set_ylabel("Rate (%)")
         ax.grid(axis="y", alpha=.15)
         ax.set_axisbelow(True)
         ax.spines[["top", "right"]].set_visible(False)
-    fig.suptitle("Đối chiếu 64 và 256 bước trong cùng lượt học" if paired else "Đối chiếu ngân sách khởi động SFT", fontsize=12)
+    fig.suptitle("64 vs. 256 steps within one training run" if paired else "SFT warm-up budget comparison", fontsize=12)
     fig.tight_layout(rect=(0, 0, 1, .94))
     fig.savefig(output / "validation-comparison.png", dpi=180, facecolor="white")
     plt.close(fig)
@@ -94,12 +94,12 @@ def summarize(folder, publish=False):
     losses = [event["loss"] for event in events]
     rolling = [sum(losses[max(0, i - 15):i + 1]) / min(16, i + 1) for i in range(len(losses))]
     fig, ax = plt.subplots(figsize=(9, 3.8), facecolor="white")
-    ax.plot(steps, losses, color="#bec7be", linewidth=.7, label="Loss mỗi bước (4 ví dụ Train)")
-    ax.plot(steps, rolling, color="#47735b", linewidth=1.6, label="Trung bình trượt 16 bước")
-    ax.axvline(64, color="#9b8567", linestyle="--", linewidth=1.2, label="Ngân sách SFT cũ: 64 bước")
-    ax.set_xlabel("Bước cập nhật SFT")
-    ax.set_ylabel("NLL trung bình trên ví dụ Train")
-    ax.set_title("Quá trình khởi động SFT · không phải loss Validation", loc="left", fontsize=12)
+    ax.plot(steps, losses, color="#bec7be", linewidth=.7, label="Per-step loss (4 Train examples)")
+    ax.plot(steps, rolling, color="#47735b", linewidth=1.6, label="16-step rolling mean")
+    ax.axvline(64, color="#9b8567", linestyle="--", linewidth=1.2, label="Original SFT budget: 64 steps")
+    ax.set_xlabel("SFT update step")
+    ax.set_ylabel("Mean NLL on Train examples")
+    ax.set_title("SFT warm-up · training loss, not Validation loss", loc="left", fontsize=12)
     ax.grid(axis="y", alpha=.15)
     ax.spines[["top", "right"]].set_visible(False)
     ax.legend(frameon=False, fontsize=9)

@@ -16,7 +16,7 @@ from audit_apps_run import audit
 from result_docs import write_result_readme
 
 
-LABELS = {"base": "Qwen gốc", "sft": "SFT64", "control": "GRPO cố định", "adaptive": "GRPO đối kháng"}
+LABELS = {"base": "Base Qwen", "sft": "SFT64", "control": "Fixed GRPO", "adaptive": "Adversarial GRPO"}
 FIELDS = ("valid_tests", "correct_expected", "bug_detecting_tests", "cases_detected")
 
 
@@ -166,14 +166,14 @@ def cost_rows(root):
                        "path": str(folder), "result_sha256": digest(folder / "result.json"),
                        "measurement": "Trainer train_runtime" if kind == "grpo" else "training_seconds" if kind == "sft" else "elapsed_seconds"})
 
-    append("SFT64 dùng chung", "shared", "sft", state["sft_training"]["path"])
+    append("Shared SFT64", "shared", "sft", state["sft_training"]["path"])
     for stage in experiment["rounds"]:
         number = stage["round"]
-        append(f'Probe Train vòng {number}', "adaptive", "probe", stage["probe"])
-        append(f'Sinh và lọc code vòng {number}', "adaptive", "code_generation", stage["pool"])
+        append(f'Train probe, round {number}', "adaptive", "probe", stage["probe"])
+        append(f'Code generation and filtering, round {number}', "adaptive", "code_generation", stage["pool"])
         for arm in ("control", "adaptive"):
-            append(f'GRPO vòng {number}', arm, "grpo", stage["arms"][arm]["training"]["path"])
-            append(f'Validation vòng {number}', arm, "evaluation", stage["arms"][arm]["validation"]["path"])
+            append(f'GRPO round {number}', arm, "grpo", stage["arms"][arm]["training"]["path"])
+            append(f'Validation round {number}', arm, "evaluation", stage["arms"][arm]["validation"]["path"])
     return output
 
 
@@ -219,9 +219,9 @@ def summarize(root, output=None):
     import matplotlib.pyplot as plt
     fig, axes = plt.subplots(1, 2, figsize=(11, 4.6), facecolor="white")
     for name, color, marker in zip(LABELS, ("#aaa896", "#6d8493", "#9b7b52", "#38654e"), ("o", "s", "D", "^"), strict=True):
-        for ax, field, title, maximum in zip(axes, ("correct_expected", "cases_detected"), ("Test có expected đúng", "Code phát hiện với tối đa 4 test"), (60, 15), strict=True):
+        for ax, field, title, maximum in zip(axes, ("correct_expected", "cases_detected"), ("Tests with correct expected outputs", "Cases detected with up to 4 tests"), (60, 15), strict=True):
             ax.plot((42, 43, 44), [by_key[name, seed][field] for seed in (42, 43, 44)], marker=marker, color=color, label=LABELS[name], alpha=.8)
-            ax.set(xticks=(42, 43, 44), xlabel="Seed sinh test · cùng checkpoint", ylabel=f'Số lượng /{maximum}', title=title, ylim=(0, maximum))
+            ax.set(xticks=(42, 43, 44), xlabel="Generation seed · same checkpoint", ylabel=f'Count /{maximum}', title=title, ylim=(0, maximum))
             ax.grid(axis="y", alpha=.15)
             ax.spines[["top", "right"]].set_visible(False)
             ax.legend(frameon=False, fontsize=9)

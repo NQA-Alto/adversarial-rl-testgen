@@ -12,7 +12,7 @@ from result_docs import write_result_readme
 
 
 FIELDS = ("valid_tests", "correct_expected", "bug_detecting_tests", "cases_detected")
-LABELS = {"attention-qv-v1": "LoRA 6 khối", "hybrid-qkv-v1": "LoRA 24 khối"}
+LABELS = {"attention-qv-v1": "LoRA · 6 blocks", "hybrid-qkv-v1": "LoRA · 24 blocks"}
 
 
 def records(path):
@@ -93,13 +93,13 @@ def summarize(root):
     import matplotlib.pyplot as plt
     fig, axes = plt.subplots(2, 2, figsize=(11, 7), facecolor="white")
     labels = [LABELS[p] + "\n" + stage.upper() for p in plan["arms"] for stage in ("sft", "grpo")]
-    for ax, field, title, denominator in zip(axes.flat, FIELDS, ("Test hợp lệ", "Test có expected đúng", "Test bắt được lỗi", "Code phát hiện với tối đa 4 test"), (60, 60, 60, 15), strict=True):
+    for ax, field, title, denominator in zip(axes.flat, FIELDS, ("Valid tests", "Tests with correct expected outputs", "Bug-detecting tests", "Cases detected with up to 4 tests"), (60, 60, 60, 15), strict=True):
         values = [summary[p][stage][field] for p in plan["arms"] for stage in ("sft", "grpo")]
         means = [item["mean"] for item in values]
         bars = ax.bar(range(4), means, yerr=[item["sample_sd"] for item in values], capsize=4, color=("#b5b7a9", "#869481", "#7c9b9a", "#38654e"))
         for bar, mean in zip(bars, means, strict=True):
             ax.annotate(f'{mean:.2f}', (bar.get_x() + bar.get_width()/2, mean), xytext=(0, 10), textcoords="offset points", ha="center", fontsize=9)
-        ax.set(xticks=range(4), xticklabels=labels, title=title, ylabel=f'Số lượng /{denominator}', ylim=(0, denominator))
+        ax.set(xticks=range(4), xticklabels=labels, title=title, ylabel=f'Count /{denominator}', ylim=(0, denominator))
         ax.tick_params(axis="x", labelsize=8)
         ax.grid(axis="y", alpha=.15)
         ax.set_axisbelow(True)

@@ -6,7 +6,7 @@ For a quick look at scoring without those assets, run `python examples/verify_te
 
 ## Start and stop
 
-On the configured machine, run `MO_GIAO_DIEN.cmd`, then open <http://127.0.0.1:7860/?__theme=light>. TensorBoard is served at <http://127.0.0.1:6006>. Run `DONG_GIAO_DIEN.cmd` to stop the services started by the launcher.
+On the configured machine, run `start_ui.cmd`, then open <http://127.0.0.1:7860/?__theme=light>. TensorBoard is served at <http://127.0.0.1:6006>. Run `stop_ui.cmd` to stop the services started by the launcher.
 
 The launchers currently contain absolute paths to the original machine. They are not a portable installer.
 
@@ -19,7 +19,7 @@ The launchers currently contain absolute paths to the original machine. They are
 | Data | Inspect dataset sources, split sizes and supported input domains |
 | Experiments | Run dataset checks, a GRPO trial or adapter evaluation; inspect logs |
 
-The interface labels are in Vietnamese. Saved examples use Validation with generation seed 42. New inference uses the GPU and can differ from those examples because generation is sampled.
+The interface uses English labels. Saved examples use Validation with generation seed 42. New inference uses the GPU and can differ from those examples because generation is sampled.
 
 ## Reading a generated test
 

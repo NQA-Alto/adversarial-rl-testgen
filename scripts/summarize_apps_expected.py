@@ -83,9 +83,9 @@ def summarize(root):
     fig, ax = plt.subplots(figsize=(9, 4), facecolor="white")
     ax.plot([e["step"] for e in events], [e["loss"] for e in events], color="#869d93", alpha=.55, label="Loss minibatch")
     smoothed = [statistics.mean(e["loss"] for e in events[max(0, i - 7):i + 1]) for i in range(len(events))]
-    ax.plot([e["step"] for e in events], smoothed, color="#315f49", label="Trung bình trượt 8 bước")
-    ax.axvline(64, linestyle="--", color="#a18b64", label="Ngân sách SFT đối chứng")
-    ax.set(xlabel="Bước cập nhật SFT · 4 ví dụ/bước", ylabel="Loss cross-entropy", title="Học expected từ nhãn Train · input trước expected")
+    ax.plot([e["step"] for e in events], smoothed, color="#315f49", label="8-step rolling mean")
+    ax.axvline(64, linestyle="--", color="#a18b64", label="SFT control budget")
+    ax.set(xlabel="SFT update step · 4 examples/step", ylabel="Cross-entropy loss", title="Expected-output learning from Train labels · input-first")
     ax.spines[["top", "right"]].set_visible(False)
     ax.grid(axis="y", alpha=.15)
     ax.legend(frameon=False)

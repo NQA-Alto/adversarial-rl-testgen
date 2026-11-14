@@ -9,7 +9,7 @@ from apps_core import ASSETS, digest, read, write
 
 PROJECT = Path(__file__).resolve().parents[1]
 PYTHON = ASSETS / "env/Scripts/python.exe"
-TASKS = ["Kiểm tra dữ liệu", "Chấm Qwen gốc trên Validation", "Huấn luyện GRPO trên Train", "Chấm adapter hiện tại trên Validation", "Huấn luyện SFT + GRPO trên APPS"]
+TASKS = ["Validate dataset", "Evaluate base Qwen on Validation", "Train GRPO on Train", "Evaluate current adapter on Validation", "Train SFT + GRPO on APPS"]
 CURRENT = None
 GUARD = threading.Lock()
 
@@ -20,21 +20,21 @@ def active_context():
     if selected:
         active = read(Path(selected["state_path"]))
         if active["dataset_id"] != selected["dataset_id"] or active["model_profile"] != selected["model_profile"]:
-            raise ValueError("Cấu hình model và dữ liệu không khớp.")
+            raise ValueError("Model and dataset configurations do not match.")
         return active, selected
     return current, None
 
 
 def command_for(task, steps):
     if task not in TASKS:
-        raise ValueError("Tác vụ không hợp lệ.")
+        raise ValueError("Invalid task.")
     if task == TASKS[0]:
         return [str(PYTHON), "-B", str(PROJECT / "scripts/verify_apps.py")], False
     if task in (TASKS[2], TASKS[4]) and (isinstance(steps, bool) or int(steps) != steps or not 1 <= int(steps) <= 96):
-        raise ValueError("Số bước GRPO phải từ 1 đến 96.")
+        raise ValueError("GRPO steps must be between 1 and 96.")
     if task == TASKS[4]:
         if active_context()[1]:
-            raise ValueError("Lượt gộp SFT + GRPO dành cho bản dữ liệu cũ. Chọn Huấn luyện GRPO trên Train để học từ checkpoint hiện tại.")
+            raise ValueError("The combined SFT + GRPO run requires the legacy dataset. Select Train GRPO on Train to use the current checkpoint.")
         return [str(PYTHON), "-B", str(PROJECT / "scripts/apps_round.py"), "--grpo-steps", str(int(steps))], False
     command = [str(PYTHON), "-B", str(PROJECT / "scripts/apps_model_runner.py")]
     if task == TASKS[2]:
@@ -45,7 +45,7 @@ def command_for(task, steps):
         parent = state.get("selected_sft_training") or state.get("sft_training")
         if parent:
             if digest(Path(parent["adapter_path"]) / "adapter_model.safetensors") != parent["adapter_sha256"]:
-                raise ValueError("Adapter SFT đã thay đổi.")
+                raise ValueError("The SFT adapter has changed.")
             baseline = state.get("selected_sft_validation") or state.get("selected_sft_train_probe") or state["sft_validation"]
             command += ["--init-adapter", parent["adapter_path"], "--baseline-run", baseline["path"]]
     else:
@@ -53,10 +53,10 @@ def command_for(task, steps):
         if task == TASKS[3]:
             record = active_context()[0].get("pilot_training")
             if not record:
-                raise ValueError("Chưa có adapter APPS để chấm.")
+                raise ValueError("No APPS adapter is available for evaluation.")
             adapter = Path(record["adapter_path"])
             if digest(adapter / "adapter_model.safetensors") != record["adapter_sha256"]:
-                raise ValueError("Adapter đã thay đổi so với bản lưu.")
+                raise ValueError("The adapter does not match the saved snapshot.")
             command += ["--adapter", str(adapter)]
     return command, True
 
@@ -70,7 +70,7 @@ def snapshot():
             if selected:
                 records = [path for path in records if (read(path).get("model_context") or {}).get("dataset_id") == selected["dataset_id"]]
             if not records:
-                return "Chưa có tác vụ đang chạy.", "", ""
+                return "No job is running.", "", ""
             record = records[0]
             status, folder = read(record)["status"], record.parent
         else:
@@ -96,7 +96,7 @@ def worker(job, shared_lock, needs_audit):
                 if job["stopping"]:
                     outcome = "cancelled"
                     break
-                job["status"] = ("Đang chạy · " if stage == "run" else "Đang kiểm chứng kết quả · ") + job["task"]
+                job["status"] = ("Running · " if stage == "run" else "Verifying results · ") + job["task"]
                 with (job["folder"] / "console.txt").open("a", encoding="utf-8") as stream:
                     process = subprocess.Popen(command, cwd=PROJECT, env=environment, stdout=stream, stderr=subprocess.STDOUT,
                                                creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0)
@@ -106,13 +106,13 @@ def worker(job, shared_lock, needs_audit):
                 outcome = "cancelled"
                 break
             if code != 0:
-                raise RuntimeError("Tác vụ dừng với mã " + str(code))
+                raise RuntimeError("Task exited with code " + str(code))
             outcome = "completed"
             if stage == "run" and needs_audit:
                 lines = (job["folder"] / "console.txt").read_text(encoding="utf-8").splitlines()
                 locations = [Path(line.removeprefix("EVIDENCE: ").strip()) for line in lines if line.startswith("EVIDENCE: ")]
                 if len(locations) != 1 or not locations[0].resolve().is_relative_to((ASSETS / "evidence").resolve()):
-                    raise RuntimeError("Không xác định được thư mục kết quả để kiểm chứng.")
+                    raise RuntimeError("Cannot locate the result directory for verification.")
                 job["evidence"] = str(locations[0])
                 command = [str(PYTHON), "-B", str(PROJECT / "scripts/audit_apps_run.py"), str(locations[0])]
     except Exception as error:
@@ -121,7 +121,7 @@ def worker(job, shared_lock, needs_audit):
     finally:
         try:
             with GUARD:
-                job["status"] = {"completed": "Hoàn tất · ", "cancelled": "Đã dừng · ", "failed": "Chưa hoàn tất · "}[outcome] + job["task"]
+                job["status"] = {"completed": "Completed · ", "cancelled": "Stopped · ", "failed": "Incomplete · "}[outcome] + job["task"]
                 if job.get("error"):
                     job["status"] += " · " + job["error"]
                 job["process"] = None
@@ -138,14 +138,14 @@ def start(task, steps, shared_lock, busy):
     global CURRENT
     if not shared_lock.acquire(blocking=False):
         status, text, folder = snapshot()
-        return "Một lượt chạy đang hoạt động. " + status, text, folder
+        return "A run is already active. " + status, text, folder
     try:
         if busy():
-            raise ValueError("GPU đang có tác vụ APPS. Hãy đợi tác vụ đó hoàn tất.")
+            raise ValueError("An APPS job is using the GPU. Wait for it to finish.")
         command, needs_audit = command_for(task, steps)
         folder = ASSETS / "evidence/ui-jobs" / ("apps-" + datetime.now().strftime("%Y%m%d-%H%M%S-%f"))
         folder.mkdir(parents=True, exist_ok=False)
-        job = {"task": task, "command": command, "folder": folder, "status": "Đang chuẩn bị · " + task,
+        job = {"task": task, "command": command, "folder": folder, "status": "Preparing · " + task,
                "started_at": datetime.now().astimezone().isoformat(), "stopping": False, "process": None, "done": False}
         job["model_context"] = active_context()[1]
         write(folder / "plan.json", {"task": task, "command": command, "started_at": job["started_at"], "model_context": job["model_context"]})
@@ -165,7 +165,7 @@ def stop():
         if job is None or job["done"]:
             return snapshot_without_lock(job)
         job["stopping"] = True
-        job["status"] = "Đang dừng · " + job["task"]
+        job["status"] = "Stopping · " + job["task"]
         process = job["process"]
     if process is None:
         return snapshot()
@@ -185,6 +185,6 @@ def stop():
 
 def snapshot_without_lock(job):
     if job is None:
-        return "Chưa có tác vụ đang chạy.", "", ""
+        return "No job is running.", "", ""
     log = job["folder"] / "console.txt"
     return job["status"], log.read_text(encoding="utf-8", errors="replace")[-24000:] if log.exists() else "", str(job["folder"])

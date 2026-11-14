@@ -3,6 +3,14 @@ import json
 from pathlib import Path
 
 from apps_core import ASSETS, canonical, digest, read
+from apps_profiles import PROFILES
+
+
+LABELS = {"base": "Base Qwen", "sft": "SFT", "control": "Fixed GRPO", "adaptive": "Adversarial GRPO"}
+
+
+def case_title(case):
+    return PROFILES.get(int(case["source_id"]), (case["title"],))[0]
 
 
 def study():
@@ -14,8 +22,18 @@ def study():
         return None
     path = Path(index["presentation_path"])
     if digest(path) != index["presentation_sha256"]:
-        raise ValueError("Bảng kết quả đã thay đổi so với bản lưu.")
-    return read(path)
+        raise ValueError("The result table does not match the saved snapshot.")
+    report = read(path)
+    names = {item["label"]: LABELS.get(item["key"], item["key"]) for item in report["variants"]}
+    report["variants"] = [dict(item, label=names[item["label"]]) for item in report["variants"]]
+    report["test_error_rows"] = [[names.get(row[0], row[0]), *row[1:]] for row in report.get("test_error_rows", [])]
+    figures = Path(__file__).resolve().parents[1] / "results/apps-expanded-adaptive"
+    if (figures / "metrics.json").is_file():
+        saved = read(figures / "metrics.json")
+        for split in ("test", "validation"):
+            if report.get(split + "_summary") == saved[split] and (figures / (split + ".png")).is_file():
+                report[split + "_chart_path"] = str(figures / (split + ".png"))
+    return report
 
 
 def variants(current):
@@ -24,9 +42,9 @@ def variants(current):
         return report["variants"]
     chosen = current.get("selected_local_model")
     if chosen:
-        return [{"key": "base", "label": "Qwen gốc", "adapter": None, "validation": current["baseline_validation"]},
-                {"key": "sft", "label": "Sau SFT", "adapter": chosen["adapter_path"], "adapter_sha256": chosen["adapter_sha256"], "validation": chosen["validation"]}]
-    return [{"key": "base", "label": "Qwen gốc", "adapter": None, "validation": current.get("baseline_validation")}]
+        return [{"key": "base", "label": "Base Qwen", "adapter": None, "validation": current["baseline_validation"]},
+                {"key": "sft", "label": "After SFT", "adapter": chosen["adapter_path"], "adapter_sha256": chosen["adapter_sha256"], "validation": chosen["validation"]}]
+    return [{"key": "base", "label": "Base Qwen", "adapter": None, "validation": current.get("baseline_validation")}]
 
 
 def selected_key(current):
@@ -36,12 +54,12 @@ def selected_key(current):
 
 def problem(case):
     number = case["case_id"].rsplit("/m", 1)[-1]
-    return ('<article class="apps-case"><div class="apps-case-heading"><div><h2>' + html.escape(case["title"])
-            + '</h2><p class="apps-muted">Phiên bản lỗi ' + html.escape(number)
-            + ' · <a href="' + html.escape(case["source_url"], quote=True) + '" target="_blank" rel="noopener">Đề APPS gốc</a></p></div></div>'
-            + '<div class="apps-problem-grid"><div><h4>Code cần kiểm tra</h4><pre>' + html.escape(case["buggy_code"])
-            + '</pre></div><div><h4>Miền input thực nghiệm</h4><pre>' + html.escape(input_contract(case))
-            + '</pre></div></div><details><summary>Xem đề bài đầy đủ</summary><pre>'
+    return ('<article class="apps-case"><div class="apps-case-heading"><div><h2>' + html.escape(case_title(case))
+            + '</h2><p class="apps-muted">Faulty variant ' + html.escape(number)
+            + ' · <a href="' + html.escape(case["source_url"], quote=True) + '" target="_blank" rel="noopener">Original APPS problem</a></p></div></div>'
+            + '<div class="apps-problem-grid"><div><h4>Code under test</h4><pre>' + html.escape(case["buggy_code"])
+            + '</pre></div><div><h4>Experimental input domain</h4><pre>' + html.escape(input_contract(case))
+            + '</pre></div></div><details><summary>Full problem statement</summary><pre>'
             + html.escape(case["specification"]) + '</pre></details></article>')
 
 
@@ -49,34 +67,34 @@ def input_contract(case):
     lines = []
     for name, field in case["domain"].items():
         if "enum" in field:
-            rule = "một trong các giá trị " + canonical(field["enum"])
+            rule = "one of " + canonical(field["enum"])
         elif field["type"] == "int":
-            rule = f'số nguyên từ {field["min"]} đến {field["max"]}'
+            rule = f'integer from {field["min"]} to {field["max"]}'
         else:
-            kind = "chuỗi" if field["type"] == "str" else "danh sách"
-            unit = "ký tự" if field["type"] == "str" else "phần tử"
-            rule = f'{kind} dài {field["min_length"]}–{field["max_length"]} {unit}, lấy từ {canonical(field["alphabet"])}'
+            kind = "string" if field["type"] == "str" else "list"
+            unit = "characters" if field["type"] == "str" else "elements"
+            rule = f'{kind} of {field["min_length"]}–{field["max_length"]} {unit}, drawn from {canonical(field["alphabet"])}'
         lines.append(name + ": " + rule + ".")
     for constraint in case.get("constraints", []):
         kind, *names = constraint.split(":")
         if kind == "lt":
             lines.append(names[0] + " < " + names[1] + ".")
         elif kind == "same_length":
-            lines.append(names[0] + " và " + names[1] + " có cùng độ dài.")
+            lines.append(names[0] + " and " + names[1] + " have the same length.")
         elif kind == "not_all_zero":
-            lines.append(names[0] + " có ít nhất một phần tử khác 0.")
+            lines.append(names[0] + " contains at least one nonzero element.")
     return "\n".join(lines)
 
 
 def result_card(title, row):
     output = '<section class="apps-result"><h3>' + html.escape(title) + '</h3>'
     if not row:
-        return output + '<p class="apps-muted">Chưa có kết quả.</p></section>'
+        return output + '<p class="apps-muted">No results available.</p></section>'
     samples = row["samples"]
     hits = sum(bool(s["bug_detected"]) for s in samples)
     correct = sum(bool(s["correct_expected"]) for s in samples)
-    output += f'<p class="apps-result-count">{hits}/{len(samples)} test phát hiện lỗi <span>· {correct}/{len(samples)} expected đúng</span></p>'
-    output += '<div class="apps-table-wrap"><table class="apps-test-table"><thead><tr><th>Test / Input</th><th>Expected</th><th>Code trả về</th></tr></thead><tbody>'
+    output += f'<p class="apps-result-count">{hits}/{len(samples)} bug-detecting tests <span>· {correct}/{len(samples)} correct expected outputs</span></p>'
+    output += '<div class="apps-table-wrap"><table class="apps-test-table"><thead><tr><th>Test / Input</th><th>Expected</th><th>Actual output</th></tr></thead><tbody>'
     for index, sample in enumerate(samples, 1):
         value = sample.get("test")
         if not value:
@@ -86,7 +104,7 @@ def result_card(title, row):
                 value = None
         has_input = type(value) is dict and "input" in value
         text = canonical(value["input"]) if has_input else sample["raw_output"]
-        label = "Phát hiện lỗi" if sample["bug_detected"] else "Expected sai" if sample["valid_format"] and not sample["correct_expected"] else "Chưa phát hiện lỗi" if sample["correct_expected"] else "Sai miền / cấu trúc" if sample.get("error") == "schema_or_domain" else "Đầu ra bị cắt" if sample.get("error") == "truncated" else "JSON không hợp lệ"
+        label = "Bug detected" if sample["bug_detected"] else "Wrong expected output" if sample["valid_format"] and not sample["correct_expected"] else "No bug detected" if sample["correct_expected"] else "Invalid domain or schema" if sample.get("error") == "schema_or_domain" else "Truncated output" if sample.get("error") == "truncated" else "Invalid JSON"
         tone = "apps-hit" if sample["bug_detected"] else "apps-neutral" if sample["correct_expected"] else "apps-wrong"
         expected = canonical(value["expected"]) if type(value) is dict and "expected" in value else "—"
         observed = sample.get("buggy_error", "—")
@@ -94,9 +112,9 @@ def result_card(title, row):
             observed = canonical(sample["buggy_output"])
         output += '<tr><td><span class="apps-test-index">' + str(index) + '</span><code>' + html.escape(text) + '</code><span class="apps-test-status ' + tone + '">' + label + '</span></td><td><code>' + html.escape(expected) + '</code>'
         if sample.get("valid_format") and not sample.get("correct_expected"):
-            output += '<small>Đúng: <code>' + html.escape(canonical(sample.get("gold_output"))) + '</code></small>'
+            output += '<small>Reference: <code>' + html.escape(canonical(sample.get("gold_output"))) + '</code></small>'
         output += '</td><td><code>' + html.escape(observed) + '</code></td></tr>'
-    output += '</tbody></table></div><details class="apps-raw"><summary>JSON gốc</summary><pre>'
+    output += '</tbody></table></div><details class="apps-raw"><summary>Raw JSON</summary><pre>'
     output += html.escape('\n'.join(f'Test {i}: {s["raw_output"]}' for i, s in enumerate(samples, 1)))
     return output + '</pre></details></section>'
 
@@ -113,7 +131,7 @@ def comparison(current, identity, key):
         if record:
             folder = Path(record["path"])
             if digest(folder / "result.json") != record["result_sha256"]:
-                raise ValueError("Kết quả đã lưu bị thay đổi.")
+                raise ValueError("The saved results have changed.")
             rows = [json.loads(line) for line in (folder / "predictions.jsonl").read_text(encoding="utf-8").splitlines()]
             row = next((row for row in rows if row["case_id"] == identity), None)
         cards.append(result_card(item["label"], row))
@@ -138,7 +156,7 @@ def metric_rows(report, split):
 def summary_table(report, split):
     values = report[split + "_summary"]
     keys = ("valid_tests", "correct_expected", "bug_detecting_tests", "cases_detected")
-    output = '<div class="apps-table-wrap"><table class="apps-summary-table"><thead><tr><th>Phiên bản</th><th>Hợp lệ</th><th>Expected đúng</th><th>Test bắt lỗi</th><th>Code phát hiện @4</th></tr></thead><tbody>'
+    output = '<div class="apps-table-wrap"><table class="apps-summary-table"><thead><tr><th>Variant</th><th>Valid</th><th>Correct expected outputs</th><th>Bug-detecting tests</th><th>Cases detected @4</th></tr></thead><tbody>'
     for row, version in zip(metric_rows(report, split), report["variants"], strict=True):
         key = version["key"]
         tone = ' class="apps-selected-row"' if key == report["selected_variant"] else ""

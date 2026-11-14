@@ -22,7 +22,7 @@ Mean ± sample SD across three generation seeds; one training run per configurat
 
 Mean correct expected outputs were 19.00/60 at SFT64 and 26.00/60 at SFT256; mean detected functions were 4.00/15 and 7.00/15, respectively.
 
-![Input-first SFT budget](learning-curve.png)
+![Input-first SFT budget](comparison.png)
 
 Figure 1. Input-first SFT budget.
 

@@ -7,19 +7,19 @@ from pathlib import Path
 PROJECT = Path(__file__).resolve().parents[1]
 ASSETS = Path(r"D:\DA\TTNT_De19_Assets")
 NAMES = {
-    "p01-nonnegative": ("Số không âm", "Trả về true khi x ≥ 0, bao gồm x = 0."),
-    "p03-closed-interval": ("Khoảng đóng", "Trả về true khi −2 ≤ x ≤ 3; hai đầu mút đều được tính."),
-    "p08-series-sum": ("Tổng từ 1 đến n", "Tính tổng các số nguyên từ 1 đến n, bao gồm n. Khi n = 0, trả về 0."),
-    "p10-gcd": ("Ước chung lớn nhất", "Tìm ước chung lớn nhất của hai số nguyên không âm a và b. Quy ước gcd(0, 0) = 0."),
-    "p13-count-positive": ("Đếm số dương", "Đếm các phần tử lớn hơn 0 trong danh sách; phần tử lặp vẫn được tính. Danh sách rỗng trả về 0."),
-    "p15-sum-positive": ("Tổng số dương", "Cộng tất cả phần tử lớn hơn 0 trong danh sách, kể cả phần tử lặp. Danh sách rỗng trả về 0."),
-    "p16-unique-sorted": ("Loại trùng và sắp xếp", "Trả về danh sách các giá trị phân biệt, theo thứ tự tăng dần. Danh sách rỗng trả về []."),
-    "p17-reverse": ("Đảo ngược danh sách", "Đảo ngược thứ tự toàn bộ phần tử; giữ nguyên số lượng và các phần tử lặp."),
-    "p21-palindrome": ("Chuỗi đối xứng", "Kiểm tra chuỗi có giống chính nó khi đọc ngược hay không. Phân biệt chữ hoa, chữ thường và khoảng trắng; chuỗi rỗng là đối xứng."),
-    "p22-vowels": ("Đếm nguyên âm", "Đếm mọi lần xuất hiện của a, e, i, o, u; không phân biệt chữ hoa và chữ thường."),
-    "p28-leading-a": ("Dãy a ở đầu chuỗi", "Đếm số ký tự a liên tiếp ở đầu chuỗi, dừng ở ký tự b đầu tiên. Chuỗi rỗng trả về 0."),
+    "p01-nonnegative": ("Nonnegative number", "Return true when x ≥ 0, including x = 0."),
+    "p03-closed-interval": ("Closed interval", "Return true when −2 ≤ x ≤ 3, including both endpoints."),
+    "p08-series-sum": ("Sum from 1 to n", "Sum integers from 1 through n. Return 0 when n = 0."),
+    "p10-gcd": ("Greatest common divisor", "Find the greatest common divisor of nonnegative integers a and b, with gcd(0, 0) = 0."),
+    "p13-count-positive": ("Count positive numbers", "Count list elements greater than 0, including duplicates. Return 0 for an empty list."),
+    "p15-sum-positive": ("Sum positive numbers", "Sum all list elements greater than 0, including duplicates. Return 0 for an empty list."),
+    "p16-unique-sorted": ("Sort unique values", "Return distinct values in ascending order. Return [] for an empty list."),
+    "p17-reverse": ("Reverse a list", "Reverse all elements, preserving length and duplicates."),
+    "p21-palindrome": ("Palindrome", "Check whether a string reads the same backwards. Case and whitespace are significant; the empty string is a palindrome."),
+    "p22-vowels": ("Count vowels", "Count all occurrences of a, e, i, o and u, ignoring case."),
+    "p28-leading-a": ("Leading a characters", "Count consecutive a characters at the start, stopping at the first b. Return 0 for an empty string."),
 }
-VARIANTS = {"parent": "Sau SFT", "control": "GRPO cố định", "adversarial": "GRPO đối kháng"}
+VARIANTS = {"parent": "After SFT", "control": "Fixed GRPO", "adversarial": "Adversarial GRPO"}
 
 
 def read(path):
@@ -79,7 +79,7 @@ def main():
         for case in rows(source(path)):
             title, translation = NAMES[case["problem_id"]]
             key = subset + "|" + case["case_id"]
-            catalog["cases"][key] = dict(case, subset=subset, title=title, specification_vi=translation)
+            catalog["cases"][key] = dict(case, subset=subset, title=title, display_specification=translation)
     for subset, seeds in (("validation", (42, 43, 44)), ("pool", (42,))):
         for seed in seeds:
             for variant in VARIANTS:

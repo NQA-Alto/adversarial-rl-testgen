@@ -18,10 +18,10 @@
     }
   },
   "train_source_input_types": {
-    "Số nguyên": 3,
-    "Danh sách số": 9,
-    "Chuỗi ký tự": 4,
-    "Danh sách chuỗi": 1
+    "Integers": 3,
+    "Numeric lists": 9,
+    "Strings": 4,
+    "String lists": 1
   },
   "train_domain_sizes": {
     "2667": 128,

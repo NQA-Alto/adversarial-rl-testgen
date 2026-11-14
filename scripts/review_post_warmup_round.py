@@ -34,7 +34,7 @@ def figures(root, output, scores):
     from matplotlib.ticker import MaxNLocator
     plt.rcParams.update({"font.family": "DejaVu Sans", "font.size": 10, "axes.spines.top": False, "axes.spines.right": False})
     colors = {"control": "#49796a", "adversarial": "#a76b46"}
-    labels = {"control": "Dữ liệu cũ", "adversarial": "Thêm lỗi đối kháng"}
+    labels = {"control": "Fixed dataset", "adversarial": "Adversarial augmentation"}
     fig, axes = plt.subplots(2, 1, figsize=(10, 6), sharex=True, layout="constrained")
     for arm in colors:
         groups = rows(root / ("train-" + arm) / "rollouts.jsonl")
@@ -47,11 +47,11 @@ def figures(root, output, scores):
         for index in range(len(groups)):
             cumulative.append(sum(bool(row["policy_signal"]) for row in groups[:index + 1]) / (index + 1))
         axes[1].plot(x, cumulative, color=colors[arm], label=labels[arm], linewidth=1.5)
-    axes[0].set_ylabel("Reward trung bình")
-    axes[0].set_title("Diễn biến GRPO — đường đậm là trung bình trượt tối đa 12 nhóm")
+    axes[0].set_ylabel("Mean reward")
+    axes[0].set_title("GRPO reward — bold lines show a rolling mean of up to 12 groups")
     axes[0].legend(frameon=False)
-    axes[1].set_ylabel("Tỷ lệ nhóm có tín hiệu học\n(tích lũy)")
-    axes[1].set_xlabel("Nhóm GRPO / bước cập nhật")
+    axes[1].set_ylabel("Groups with learning signal\n(cumulative rate)")
+    axes[1].set_xlabel("GRPO group / update step")
     for ax in axes:
         ax.grid(axis="y", color="#e4e5e2", linewidth=0.6)
         ax.set_ylim(0, 1.02)
@@ -59,18 +59,18 @@ def figures(root, output, scores):
     fig.savefig(output / "training-curves.svg", facecolor="white", bbox_inches="tight", pad_inches=0.15)
     plt.close(fig)
     names = ("valid_tests", "correct_expected", "bug_detecting_tests", "cases_detected_with_up_to_4_tests")
-    titles = ("Test hợp lệ / 72", "Kết quả kỳ vọng đúng / 72", "Test phát hiện lỗi / 72", "Chương trình lỗi phát hiện / 18")
+    titles = ("Valid tests / 72", "Correct expected outputs / 72", "Bug-detecting tests / 72", "Faulty programs detected / 18")
     fig, axes = plt.subplots(2, 2, figsize=(10, 6), layout="constrained")
     for ax, key, title in zip(axes.flat, names, titles, strict=True):
         values = [scores[variant][key] for variant in ("parent_warmup", "control", "adversarial")]
-        bars = ax.bar(["Trước vòng này", "Dữ liệu cũ", "Đối kháng"], values, color=["#999d9a", colors["control"], colors["adversarial"]], width=0.6)
+        bars = ax.bar(["Before this round", "Fixed dataset", "Adversarial"], values, color=["#999d9a", colors["control"], colors["adversarial"]], width=0.6)
         ax.bar_label(bars, padding=3)
         ax.set_ylim(0, 18 if key == names[-1] else 72)
         ax.yaxis.set_major_locator(MaxNLocator(integer=True))
         ax.set_title(title)
         ax.set_axisbelow(True)
         ax.grid(axis="y", color="#e4e5e2", linewidth=0.6)
-    fig.suptitle("Validation — một seed, cùng 4 test cho mỗi chương trình lỗi")
+    fig.suptitle("Validation — one seed, four tests per faulty program")
     fig.savefig(output / "validation-comparison.png", dpi=180, facecolor="white", bbox_inches="tight", pad_inches=0.15)
     fig.savefig(output / "validation-comparison.svg", facecolor="white", bbox_inches="tight", pad_inches=0.15)
     plt.close(fig)

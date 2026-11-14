@@ -38,7 +38,7 @@ def summarize(folder):
     trial = read(folder / "result.json")
     if trial["status"] != "completed" or not trial["controlled_evaluation_verified"] or not trial["training_case_order_match"]:
         raise ValueError("Completed controlled reward trial required")
-    labels = {"legacy-v1": "GRPO reward hiện tại", "equal-v1": "GRPO reward chia đều"}
+    labels = {"legacy-v1": "GRPO · original reward", "equal-v1": "GRPO · equal reward weights"}
     parent_path = Path(trial["plan"]["parent_validation"])
     audit(parent_path)
     parent = read(parent_path / "result.json")
@@ -126,35 +126,35 @@ def summarize(folder):
     import matplotlib.pyplot as plt
     colors = ["#c4c5b1", "#95aa97", "#38654e"]
     fig, axes = plt.subplots(1, 3, figsize=(12, 4.5), facecolor="white")
-    xlabels = ["Trước RL", "Reward\nhiện tại", "Reward\nchia đều"]
+    xlabels = ["Before RL", "Original\nreward", "Equal\nreward weights"]
     for ax, field, title in zip(axes, ("io_accuracy", "attack_rate", "case_detection_at_4"),
-                               ("Expected đúng", "Test thực sự bắt lỗi", "Code phát hiện với tối đa 4 test"), strict=True):
+                               ("Correct expected outputs", "Valid bug-detecting tests", "Cases detected with up to 4 tests"), strict=True):
         values = [record["metrics"][field] * 100 for record in records.values()]
         bars = ax.bar(xlabels, values, color=colors, width=.6)
         for bar, value in zip(bars, values, strict=True):
             ax.text(bar.get_x() + bar.get_width() / 2, value + 1.2, f'{value:.1f}%', ha="center", fontweight="bold" if value == max(values) else "normal")
         ax.set_ylim(0, max(40, max(values) * 1.3))
-        ax.set_xlabel("Mốc / tỷ trọng reward")
-        ax.set_ylabel("Tỷ lệ (%)")
+        ax.set_xlabel("Checkpoint / reward weights")
+        ax.set_ylabel("Rate (%)")
         ax.set_title(title, fontsize=10)
         ax.grid(axis="y", alpha=.15)
         ax.set_axisbelow(True)
         ax.spines[["top", "right"]].set_visible(False)
-    fig.suptitle("Kiểm chứng tỷ trọng reward · cùng parent và 96 bước GRPO", fontsize=12)
+    fig.suptitle("Reward weights · same parent and 96 GRPO steps", fontsize=12)
     fig.tight_layout(rect=(0, 0, 1, .93))
     fig.savefig(output / "validation-comparison.png", dpi=180, facecolor="white")
     plt.close(fig)
     fig, axes = plt.subplots(1, 2, figsize=(11, 4), facecolor="white")
     for profile, color in zip(labels, colors[1:], strict=True):
         rollouts = rows(Path(trial["arms"][profile]["training"]) / "rollouts.jsonl")
-        for ax, field, title in zip(axes, ("correct_expected", "bug_detected"), ("Expected đúng khi học", "Test bắt lỗi khi học"), strict=True):
+        for ax, field, title in zip(axes, ("correct_expected", "bug_detected"), ("Correct expected outputs during training", "Bug-detecting tests during training"), strict=True):
             steps = [row["optimizer_step_before"] + 1 for row in rollouts]
             values = [sum(sample[field] for sample in row["samples"]) / 4 * 100 for row in rollouts]
             moving = [sum(values[max(0, i - 15):i + 1]) / min(16, i + 1) for i in range(len(values))]
             ax.plot(steps, moving, color=color, label=labels[profile], linewidth=1.7)
             ax.set_title(title, loc="left", fontsize=11)
-            ax.set_xlabel("Bước cập nhật GRPO")
-            ax.set_ylabel("Tỷ lệ (%) · trung bình trượt 16 nhóm")
+            ax.set_xlabel("GRPO update step")
+            ax.set_ylabel("Rate (%) · 16-group rolling mean")
             ax.set_ylim(0, 100)
             ax.grid(axis="y", alpha=.15)
             ax.spines[["top", "right"]].set_visible(False)
