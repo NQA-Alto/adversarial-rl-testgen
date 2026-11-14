@@ -1,11 +1,11 @@
-# Lượt SFT dừng ở kiểm tra replay
+# SFT replay gate
 
-Chạy lại mốc 64 để kiểm tra điều kiện so ngân sách với adapter lịch sử.
+A replay of the 64-step checkpoint checks whether a longer training-budget comparison can use the historical adapter as a matching baseline.
 
-Lượt này dừng sau 116/256 bước. Relative L2 tại mốc 64 là 0,002685916, vượt ngưỡng 0,001. Nhãn, thứ tự ví dụ và mã dùng chung trùng hash; nguyên nhân độ lệch chưa được xác định. Không có đánh giá chất lượng mới trong lượt này.
+The run stopped after 116/256 steps. Relative L2 at step 64 was 0.002685916, above the 0.001 threshold. Label, example-order and shared-source hashes matched; the cause of the divergence remains unresolved. No new quality evaluation was completed.
 
-## Dữ liệu
+## Data files
 
 [metrics.json](metrics.json)
 
-[Cấu hình và chỉ số đánh giá](../../docs/EXPERIMENTS.md).
+[Evaluation guide](../../docs/EXPERIMENTS.md).

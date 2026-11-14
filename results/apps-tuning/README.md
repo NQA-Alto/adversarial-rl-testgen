@@ -1,11 +1,11 @@
-# Thinking và hợp đồng đầu ra
+# Thinking and output contracts
 
-Các phép thử suy luận trên Train với adapter đóng băng: bật thinking và thay diễn đạt kiểu đầu ra trong prompt.
+Train-only inference trials with frozen adapters: enabling thinking and changing the output-type instructions in the prompt.
 
-Nhánh thinking lưu 20 mẫu đều bị cắt ở trần 768 token. Hai prompt v3/v4 cũng không qua điều kiện Train; không chấm thêm Validation cho các ứng viên này.
+All 20 saved thinking samples were truncated at the 768-token limit. Prompt variants v3/v4 also failed the Train gate, so these candidates were not evaluated further on Validation.
 
-## Dữ liệu
+## Data files
 
 [experiments.json](experiments.json)
 
-[Cấu hình và chỉ số đánh giá](../../docs/EXPERIMENTS.md).
+[Evaluation guide](../../docs/EXPERIMENTS.md).

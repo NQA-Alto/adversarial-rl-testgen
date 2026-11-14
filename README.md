@@ -1,82 +1,92 @@
-# Adversarial Reinforcement Learning for Test Case Generation
+# LLM Test Generation
 
-Sinh ca kiểm thử cho hàm Python bằng Qwen3.5-2B chạy trên máy cá nhân. Mỗi ca kiểm thử gồm dữ liệu đầu vào và kết quả mong đợi (`input`, `expected`). Chương trình đối chiếu với lời giải tham chiếu để kiểm tra đáp án và xác định ca kiểm thử có phát hiện được lỗi hay không.
+A student project exploring how a local language model can generate tests that expose bugs in Python functions. Each test contains an input and an expected output. An execution-based verifier checks the expected output against a reference solution before counting a detected bug.
 
-Đồ án thử nghiệm SFT, GRPO và curriculum đối kháng trên một tập con APPS Introductory. Model sinh test được tinh chỉnh bằng LoRA; model sinh code bổ sung giữ nguyên trọng số. Quá trình suy luận và huấn luyện đều chạy local.
+The training pipeline combines supervised fine-tuning (SFT), Group Relative Policy Optimization (GRPO) and an adversarial code curriculum, inspired by ATGen. It uses Qwen3.5-2B with LoRA on a bounded subset of APPS Introductory.
 
-## Dữ liệu
+## Start here
 
-Tập con APPS Introductory dạng gọi hàm Python. Miền input được giới hạn để kiểm tra bằng hai lời giải tham chiếu. Code lỗi ban đầu tạo bằng đột biến AST; code bổ sung được model local sinh và lọc trong các vòng đối kháng.
+- **Try the verifier:** run the [small example](#try-the-verifier) below with Python, without downloading a model.
+- **Review the experiment:** see the [recorded results](results/apps-expanded-adaptive/README.md) and [evaluation protocol](docs/EXPERIMENTS.md).
+- **Explore the code:** use the [source map](#source-map).
+- **Run the full application:** see [setup and training](docs/APPS_TRAINING.md). The original Windows setup requires local assets that are not included in this repository.
 
-| Tập | Bài toán | Code lỗi |
-|---|---:|---:|
-| Train | 58 | 145 |
-| Validation | 5 | 15 |
-| Test | 7 | 18 |
+## How it works
 
-Các tập tách theo bài và URL nguồn trong APPS Train. Tập Test ở đây là holdout của đồ án, khác APPS Test chính thức.
+```text
+Problem + faulty Python function + input contract
+                        |
+                  Test generator
+                        |
+                {input, expected}
+                        |
+               Execution-based verifier
+                 /                 \
+       Reference solution      Faulty function
+                 \                 /
+           Correct expected AND different output?
+                        |
+                 Bug detected
+```
 
-## Kết quả
+SFT teaches the output format using reference-checked examples. GRPO uses rewards for valid inputs, correct expected outputs and bug detection. In the adversarial branch, a frozen code model proposes new faulty functions; filtering retains candidates that pass the generator's current valid tests but still contain a known error within the declared input domain.
 
-Đánh giá cuối trên Test, trung bình ba seed sinh 42/43/44; bốn test cho mỗi code.
+## Try the verifier
 
-| Phiên bản | Expected đúng /72 | Test bắt lỗi /72 | Code phát hiện /18 |
+From the repository root, using Python 3.12:
+
+```sh
+python examples/verify_test.py
+python scripts/check_apps_rewards.py
+python scripts/check_runtime_limits.py
+```
+
+These commands use the Python standard library. The example scores three hand-written tests against a small boundary-condition bug. It demonstrates the verifier, not model inference or the reported APPS results.
+
+## Recorded results
+
+The expanded experiment uses 58 training problems, 5 validation problems and 7 held-out problems, all drawn from APPS Train. Each faulty function receives four generated tests. The table reports mean counts across generation seeds 42, 43 and 44, with one training seed per configuration.
+
+| Checkpoint | Correct expected / 72 | Bug-detecting tests / 72 | Faulty functions detected / 18 |
 |---|---:|---:|---:|
-| Qwen gốc | 14.00 | 7.00 | 5.00 |
-| Sau SFT | **24.67** | **14.33** | **8.67** |
-| GRPO cố định | **24.67** | **13.33** | **7.67** |
-| GRPO đối kháng | **24.67** | **14.00** | **8.33** |
+| Base Qwen | 14.00 | 7.00 | 5.00 |
+| SFT, 840 steps | 24.67 | 14.33 | 8.67 |
+| SFT + fixed-code GRPO | 24.67 | 13.33 | 7.67 |
+| SFT + adversarial GRPO | 24.67 | 14.00 | 8.33 |
 
-Phiên bản sử dụng được chọn trên Validation trước khi mở Test: **Sau SFT**.
+SFT was selected using validation results before the held-out evaluation. It improved on the base model; neither GRPO branch improved bug detection over SFT in this experiment.
 
-Phép so sánh GRPO dùng cùng SFT 840 cha, cùng reward và hai vòng × 32 bước mỗi nhánh. Ba seed sinh chỉ phản ánh biến động lấy mẫu; mỗi cấu hình có một seed huấn luyện.
+[Metrics and variability](results/apps-expanded-adaptive/README.md) · [Machine-readable results](results/apps-expanded-adaptive/metrics.json) · [Frozen protocol](results/apps-expanded-adaptive/protocol.json)
 
-[Thiết lập, số liệu Validation và phân tích giới hạn](results/apps-expanded-adaptive/README.md)
+## Source map
 
-![Kết quả Test](results/apps-expanded-adaptive/test.png)
-
-Hình 1. Expected đúng và code lỗi phát hiện trên Test. Thanh sai số là độ lệch chuẩn qua ba seed sinh.
-
-## Chạy demo
-
-Bản chạy hiện tại dùng Windows; model, dữ liệu và adapter lưu ở `D:/DA/TTNT_De19_Assets`.
-
-1. Chạy `MO_GIAO_DIEN.cmd`.
-2. Mở [demo](http://127.0.0.1:7860/?__theme=light).
-3. Chọn bài và phiên bản, xem kết quả đã lưu hoặc bấm **Sinh 4 test mới**.
-
-Tab Kết quả hiển thị đối chứng và đánh giá cuối. Tab Thực nghiệm cho phép chạy kiểm tra dữ liệu, GRPO trên Train và xem đường học. [TensorBoard](http://127.0.0.1:6006) chạy cùng bộ công cụ. Dùng `DONG_GIAO_DIEN.cmd` để dừng dịch vụ.
-
-## Môi trường
-
-| Thành phần | Cấu hình đã dùng |
+| Component | Entry points |
 |---|---|
-| CPU | AMD Ryzen 7 7840H |
-| GPU | NVIDIA RTX 4060 Laptop, 8 GB VRAM |
-| RAM | 16 GB |
-| Python | 3.12.15 |
-| PyTorch | 2.14.1+cu132 |
-| Transformers / PEFT / TRL | 5.20.2 / 0.21.2 / 1.16.0 |
-| Model | Qwen3.5-2B, BF16 |
-| LoRA | Rank 4, alpha 8, 208.896 tham số huấn luyện |
+| Input contracts, prompts and scoring | [`apps_core.py`](scripts/apps_core.py), [`restricted_python.py`](scripts/restricted_python.py) |
+| Data preparation | [`prepare_apps.py`](scripts/prepare_apps.py), [`prepare_apps_expanded.py`](scripts/prepare_apps_expanded.py) |
+| SFT and GRPO | [`apps_sft.py`](scripts/apps_sft.py), [`apps_model_runner.py`](scripts/apps_model_runner.py), [`apps_rewards.py`](scripts/apps_rewards.py) |
+| Adversarial code and curriculum | [`apps_adversary.py`](scripts/apps_adversary.py), [`apps_adversarial_round.py`](scripts/apps_adversarial_round.py) |
+| Evaluation and audit | [`apps_final_evaluate.py`](scripts/apps_final_evaluate.py), [`audit_apps_run.py`](scripts/audit_apps_run.py) |
+| Gradio application | [`apps_ui.py`](scripts/apps_ui.py), [`apps_presentation.py`](scripts/apps_presentation.py), [`ui_services.py`](scripts/ui_services.py) |
 
-Các lệnh khởi chạy còn dùng đường dẫn của máy thực nghiệm. Model nền và checkpoint không được đưa vào Git; việc cài lại trên máy khác chưa được kiểm tra.
+The repository also retains earlier experiments and internal-dataset scripts. Start with the APPS entry points above; the [results index](results/README.md) separates the expanded study from earlier trials.
 
-## Mã nguồn và tài liệu
+## Scope
 
-- [Dữ liệu](docs/APPS_DATASET.md)
-- [Cách dùng demo](docs/DEMO.md)
-- [Phương pháp tham khảo](docs/ATGEN_ALIGNMENT.md)
-- [Thực nghiệm cuối](results/apps-expanded-adaptive/README.md)
+The verifier supports a restricted Python syntax and explicitly bounded input domains. The held-out set is small and separate from the official APPS Test split. Generation seeds measure sampling variation, not variation across independently trained models. The results therefore describe this experimental setup rather than a full APPS benchmark reproduction.
 
-`apps_core.py` chứa prompt và bộ chấm; `restricted_python.py` thực thi tập con Python; `apps_model_runner.py` chạy GRPO và đánh giá; `apps_adversary.py` sinh và lọc code; `apps_ui.py` cùng `apps_presentation.py` tạo giao diện Gradio.
+Source code, result summaries and plots are included. Model weights, adapters, prepared datasets and raw run artifacts remain external. The original full training/UI environment has not been reproduced on a clean machine.
 
-## Giới hạn
+## Documentation
 
-Hỗ trợ hàm Python trong cú pháp và miền input đã khai báo. Chưa phải hệ thống chấm mọi chương trình hoặc benchmark APPS đầy đủ. Bộ dữ liệu và holdout nhỏ; expected sai vẫn là một nguồn thất bại. Việc chạy lại trên máy khác chưa được kiểm tra.
+- [Dataset construction](docs/APPS_DATASET.md)
+- [Setup and training](docs/APPS_TRAINING.md)
+- [Demo guide](docs/DEMO.md)
+- [Evaluation and experiment history](docs/EXPERIMENTS.md)
+- [Relationship to ATGen](docs/ATGEN_ALIGNMENT.md)
 
-## Tham khảo
+## References
 
-- [ATGen](https://arxiv.org/abs/2510.14635)
-- [APPS](https://github.com/hendrycks/apps) và [codeparrot/apps](https://huggingface.co/datasets/codeparrot/apps)
+- [ATGen paper](https://arxiv.org/abs/2510.14635)
+- [APPS](https://github.com/hendrycks/apps) and the [codeparrot/apps dataset](https://huggingface.co/datasets/codeparrot/apps)
 - [TRL GRPOTrainer](https://huggingface.co/docs/trl/grpo_trainer)

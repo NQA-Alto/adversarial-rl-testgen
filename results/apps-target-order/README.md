@@ -1,19 +1,19 @@
-# Thứ tự trường trong nhãn SFT
+# SFT target field order
 
-Giữ nguyên 319 cặp input/expected và cấu hình học; đổi thứ tự hai trường ngoài cùng của target. So riêng các mốc SFT và GRPO.
+The study keeps the same 319 input/expected pairs and training settings while changing the order of the two top-level target fields. SFT and GRPO checkpoints are compared separately.
 
-| Cấu hình | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện /15 |
+| Configuration | Valid /60 | Correct expected /60 | Bug-detecting tests /60 | Functions detected /15 |
 |---|---|---|---|---|
-| sorted-v1 / sft | 41,00 ± 2,65 | 11,33 ± 2,52 | 3,67 ± 1,53 | 3,33 ± 1,15 |
-| sorted-v1 / grpo | 43,33 ± 3,51 | 12,00 ± 2,65 | 3,67 ± 1,53 | 3,33 ± 1,53 |
-| input-first-v1 / sft | 43,33 ± 3,21 | 19,00 ± 2,65 | 5,33 ± 0,58 | 4,00 ± 1,00 |
-| input-first-v1 / grpo | **43,67 ± 3,51** | **20,67 ± 2,52** | **5,67 ± 2,08** | **4,33 ± 1,53** |
+| sorted-v1 / sft | 41.00 ± 2.65 | 11.33 ± 2.52 | 3.67 ± 1.53 | 3.33 ± 1.15 |
+| sorted-v1 / grpo | 43.33 ± 3.51 | 12.00 ± 2.65 | 3.67 ± 1.53 | 3.33 ± 1.53 |
+| input-first-v1 / sft | 43.33 ± 3.21 | 19.00 ± 2.65 | 5.33 ± 0.58 | 4.00 ± 1.00 |
+| input-first-v1 / grpo | 43.67 ± 3.51 | 20.67 ± 2.52 | 5.67 ± 2.08 | 4.33 ± 1.53 |
 
-Trung bình ± SD trên ba seed sinh; mỗi cấu hình có một lượt train.
+Mean ± sample SD across three generation seeds; one training run per configuration.
 
-## Kết quả từng lượt
+## Per-run counts
 
-| Nhãn | Mốc | Seed sinh | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện /15 |
+| Target order | Stage | Generation seed | Valid /60 | Correct expected /60 | Bug-detecting tests /60 | Functions detected /15 |
 |---|---|---|---|---|---|---|
 | sorted-v1 | SFT64 | 42 | 39 | 14 | 5 | 4 |
 | sorted-v1 | GRPO | 42 | 43 | 14 | 4 | 3 |
@@ -28,14 +28,14 @@ Trung bình ± SD trên ba seed sinh; mỗi cấu hình có một lượt train.
 | input-first-v1 | SFT64 | 44 | 47 | 17 | 5 | 5 |
 | input-first-v1 | GRPO | 44 | 47 | 21 | 8 | 6 |
 
-Input-first tăng expected ở cả ba seed sinh. Phần lớn thay đổi xuất hiện ngay sau SFT; mức tăng test bắt lỗi tập trung ở bài làm tròn 2947.
+Input-first targets increased correct expected outputs at all three generation seeds. Most of the change appeared after SFT; the gain in bug-detecting tests was concentrated in rounding problem 2947.
 
-![Thứ tự trường trong nhãn SFT](comparison.png)
+![SFT target field order](comparison.png)
 
-Hình 1. Thứ tự trường trong nhãn SFT.
+Figure 1. SFT target field order.
 
-## Dữ liệu
+## Data files
 
 [costs.csv](costs.csv) · [errors.csv](errors.csv) · [metrics.csv](metrics.csv) · [metrics.json](metrics.json) · [paired-deltas.csv](paired-deltas.csv) · [per-case.csv](per-case.csv) · [per-problem.csv](per-problem.csv)
 
-[Cấu hình và chỉ số đánh giá](../../docs/EXPERIMENTS.md).
+[Evaluation guide](../../docs/EXPERIMENTS.md).

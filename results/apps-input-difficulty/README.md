@@ -1,11 +1,11 @@
-# Phân bố input làm lộ lỗi
+# Bug-exposing input density
 
-Vét cạn miền input Validation để đo tỷ lệ input phân biệt được reference với từng mutant.
+Exhaustive enumeration of each Validation input domain measures the fraction of inputs that distinguish the reference solution from a mutant.
 
-Xác suất phát hiện với bốn lần chọn đều có hoàn lại là 1−(1−p)^4, giả sử expected luôn đúng. Đây là phân tích bằng reference, không phải thành tích của model.
+With four independent uniform draws with replacement, detection probability is 1 - (1 - p)^4, assuming every expected output is correct. This is a reference-based calculation, not a model score.
 
-## Dữ liệu
+## Data files
 
 [analysis.json](analysis.json) · [per-case.csv](per-case.csv)
 
-[Cấu hình và chỉ số đánh giá](../../docs/EXPERIMENTS.md).
+[Evaluation guide](../../docs/EXPERIMENTS.md).

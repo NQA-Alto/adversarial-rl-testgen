@@ -1,11 +1,11 @@
-# Thứ tự khóa JSON sau SFT
+# JSON field order after SFT
 
-Các nhãn cũ đều đặt expected trước input do hàm canonical sắp xếp tên khóa.
+Earlier SFT labels placed expected before input because canonical serialization sorted the keys.
 
-Sau SFT, phần lớn JSON model sinh cũng bắt đầu bằng expected. Phép so sánh thứ tự target được lưu riêng tại apps-target-order.
+Most JSON outputs after SFT also began with expected. The controlled ordering comparison is recorded in [SFT target field order](../apps-target-order/README.md).
 
-## Dữ liệu
+## Data files
 
 [analysis.json](analysis.json)
 
-[Cấu hình và chỉ số đánh giá](../../docs/EXPERIMENTS.md).
+[Evaluation guide](../../docs/EXPERIMENTS.md).

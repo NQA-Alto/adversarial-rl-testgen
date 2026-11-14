@@ -1,19 +1,19 @@
-# Thống kê dữ liệu
+# Earlier APPS dataset profile
 
-Tập con APPS gồm 29 bài, 74 mutant, chia theo bài thành Train/Validation/Test. Phần thống kê đặc trưng dùng Train; số lượng tập chia lấy từ manifest.
+The earlier subset contains 29 problems and 74 mutants, split by source problem into Train, Validation and Test. Feature summaries use Train; split sizes come from the manifest.
 
-Dữ liệu nguồn, hợp đồng input và bộ chấm được mô tả trong tài liệu dữ liệu.
+See [dataset construction](../../docs/APPS_DATASET.md) for source and verifier details. This profile describes the earlier subset, not the expanded 58-problem Train set.
 
-![Thống kê dữ liệu](dataset-profile.png)
+![Earlier APPS dataset profile](dataset-profile.png)
 
-Hình 1. Thống kê dữ liệu.
+Figure 1. Earlier APPS dataset profile.
 
-![Thống kê dữ liệu](pipeline.png)
+![Earlier APPS dataset profile](pipeline.png)
 
-Hình 2. Thống kê dữ liệu.
+Figure 2. Earlier APPS dataset profile.
 
-## Dữ liệu
+## Data files
 
 [profile.json](profile.json)
 
-[Cấu hình và chỉ số đánh giá](../../docs/EXPERIMENTS.md).
+[Evaluation guide](../../docs/EXPERIMENTS.md).

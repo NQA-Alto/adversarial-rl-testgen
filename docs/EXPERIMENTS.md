@@ -1,34 +1,38 @@
-# Thực nghiệm
+# Evaluation and experiment history
 
-## Cách tính chỉ số
+## Metrics
 
-| Chỉ số | Tử số | Mẫu số |
+| Metric | Numerator | Denominator |
 |---|---|---|
-| Valid rate | Output có JSON và input hợp lệ | Toàn bộ output sinh ra |
-| IO accuracy | Test có expected đúng theo reference | Toàn bộ output sinh ra |
-| Attack rate | Test đúng và làm lộ lỗi của code | Toàn bộ output sinh ra |
-| Code detection at 4 | Code có ít nhất một test đúng bắt lỗi | Toàn bộ code được đánh giá |
+| Valid rate | Outputs with valid JSON and an allowed input | All generated outputs |
+| IO accuracy | Tests with a correct expected output | All generated outputs |
+| Attack rate | Correct tests that expose a bug | All generated outputs |
+| Detection at 4 | Faulty functions detected by at least one correct test | All evaluated faulty functions |
 
-Output không hợp lệ hoặc bị cắt vẫn nằm trong mẫu số. Code detection dùng ngân sách tối đa bốn test mỗi code, khác pass@1 của model viết code. Các chỉ số không được thay thế cho nhau khi so với ATGen.
+Invalid and truncated outputs remain in the denominator. Detection at 4 uses a budget of four tests per faulty function. It measures test generation, rather than the accuracy of a code-writing model.
 
-## Mốc đã đánh giá trên Test
+## Expanded study
 
-[Tập Train mở rộng và SFT 840](../results/apps-expanded-adaptive/README.md) gồm 58 bài Train, 5 bài Validation và 7 bài Test giữ riêng từ APPS Train. Checkpoint được chọn bằng Validation trước khi chạy Test. SFT tốt hơn Qwen gốc; hai nhánh GRPO ở ngân sách hai vòng 32 bước chưa vượt SFT.
+The [expanded experiment](../results/apps-expanded-adaptive/README.md) uses 58 Train, 5 Validation and 7 held-out Test problems from APPS Train. SFT840 was selected using Validation before the final evaluation.
 
-Ba seed sinh 42, 43, 44 phản ánh biến động lấy mẫu. Các mutant cùng bài có tương quan; số mutant không phải số bài toán độc lập.
+The fixed-code and adversarial GRPO branches share the SFT parent, prompt, reward profile, training positions and two rounds of 32 optimizer steps. The adversarial branch changes eligible faulty functions between rounds; the fixed branch retains the original code.
 
-## Thử nghiệm tiếp theo
+The base model, SFT and both GRPO branches were evaluated with generation seeds 42, 43 and 44. There is one training seed per configuration. Reported standard deviations describe sampling variability; the study does not estimate variation across independent training runs. Mutants from the same source problem are also correlated.
 
-Lịch cân bằng tăng số nhóm được học trên code đối kháng. Nhánh cố định và đối kháng có cùng parent SFT, case ID, số bước, learning rate và reward. Mỗi nhánh được học hai vòng 64 bước; pilot dùng seed 42 và chỉ chạy seed 43 xác nhận nếu đạt điều kiện đã chốt. Chỉ code tại các vị trí đối kháng được thay; sau vòng đầu, bộ sinh code được lọc theo test sinh trên curriculum hiện tại. Các lỗi chưa bị bắt được giữ lại.
+SFT improved on the base model. Neither GRPO branch improved held-out bug detection over SFT in this configuration.
 
-Các phép thử mới chỉ dùng Train/Validation. Test cũ giữ nguyên để mô tả phiên bản đã chốt, không được gán cho checkpoint mới. Muốn đánh giá cuối một phiên bản tiếp theo cần một holdout mới chưa tham gia điều chỉnh.
+## Subsequent experiments
 
-## Các mốc trước
+The balanced-curriculum implementation uses two rounds of 64 steps, with half the sampled groups drawn from adversarial positions. The fixed and adversarial branches use matching case IDs, learning rates, parents and rewards. A seed-43 confirmation is conditional on the seed-42 validation gate.
 
-- [SFT 64 và 256 trên cùng quỹ đạo](../results/apps-shared-sft-budget/README.md)
-- [SFT 256 trước và sau GRPO](../results/apps-sft256-grpo/README.md)
-- [Hai nhánh đối kháng từ SFT 64](../results/apps-input-first-review/README.md)
+These trials use Train/Validation. The stored Test result belongs to the earlier frozen protocol. A later checkpoint would require a fresh held-out evaluation to support a new final claim.
 
-Đây là kết quả lịch sử trên tập Train nhỏ hơn, không gộp với tập mở rộng. Các lượt không cải thiện được giữ lại trong nhật ký và phân tích riêng.
+## Earlier trials
 
-Output gốc, adapter, mã nguồn đóng băng và các phép chấm lại được lưu trong `D:/DA/TTNT_De19_Assets/evidence`. Git giữ mã nguồn, cấu hình, bảng tổng hợp và biểu đồ.
+The [results index](../results/README.md) groups the earlier studies, including target ordering, SFT budget, reward weighting, adversarial curricula and error analysis. They use earlier datasets or prompts and should be compared within their own settings.
+
+Stopped runs and negative results are retained alongside successful runs. In particular, the replay-gate failure and the LoRA trial stopped before Validation do not provide new model-quality estimates.
+
+## Available evidence
+
+Git contains summary CSV/JSON files, plots and the expanded protocol with source and split hashes. Raw generations, adapters and frozen run sources were stored in `D:/DA/TTNT_De19_Assets/evidence` and are not included in this checkout. Reading a summary or passing the standalone checks is not a rerun of the model experiments.

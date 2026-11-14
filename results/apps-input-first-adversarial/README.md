@@ -1,24 +1,24 @@
-# Curriculum đối kháng với nhãn input-first
+# Input-first adversarial curriculum
 
-Hai nhánh bắt đầu từ SFT64 input-first, cùng hai vòng × 48 bước GRPO. Bảng dùng seed sinh 42.
+Both branches start from SFT64 with input-first targets and run two rounds of 48 GRPO steps. Results below use generation seed 42.
 
-## Kết quả từng lượt
+## Per-run counts
 
-| Cấu hình | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện /15 |
+| Configuration | Valid /60 | Correct expected /60 | Bug-detecting tests /60 | Functions detected /15 |
 |---|---|---|---|---|
-| Qwen gốc | 35 | 15 | 4 | 3 |
+| Base Qwen | 35 | 15 | 4 | 3 |
 | SFT64 | 41 | 18 | 6 | 3 |
-| GRPO cố định | 41 | 19 | 4 | 3 |
-| GRPO đối kháng | 41 | 16 | 5 | 3 |
+| Fixed-code GRPO | 41 | 19 | 4 | 3 |
+| Adversarial GRPO | 41 | 16 | 5 | 3 |
 
-Hai nhánh cùng phát hiện 3/15 code ở seed 42.
+Both branches detected 3/15 functions at seed 42.
 
-![Curriculum đối kháng với nhãn input-first](validation-comparison.png)
+![Input-first adversarial curriculum](validation-comparison.png)
 
-Hình 1. Curriculum đối kháng với nhãn input-first.
+Figure 1. Input-first adversarial curriculum.
 
-## Dữ liệu
+## Data files
 
 [metrics.csv](metrics.csv) · [metrics.json](metrics.json) · [per-problem.csv](per-problem.csv)
 
-[Cấu hình và chỉ số đánh giá](../../docs/EXPERIMENTS.md).
+[Evaluation guide](../../docs/EXPERIMENTS.md).

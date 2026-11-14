@@ -1,29 +1,29 @@
-# Tỷ trọng reward trong GRPO
+# GRPO reward weights
 
-Hai nhánh cùng SFT64 expected-first, cùng 96 bước GRPO; so trọng số 0,1/0,2/0,7 với chia đều 1/3.
+Both runs start from the same expected-first SFT64 adapter and use 96 GRPO steps. Component weights 0.1/0.2/0.7 are compared with equal weights of 1/3.
 
-## Kết quả từng lượt
+## Per-run counts
 
-| Cấu hình | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện /15 |
+| Configuration | Valid /60 | Correct expected /60 | Bug-detecting tests /60 | Functions detected /15 |
 |---|---|---|---|---|
 | SFT64 | 41 | 13 | 4 | 3 |
-| Reward 0,1/0,2/0,7 | 41 | 13 | 4 | 3 |
-| Reward chia đều | 45 | 15 | 5 | 4 |
+| Weighted reward (0.1/0.2/0.7) | 41 | 13 | 4 | 3 |
+| Equal reward | 45 | 15 | 5 | 4 |
 
-Reward chia đều tăng nhẹ ở seed 42, nhưng mức tăng chưa ổn định khi sinh lại với seed 43/44.
+Equal weights improved the seed-42 result slightly, but the gain was not consistent when resampled with seeds 43/44.
 
-![Tỷ trọng reward trong GRPO](validation-comparison.png)
+![GRPO reward weights](validation-comparison.png)
 
-Hình 1. Tỷ trọng reward trong GRPO.
+Figure 1. GRPO reward weights.
 
-![Tỷ trọng reward trong GRPO](training-components.png)
+![GRPO reward weights](training-components.png)
 
-Hình 2. Tỷ trọng reward trong GRPO.
+Figure 2. GRPO reward weights.
 
-[Kết quả sinh lại với ba seed](SAMPLING.md).
+[Resampling across three seeds](SAMPLING.md).
 
-## Dữ liệu
+## Data files
 
 [error-examples.json](error-examples.json) · [metrics.csv](metrics.csv) · [metrics.json](metrics.json) · [per-case.csv](per-case.csv) · [sampling-metrics.csv](sampling-metrics.csv) · [sampling-metrics.json](sampling-metrics.json)
 
-[Cấu hình và chỉ số đánh giá](../../docs/EXPERIMENTS.md).
+[Evaluation guide](../../docs/EXPERIMENTS.md).

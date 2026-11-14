@@ -1,23 +1,23 @@
-# Reward: kết quả theo seed sinh
+# Reward comparison by generation seed
 
-Các checkpoint cố định được đánh giá với seed sinh 42/43/44, mỗi lượt 60 test trên 15 code Validation.
+Fixed checkpoints evaluated with generation seeds 42/43/44. Each run generates 60 tests for 15 Validation functions.
 
-| Cấu hình | Seed sinh | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện /15 |
+| Configuration | Generation seed | Valid /60 | Correct expected /60 | Bug-detecting tests /60 | Functions detected /15 |
 |---|---|---|---|---|---|
 | SFT64 | 42 | 41 | 13 | 4 | 3 |
-| Reward 0,1/0,2/0,7 | 42 | 41 | 13 | 4 | 3 |
-| Reward chia đều | 42 | 45 | 15 | 5 | 4 |
+| Weighted reward (0.1/0.2/0.7) | 42 | 41 | 13 | 4 | 3 |
+| Equal reward | 42 | 45 | 15 | 5 | 4 |
 | SFT64 | 43 | 42 | 12 | 2 | 2 |
-| Reward 0,1/0,2/0,7 | 43 | 40 | 13 | 2 | 2 |
-| Reward chia đều | 43 | 42 | 14 | 2 | 2 |
+| Weighted reward (0.1/0.2/0.7) | 43 | 40 | 13 | 2 | 2 |
+| Equal reward | 43 | 42 | 14 | 2 | 2 |
 | SFT64 | 44 | 46 | 10 | 5 | 5 |
-| Reward 0,1/0,2/0,7 | 44 | 45 | 10 | 5 | 5 |
-| Reward chia đều | 44 | 46 | 10 | 5 | 5 |
+| Weighted reward (0.1/0.2/0.7) | 44 | 45 | 10 | 5 | 5 |
+| Equal reward | 44 | 46 | 10 | 5 | 5 |
 
-Một seed train, ba seed sinh. Các số đếm theo seed được giữ để xem biến động lấy mẫu.
+One training seed and three generation seeds. Per-seed counts show sampling variability.
 
-![Kết quả theo seed](sampling-variability.png)
+![Results by generation seed](sampling-variability.png)
 
-Hình 1. Kết quả sinh lại của các checkpoint.
+Figure 1. Resampled checkpoint results.
 
-[Dữ liệu](sampling-metrics.json) · [Thí nghiệm reward](README.md).
+[Data files](sampling-metrics.json) · [Reward experiment](README.md).

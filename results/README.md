@@ -1,11 +1,41 @@
-# Kết quả thực nghiệm
+# Experiment results
 
-| Kết quả | Phạm vi |
+Start with the expanded study. The other folders preserve earlier experiments and diagnostics with different datasets, prompts or training budgets.
+
+## Main study
+
+[Expanded APPS experiment](apps-expanded-adaptive/README.md): SFT840, fixed-code GRPO and adversarial GRPO, with Validation and held-out Test results. Includes the dataset ID, protocol and summary metrics.
+
+## Training comparisons
+
+| Study | Question |
 |---|---|
-| [APPS mở rộng](apps-expanded-adaptive/README.md) | SFT 840, hai nhánh GRPO, Validation và Test đã khóa |
-| [Ngân sách SFT](apps-shared-sft-budget/README.md) | Mốc SFT 64 và 256 trên cùng quỹ đạo, tập Train cũ |
-| [GRPO từ SFT 256](apps-sft256-grpo/README.md) | Đối chứng trước và sau RL trên Validation cũ |
-| [Curriculum đối kháng từ SFT 64](apps-input-first-review/README.md) | Hai vòng đối kháng và cố định trên Validation cũ |
-| [Phân tích expected](apps-expected-diagnosis/README.md) | Các dạng expected sai ở mốc SFT 64 + GRPO |
+| [Initial pilot](apps-pilot/README.md) | How does the first GRPO run compare with the base model? |
+| [SFT and GRPO](apps-sft-grpo/README.md) | What changes after SFT64 and GRPO96 with expected-first labels? |
+| [Target ordering](apps-target-order/README.md) | Does emitting input before expected change performance? |
+| [Shared SFT trajectory](apps-shared-sft-budget/README.md) | How do checkpoints at 64 and 256 steps compare within one run? |
+| [GRPO after SFT256](apps-sft256-grpo/README.md) | Does another 96-step GRPO stage help the stronger parent? |
+| [Expected-first SFT budget](apps-sft-budget/README.md) | What changes between 64 and 256 steps with the earlier labels? |
+| [Reward weights](apps-reward-ablation/README.md) | How do weighted and equal rewards compare? |
 
-Số liệu giữa các phiên bản dữ liệu và prompt được giữ riêng. Các thư mục còn lại lưu những phép thử trước đó; chúng không thay kết quả của checkpoint đã chốt. Cách tính chỉ số và giới hạn so sánh nằm trong [tài liệu thực nghiệm](../docs/EXPERIMENTS.md).
+## Adversarial curricula
+
+| Study | Evaluation |
+|---|---|
+| [Expected-first curriculum](apps-adversarial/README.md) | Seed 42 |
+| [Expected-first resampling](apps-adversarial-review/README.md) | Generation seeds 42/43/44 |
+| [Input-first curriculum](apps-input-first-adversarial/README.md) | Seed 42 |
+| [Input-first resampling](apps-input-first-review/README.md) | Generation seeds 42/43/44 |
+
+## Diagnostics and stopped trials
+
+- [Earlier dataset profile](apps-data-profile/README.md)
+- [Output error breakdown](apps-error-analysis/README.md)
+- [Incorrect expected outputs](apps-expected-diagnosis/README.md)
+- [Input difficulty](apps-input-difficulty/README.md)
+- [Target serialization](apps-serialization-diagnosis/README.md)
+- [LoRA coverage](apps-lora-coverage/README.md)
+- [SFT replay gate](apps-expected-budget/README.md)
+- [Thinking and output contracts](apps-tuning/README.md)
+
+Each study links to its stored data. Metric definitions and comparison limits are in the [evaluation guide](../docs/EXPERIMENTS.md).

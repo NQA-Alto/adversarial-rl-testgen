@@ -1,23 +1,34 @@
-# Demo
+# Demo guide
 
-Chạy `MO_GIAO_DIEN.cmd` và mở [giao diện](http://127.0.0.1:7860/?__theme=light).
+The Gradio application combines saved examples, result summaries and local inference. It runs on the original Windows environment and requires external dataset, model and run files. See [setup and training](APPS_TRAINING.md) before launching it.
 
-## Demo
+For a quick look at scoring without those assets, run `python examples/verify_test.py` from the repository root.
 
-Chọn một bài và phiên bản model. Bảng hiển thị bốn test đã lưu trên Validation với seed 42, đối chiếu Qwen gốc với phiên bản đã chọn. **Sinh 4 test mới** chạy suy luận trên GPU; kết quả có thể khác do lấy mẫu.
+## Start and stop
 
-Mỗi dòng có input, expected model sinh và kết quả code. Nếu expected sai, bảng ghi thêm đáp án tham chiếu. Test đúng nhưng chưa làm lộ lỗi được phân biệt với test không hợp lệ. **JSON gốc** giữ đầu ra để kiểm tra.
+On the configured machine, run `MO_GIAO_DIEN.cmd`, then open <http://127.0.0.1:7860/?__theme=light>. TensorBoard is served at <http://127.0.0.1:6006>. Run `DONG_GIAO_DIEN.cmd` to stop the services started by the launcher.
 
-Bài mặc định lấy một hoặc hai ký tự giữa: độ dài lẻ trả một ký tự, độ dài chẵn trả hai ký tự. Chẳng hạn `bAA` có kết quả `A`, còn `bb` có kết quả `bb`. Miền input của từng thí nghiệm hiển thị cạnh code.
+The launchers currently contain absolute paths to the original machine. They are not a portable installer.
 
-## Kết quả và dữ liệu
+## Application tabs
 
-Kết quả gồm Qwen gốc, SFT840, GRPO cố định và GRPO đối kháng. Chỉ số tổng hợp dùng toàn bộ code trong tập tương ứng. Test giữ lại được chấm sau khi chọn checkpoint bằng Validation.
+| Tab | Purpose |
+|---|---|
+| Demo | Inspect a problem, faulty code and saved tests; optionally generate four new tests |
+| Results | Compare recorded Validation and held-out Test results |
+| Data | Inspect dataset sources, split sizes and supported input domains |
+| Experiments | Run dataset checks, a GRPO trial or adapter evaluation; inspect logs |
 
-Tab Dữ liệu cho biết nguồn, số bài, số code lỗi và miền hỗ trợ. Tất cả là tập con APPS Train, không phải APPS Test chính thức.
+The interface labels are in Vietnamese. Saved examples use Validation with generation seed 42. New inference uses the GPU and can differ from those examples because generation is sampled.
 
-## Thực nghiệm
+## Reading a generated test
 
-Có thể kiểm tra dữ liệu, chấm Qwen gốc, chạy1–96 bước GRPO hoặc chấm adapter mới. Nút GRPO dùng code Train cố định và khởi tạo lại từ SFT840 với optimizer mới. Lượt bấm tay không thay checkpoint của phép đánh giá cuối.
+Each row shows the input, generated expected output and the faulty function's output. When expected is wrong, the reference output is shown as well. A correct test that misses the bug is separate from an invalid test. The raw JSON view preserves the original output.
 
-Nhật ký có thanh cuộn, nút về đầu/cuối và nơi lưu kết quả. Đường học GRPO nằm trong phần thu gọn; TensorBoard mở ở cổng 6006. Dùng `DONG_GIAO_DIEN.cmd` để dừng các dịch vụ.
+For the middle-character example, `bAA` should return `A`, while `bb` should return `bb`. The allowed input domain is displayed alongside the code.
+
+## Interactive training
+
+The GRPO control starts from SFT840 with a new optimizer and uses fixed Train code. It accepts 1-96 training steps. Interactive runs save new adapters, logs and results under `evidence/`; they do not replace the checkpoint used in the recorded final evaluation.
+
+Stopping a job preserves files already written. The experiment logs include the run directory so saved outputs can be inspected later.

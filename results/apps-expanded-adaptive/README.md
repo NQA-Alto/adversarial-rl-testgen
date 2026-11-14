@@ -1,51 +1,50 @@
-# Thực nghiệm trên tập APPS mở rộng
+# Expanded APPS experiment
 
-Hai nhánh GRPO cùng xuất phát từ SFT 840, dùng 145 vị trí code Train, reward chia đều và hai vòng × 32 bước. Nhánh đối kháng làm mới code giữa hai vòng; nhánh cố định giữ code ban đầu.
+This study compares base Qwen, SFT840 and two GRPO branches. Both GRPO branches start from the same SFT adapter, use 145 Train positions and run two rounds of 32 steps with equal-weight rewards. The adversarial branch refreshes eligible faulty functions between rounds; the fixed-code branch retains the original functions.
 
-Model sinh code là Qwen3.5-2B gốc, không cập nhật trọng số. Bộ lọc nhận code còn sai trong miền thực nghiệm nhưng vượt qua test đúng do policy hiện tại sinh.
+The code generator is the frozen Qwen3.5-2B base model. Its candidates must still be faulty within the declared domain while passing the current policy's valid tests.
 
 ## Validation
 
-| Phiên bản | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện /15 |
+| Checkpoint | Correct expected / 60 | Bug-detecting tests / 60 | Functions detected / 15 |
 |---|---:|---:|---:|
-| Qwen gốc | 14.67 | 3.67 | 3.33 |
-| Sau SFT | **31.67** | **14.33** | **8.33** |
-| GRPO cố định | **30.00** | **13.67** | **8.00** |
-| GRPO đối kháng | **28.67** | **13.33** | **7.67** |
+| Base Qwen | 14.67 | 3.67 | 3.33 |
+| SFT840 | 31.67 | 14.33 | 8.33 |
+| Fixed-code GRPO | 30.00 | 13.67 | 8.00 |
+| Adversarial GRPO | 28.67 | 13.33 | 7.67 |
 
-## Test cuối
+## Held-out Test
 
-| Phiên bản | Expected đúng /72 | Test bắt lỗi /72 | Code phát hiện /18 |
+| Checkpoint | Correct expected / 72 | Bug-detecting tests / 72 | Functions detected / 18 |
 |---|---:|---:|---:|
-| Qwen gốc | 14.00 | 7.00 | 5.00 |
-| Sau SFT | **24.67** | **14.33** | **8.67** |
-| GRPO cố định | **24.67** | **13.33** | **7.67** |
-| GRPO đối kháng | **24.67** | **14.00** | **8.33** |
+| Base Qwen | 14.00 | 7.00 | 5.00 |
+| SFT840 | 24.67 | 14.33 | 8.67 |
+| Fixed-code GRPO | 24.67 | 13.33 | 7.67 |
+| Adversarial GRPO | 24.67 | 14.00 | 8.33 |
 
-Trung bình ba seed sinh 42/43/44, một seed huấn luyện. Thanh sai số trong hình là SD. Phần in đậm cao hơn Qwen gốc cùng tập đánh giá; không biểu thị kiểm định ý nghĩa thống kê.
+Values are mean counts across generation seeds 42/43/44, with one training seed. Four tests are generated per faulty function. The plots show sample standard deviations, available numerically in [metrics.json](metrics.json).
 
-![Kết quả Validation](validation.png)
+![Validation results](validation.png)
 
-Hình 1. Kết quả Validation của bốn phiên bản, cùng ngân sách sinh bốn test/code.
+![Held-out Test results](test.png)
 
-![Kết quả Test](test.png)
+SFT was selected from Validation before the locked Test event. It detected more faulty functions than the base model. Neither GRPO branch improved on SFT in this experiment.
 
-Hình 2. Kết quả trên holdout Test sau khi chọn checkpoint bằng Validation.
+## Adversarial curriculum
 
-Checkpoint chọn trước Test: **Sau SFT**. Test được chạy trong một sự kiện khóa protocol cho các phiên bản và seed đã định trước; không tinh chỉnh từ kết quả Test.
-
-
-## Curriculum đối kháng
-
-| Vòng | Code lấy mẫu | Được nhận | Vị trí đối kháng /145 | Test sinh trên code đối kháng |
+| Round | Sampled candidates | Accepted candidates | Adversarial positions / 145 | Tests generated on adversarial code |
 |---|---:|---:|---:|---:|
 | 1 | 416 | 20 | 17 | 4 |
 | 2 | 392 | 11 | 13 | 8 |
 
-## Phạm vi
+## Scope and evidence
 
-Train 58 bài/145 code lỗi, Validation5/15 và Test7/18, tách theo bài và URL nguồn trong APPS Train. Không dùng APPS Test chính thức. Bốn phiên bản cùng prompt, model nền, bộ chấm và ngân sách sinh. SFT và RL cần được phân tích riêng.
+Dataset `apps-intro-expanded-v4-0b00cd05b256` contains 58 Train problems / 145 faulty functions, 5 Validation / 15 and 7 Test / 18. Splits are disjoint by source problem and URL within APPS Train. The official APPS Test split is unused.
 
-Bộ chạy giới hạn 4.000 lệnh và 1 giây mỗi lần gọi hàm. Các đầu ra được lưu nguyên trạng và chấm lại để kiểm tra reward, chỉ số tổng hợp và hash checkpoint.
+The restricted interpreter allows up to 4,000 steps and one second per function call. Raw outputs were retained for rescoring and reward checks. Summaries and the frozen protocol are published here; raw run artifacts and adapters remain external.
 
-Mỗi cấu hình có một seed train; các mutant cùng bài có tương quan. Kết quả không đại diện cho toàn bộ APPS hoặc chương trình Python tùy ý.
+The small holdout, correlated mutants and single training seed limit generalization. The experiment does not establish an advantage for adversarial GRPO over SFT.
+
+- [Summary metrics](metrics.json)
+- [Protocol, source hashes and split hashes](protocol.json)
+- [Metric definitions](../../docs/EXPERIMENTS.md)

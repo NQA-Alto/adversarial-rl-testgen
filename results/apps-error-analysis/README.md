@@ -1,15 +1,15 @@
-# Phân tích lỗi ở lượt đối kháng ban đầu
+# Output errors in the initial adversarial trial
 
-Phân loại đầu ra Validation của các checkpoint expected-first và đối chiếu những input có thể làm lộ lỗi.
+Validation outputs from expected-first checkpoints are classified by failure type and compared with inputs that could expose a bug.
 
-Expected sai làm mất một phần cơ hội bắt lỗi, kể cả khi input đã phân biệt được reference với mutant.
+Incorrect expected outputs prevent some otherwise useful inputs from counting as bug-detecting tests.
 
-![Phân tích lỗi ở lượt đối kháng ban đầu](failure-breakdown.png)
+![Output errors in the initial adversarial trial](failure-breakdown.png)
 
-Hình 1. Phân tích lỗi ở lượt đối kháng ban đầu.
+Figure 1. Output errors in the initial adversarial trial.
 
-## Dữ liệu
+## Data files
 
 [analysis.json](analysis.json) · [per-case.csv](per-case.csv) · [samples.csv](samples.csv)
 
-[Cấu hình và chỉ số đánh giá](../../docs/EXPERIMENTS.md).
+[Evaluation guide](../../docs/EXPERIMENTS.md).

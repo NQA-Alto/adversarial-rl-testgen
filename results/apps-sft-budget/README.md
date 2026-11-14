@@ -1,27 +1,27 @@
-# Ngân sách SFT với nhãn expected-first
+# Expected-first SFT budget
 
-So sánh 64 và 256 bước SFT với cùng pool nhãn và prompt. Có checkpoint 64 của chính lượt học mới để đối chiếu.
+Comparison of 64 and 256 SFT steps with the same label pool and prompt. The new training run retains its own 64-step checkpoint for comparison.
 
-## Kết quả từng lượt
+## Per-run counts
 
-| Cấu hình | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện /15 |
+| Configuration | Valid /60 | Correct expected /60 | Bug-detecting tests /60 | Functions detected /15 |
 |---|---|---|---|---|
-| SFT64 trước đó | 41 | 13 | 4 | 3 |
-| SFT64 cùng lượt | 41 | 15 | 5 | 4 |
+| Earlier SFT64 | 41 | 13 | 4 | 3 |
+| Same-run SFT64 | 41 | 15 | 5 | 4 |
 | SFT256 | 54 | 21 | 3 | 2 |
 
-SFT256 tăng expected nhưng giảm số code phát hiện. Kết quả này thuộc cấu hình nhãn cũ.
+SFT256 increased correct expected outputs but detected fewer functions. This trial uses the earlier expected-first labels.
 
-![Ngân sách SFT với nhãn expected-first](validation-comparison.png)
+![Expected-first SFT budget](validation-comparison.png)
 
-Hình 1. Ngân sách SFT với nhãn expected-first.
+Figure 1. Expected-first SFT budget.
 
-![Ngân sách SFT với nhãn expected-first](learning-curve.png)
+![Expected-first SFT budget](learning-curve.png)
 
-Hình 2. Ngân sách SFT với nhãn expected-first.
+Figure 2. Expected-first SFT budget.
 
-## Dữ liệu
+## Data files
 
 [metrics.csv](metrics.csv) · [metrics.json](metrics.json) · [per-case.csv](per-case.csv)
 
-[Cấu hình và chỉ số đánh giá](../../docs/EXPERIMENTS.md).
+[Evaluation guide](../../docs/EXPERIMENTS.md).

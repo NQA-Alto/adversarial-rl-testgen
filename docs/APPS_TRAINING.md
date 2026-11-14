@@ -1,60 +1,101 @@
-# Chạy và huấn luyện
+# Setup and training
 
-Môi trường huấn luyện nằm ở `D:/DA/TTNT_De19_Assets/env`, model nền ở `models/Qwen3.5-2B` trong cùng thư mục tài nguyên. `requirements.txt` dành cho huấn luyện, `requirements-ui.txt` dành cho giao diện. Các lệnh hiện còn dùng đường dẫn của máy thực nghiệm.
+There are two ways to explore this repository: run the standalone verifier on a normal Python installation, or restore the original local model environment for inference and training.
 
-## Giao diện
+## Standalone verifier
 
-Chạy `MO_GIAO_DIEN.cmd`, mở [demo](http://127.0.0.1:7860/?__theme=light). Dùng `DONG_GIAO_DIEN.cmd` để dừng các dịch vụ.
+Python 3.12 is the recorded runtime. No third-party packages or GPU are required for:
 
-| Tab | Chức năng |
+```sh
+python examples/verify_test.py
+python scripts/check_apps_rewards.py
+python scripts/check_runtime_limits.py
+```
+
+These checks exercise scoring and interpreter limits. They do not train a model or reproduce the stored benchmark results.
+
+## Original full environment
+
+| Component | Recorded configuration |
 |---|---|
-| Demo | Xem đề, code và test đã lưu; sinh bốn test mới |
-| Kết quả | Bảng Validation, Test và biểu đồ so sánh |
-| Dữ liệu | Nguồn APPS, tập chia và miền input |
-| Thực nghiệm | Kiểm tra dữ liệu, chạy GRPO, chấm adapter, xem log và TensorBoard |
+| Operating system | Windows |
+| CPU | AMD Ryzen 7 7840H |
+| GPU | NVIDIA RTX 4060 Laptop, 8 GB VRAM |
+| RAM | 16 GB |
+| Python | 3.12.15 |
+| PyTorch | 2.14.1+cu132 |
+| Transformers / PEFT / TRL | 5.20.2 / 0.21.2 / 1.16.0 |
+| Base model | Qwen3.5-2B, BF16 |
+| LoRA | Rank 4, alpha 8; 208,896 trainable parameters in the selected profile |
 
-Nút sinh test chỉ chạy suy luận. Tác vụ GRPO tạo adapter mới từ SFT đã chọn, với optimizer mới; không ghi đè checkpoint gốc. Kết quả, log và adapter được lưu riêng trong `evidence/`. Nút dừng giữ lại những tệp đã ghi xuống đĩa.
+`requirements.txt` records the training environment; `requirements-ui.txt` lists the UI dependencies. `requirements-quantization.txt` adds bitsandbytes for quantization experiments. These are recorded dependency snapshots, not a verified clean-install recipe. In particular, the PyTorch CUDA build needs a compatible package source and driver setup.
 
-## Dữ liệu và SFT
+The original resource layout is:
 
-Tập mở rộng dùng 58 bài Train và 1.050 nhãn SFT. Nhãn gồm input hợp lệ và expected tính từ lời giải tham chiếu; có cả test bắt lỗi và test đúng chưa bắt lỗi. SFT dùng bốn ví dụ mỗi bước, learning rate `5e-5`, seed 42, input trước expected. Bản được chọn đã học 840 bước.
+```text
+D:/DA/TTNT_De19_Assets/
+  env/                              training Python environment
+  tools/gui/env/                    UI Python environment
+  models/Qwen3.5-2B/                 base weights and tokenizer
+  data/apps-source/<revision>/       pinned APPS source
+  data/apps-introductory-v2/         prepared base subset
+  data/apps-introductory-expanded-v4/ expanded training subset
+  evidence/                         adapters, raw outputs and run records
+```
+
+Those assets are not included in Git. Launchers and several scripts also refer to the original project location, `D:/DA/DoAn_TTNT_De19/adversarial-rl-testgen`. Moving the checkout alone is insufficient to run the full application. A clean-machine installation has not been validated.
+
+## Dataset preparation
+
+[`fetch_apps.py`](../scripts/fetch_apps.py) downloads the pinned source. [`prepare_apps.py`](../scripts/prepare_apps.py) builds v2, and [`prepare_apps_expanded.py`](../scripts/prepare_apps_expanded.py) extends Train using the local tokenizer. The expansion copies Validation and Test unchanged and refuses to overwrite an existing target. See [dataset construction](APPS_DATASET.md) for the selection criteria.
+
+The commands below assume that the original assets and environments have been restored. Run them from the repository root.
 
 ```powershell
 $env:PYTHONUTF8 = '1'
 $env:TTNT_APPS_DATA_DIR = 'D:/DA/TTNT_De19_Assets/data/apps-introductory-expanded-v4'
-$python = 'D:/DA/TTNT_De19_Assets/env/Scripts/python.exe'
-$project = 'D:/DA/DoAn_TTNT_De19/adversarial-rl-testgen'
-& $python -B "$project/scripts/verify_apps.py"
-& $python -B "$project/scripts/apps_sft.py" --steps 840 --target-order input-first-v1
+$trainPython = 'D:/DA/TTNT_De19_Assets/env/Scripts/python.exe'
+& $trainPython -B scripts/verify_apps.py
+& $trainPython -B scripts/apps_sft.py --steps 840 --target-order input-first-v1
 ```
 
-`prepare_apps_expanded.py` bổ sung các profile Train vào tập v2 và từ chối ghi đè tập đã có. Validation và Test được sao chép nguyên byte từ v2. Cần tải nguồn APPS và chuẩn bị v2 trước khi chạy bước mở rộng.
+The selected SFT run used 1,050 labels, four examples per step, learning rate `5e-5` and seed 42.
 
 ## GRPO
 
-Mỗi nhóm sinh bốn test cho cùng một code. Cấu hình `equal-v1` cộng ba thành phần reward bằng nhau: định dạng/input hợp lệ, expected đúng và bắt được lỗi. Test có expected sai không được tính là bắt lỗi. Chỉ LoRA được cập nhật.
+Each group contains four tests for the same faulty function. Reward profile `equal-v1` assigns equal contributions to valid format/input, correct expected output and bug detection. A wrong expected output cannot earn bug-detection reward. Training updates the LoRA adapter.
+
+For an individual fixed-code run, substitute actual adapter and baseline directories:
 
 ```powershell
-& $python -B "$project/scripts/apps_model_runner.py" train `
+& $trainPython -B scripts/apps_model_runner.py train `
   --steps 64 --seed 42 --prompt-version apps-call-v2 `
   --reward-profile equal-v1 --learning-rate 0.000005 `
-  --init-adapter '<adapter SFT>' --baseline-run '<lượt Validation của adapter đó>' --no-publish
+  --init-adapter '<SFT adapter directory>' `
+  --baseline-run '<matching Validation run directory>' --no-publish
 
-& $python -B "$project/scripts/apps_model_runner.py" evaluate `
-  --adapter '<adapter cần chấm>' --seed 42 --prompt-version apps-call-v2 --no-publish
+& $trainPython -B scripts/apps_model_runner.py evaluate `
+  --adapter '<adapter directory>' --seed 42 `
+  --prompt-version apps-call-v2 --no-publish
 ```
 
-`--no-publish` chỉ ngăn thay trạng thái demo, không liên quan đến GitHub. Mỗi lần chạy vẫn lưu kết quả riêng.
+`--no-publish` prevents an update to local demo state; it has no connection to GitHub publication. Each run still writes its own output directory.
 
-## Lấy mẫu đối kháng cân bằng
+The recorded expanded comparison used two rounds of 32 steps per branch from the same SFT840 parent. The commands above are individual runs, not a complete replay of that comparison. Its settings and hashes are in the [frozen protocol](../results/apps-expanded-adaptive/protocol.json).
 
-`apps_balanced_study.py` điều phối hai vòng, mỗi vòng 64 bước cho từng nhánh. Pilot dùng seed train 42. Seed 43 chỉ chạy xác nhận khi pilot đạt điều kiện cải thiện đã chốt trước. Một nửa số nhóm lấy từ các vị trí có code đối kháng, một nửa từ phần Train còn lại. Nhánh cố định dùng đúng lịch case ID đó nhưng giữ code AST ban đầu. Trước vòng hai, policy kiểm tra đúng code đang học. Vị trí chưa bắt được lỗi giữ nguyên; chỉ vị trí đã bắt được mới tìm code thay thế.
+## Balanced-curriculum follow-up
+
+`apps_balanced_study.py` implements a separate two-round, 64-step-per-round comparison. Half the sampled groups come from adversarial positions; the fixed-code branch uses matching case IDs. Before round two, unresolved faulty functions are retained and already-detected ones become replacement candidates.
 
 ```powershell
-& $python -B "$project/scripts/apps_balanced_study.py" `
-  --parent-study '<thư mục thực nghiệm SFT 840 và hai nhánh đã lưu>'
+& $trainPython -B scripts/apps_balanced_study.py `
+  --parent-study '<existing SFT840 comparison directory>'
 ```
 
-Lịch học có hash và được đối chiếu lại với từng nhóm thực tế sau huấn luyện. Bản này chỉ đánh giá Train/Validation, giữ nguyên sự kiện Test đã công bố và chưa tự thay checkpoint của demo.
+The pilot uses training seed 42. A seed-43 confirmation is conditional on its validation gate. This follow-up uses Train/Validation and is separate from the published 32-step-per-round held-out result.
 
-`check_apps_sampling.py` kiểm tra lịch lấy mẫu với sampler thật của TRL. `audit_apps_run.py` chấm lại output đã lưu, kiểm tra reward, lịch học và hash adapter.
+## Inspecting runs
+
+`audit_apps_run.py` checks stored outputs, rewards, sampling schedules and adapter hashes. `check_apps_sampling.py` checks the actual TRL sampler. Both require the relevant run artifacts or training dependencies.
+
+For the application controls, see the [demo guide](DEMO.md).

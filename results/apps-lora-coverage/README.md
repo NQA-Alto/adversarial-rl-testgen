@@ -1,11 +1,11 @@
-# Phạm vi adapter LoRA
+# LoRA target coverage
 
-So profile q_proj/v_proj của self-attention với profile thêm projection của linear attention.
+Comparison of self-attention q_proj/v_proj targets with a profile that also includes linear-attention projections.
 
-Profile cũ có 208.896 tham số trên 6/24 khối; profile mở rộng có 798.720 tham số trên 24/24 khối. Hai lượt SFT64 hoàn tất; phép thử dừng trước Validation để kiểm tra thứ tự nhãn.
+The original profile has 208,896 trainable parameters across 6/24 blocks; the expanded profile has 798,720 across 24/24. Both SFT64 runs completed, but the trial stopped before Validation to investigate target ordering.
 
-## Dữ liệu
+## Data files
 
 [attempt.json](attempt.json) · [coverage.json](coverage.json)
 
-[Cấu hình và chỉ số đánh giá](../../docs/EXPERIMENTS.md).
+[Evaluation guide](../../docs/EXPERIMENTS.md).

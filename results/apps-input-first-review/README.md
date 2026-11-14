@@ -1,41 +1,41 @@
-# Lấy mẫu lại hai nhánh input-first
+# Input-first resampling
 
-So sánh Qwen gốc, SFT64 và hai nhánh GRPO trên ba seed sinh 42/43/44.
+Base Qwen, SFT64 and both GRPO branches evaluated with generation seeds 42/43/44.
 
-| Cấu hình | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện /15 |
+| Configuration | Valid /60 | Correct expected /60 | Bug-detecting tests /60 | Functions detected /15 |
 |---|---|---|---|---|
-| Qwen gốc | 35,33 ± 0,58 | 14,67 ± 2,52 | 3,67 ± 0,58 | 3,33 ± 0,58 |
-| SFT64 | 43,33 ± 3,21 | 19,00 ± 2,65 | **5,33 ± 0,58** | **4,00 ± 1,00** |
-| GRPO cố định | 43,33 ± 3,21 | **20,33 ± 1,53** | 5,00 ± 1,73 | **4,00 ± 1,73** |
-| GRPO đối kháng | **43,67 ± 3,06** | 19,00 ± 3,00 | 5,00 ± 1,00 | **4,00 ± 1,73** |
+| Base Qwen | 35.33 ± 0.58 | 14.67 ± 2.52 | 3.67 ± 0.58 | 3.33 ± 0.58 |
+| SFT64 | 43.33 ± 3.21 | 19.00 ± 2.65 | 5.33 ± 0.58 | 4.00 ± 1.00 |
+| Fixed-code GRPO | 43.33 ± 3.21 | 20.33 ± 1.53 | 5.00 ± 1.73 | 4.00 ± 1.73 |
+| Adversarial GRPO | 43.67 ± 3.06 | 19.00 ± 3.00 | 5.00 ± 1.00 | 4.00 ± 1.73 |
 
-Trung bình ± SD trên ba seed sinh; mỗi cấu hình có một lượt train.
+Mean ± sample SD across three generation seeds; one training run per configuration.
 
-## Kết quả từng lượt
+## Per-run counts
 
-| Cấu hình | Seed sinh | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện /15 |
+| Configuration | Generation seed | Valid /60 | Correct expected /60 | Bug-detecting tests /60 | Functions detected /15 |
 |---|---|---|---|---|---|
-| Qwen gốc | 42 | 35 | 15 | 4 | 3 |
+| Base Qwen | 42 | 35 | 15 | 4 | 3 |
 | SFT64 | 42 | 41 | 18 | 6 | 3 |
-| GRPO cố định | 42 | 41 | 19 | 4 | 3 |
-| GRPO đối kháng | 42 | 41 | 16 | 5 | 3 |
-| Qwen gốc | 43 | 35 | 17 | 3 | 3 |
+| Fixed-code GRPO | 42 | 41 | 19 | 4 | 3 |
+| Adversarial GRPO | 42 | 41 | 16 | 5 | 3 |
+| Base Qwen | 43 | 35 | 17 | 3 | 3 |
 | SFT64 | 43 | 42 | 22 | 5 | 4 |
-| GRPO cố định | 43 | 42 | 22 | 4 | 3 |
-| GRPO đối kháng | 43 | 43 | 22 | 4 | 3 |
-| Qwen gốc | 44 | 36 | 12 | 4 | 4 |
+| Fixed-code GRPO | 43 | 42 | 22 | 4 | 3 |
+| Adversarial GRPO | 43 | 43 | 22 | 4 | 3 |
+| Base Qwen | 44 | 36 | 12 | 4 | 4 |
 | SFT64 | 44 | 47 | 17 | 5 | 5 |
-| GRPO cố định | 44 | 47 | 20 | 7 | 6 |
-| GRPO đối kháng | 44 | 47 | 19 | 6 | 6 |
+| Fixed-code GRPO | 44 | 47 | 20 | 7 | 6 |
+| Adversarial GRPO | 44 | 47 | 19 | 6 | 6 |
 
-Nhánh cố định phát hiện trung bình 4.00/15 code; nhánh đối kháng 4.00/15. Chi phí sinh và lọc code được lưu trong costs.csv.
+The fixed-code branch detected 4.00/15 functions on average; the adversarial branch detected 4.00/15. Generation and filtering costs are recorded in costs.csv.
 
-![Lấy mẫu lại hai nhánh input-first](sampling.png)
+![Input-first resampling](sampling.png)
 
-Hình 1. Lấy mẫu lại hai nhánh input-first.
+Figure 1. Input-first resampling.
 
-## Dữ liệu
+## Data files
 
 [costs.csv](costs.csv) · [costs.json](costs.json) · [metrics.csv](metrics.csv) · [metrics.json](metrics.json)
 
-[Cấu hình và chỉ số đánh giá](../../docs/EXPERIMENTS.md).
+[Evaluation guide](../../docs/EXPERIMENTS.md).

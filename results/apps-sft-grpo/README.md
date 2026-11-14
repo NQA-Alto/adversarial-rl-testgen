@@ -1,23 +1,23 @@
-# SFT và GRPO với nhãn expected-first
+# SFT and GRPO with expected-first labels
 
-So sánh Qwen gốc, SFT64 và GRPO96 trên 15 code Validation, seed 42. Nhãn SFT ở lượt này đặt expected trước input.
+Base Qwen, SFT64 and GRPO96 evaluated on 15 Validation functions with generation seed 42. SFT targets place expected before input.
 
-## Kết quả từng lượt
+## Per-run counts
 
-| Cấu hình | Hợp lệ /60 | Expected đúng /60 | Test bắt lỗi /60 | Code phát hiện /15 |
+| Configuration | Valid /60 | Correct expected /60 | Bug-detecting tests /60 | Functions detected /15 |
 |---|---|---|---|---|
-| Qwen gốc | 35 | 15 | 4 | 3 |
+| Base Qwen | 35 | 15 | 4 | 3 |
 | SFT64 | 41 | 13 | 4 | 3 |
 | SFT64 + GRPO96 | 44 | 15 | 4 | 3 |
 
-Tỷ lệ hợp lệ tăng sau học; số code phát hiện vẫn là 3/15.
+Training increased valid outputs, while detected functions remained at 3/15.
 
-![SFT và GRPO với nhãn expected-first](validation-comparison.png)
+![SFT and GRPO with expected-first labels](validation-comparison.png)
 
-Hình 1. SFT và GRPO với nhãn expected-first.
+Figure 1. SFT and GRPO with expected-first labels.
 
-## Dữ liệu
+## Data files
 
 [metrics.csv](metrics.csv) · [metrics.json](metrics.json) · [per-problem.csv](per-problem.csv)
 
-[Cấu hình và chỉ số đánh giá](../../docs/EXPERIMENTS.md).
+[Evaluation guide](../../docs/EXPERIMENTS.md).

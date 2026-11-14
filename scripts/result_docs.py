@@ -4,36 +4,148 @@ from pathlib import Path
 
 
 FIELDS = ("valid_tests", "correct_expected", "bug_detecting_tests", "cases_detected")
-HEADERS = ("Hợp lệ /60", "Expected đúng /60", "Test bắt lỗi /60", "Code phát hiện /15")
-LABELS = {
-    "base": "Qwen gốc", "baseline_validation": "Qwen gốc", "fresh_grpo_pilot": "GRPO ban đầu", "sft": "SFT64", "sft256": "SFT256",
-    "sft256-grpo96": "SFT256 + GRPO96", "grpo": "GRPO", "control": "GRPO cố định", "adaptive": "GRPO đối kháng",
-    "sft_validation": "SFT64", "pilot_validation": "SFT64 + GRPO96", "SFT64_parent": "SFT64",
-    "legacy-v1": "Reward 0,1/0,2/0,7", "equal-v1": "Reward chia đều",
-    "SFT64_historical": "SFT64 trước đó", "SFT64_same_trajectory": "SFT64 cùng lượt", "SFT256": "SFT256",
-}
-NOTES = {
-    "apps-pilot": ("Thử nghiệm APPS ban đầu", "Prompt v1, Qwen gốc và lượt GRPO đầu tiên. Mỗi code Validation sinh bốn test, seed 42.", "Đây là mốc đầu trước khi đổi prompt và thêm SFT.", []),
-    "apps-sft-grpo": ("SFT và GRPO với nhãn expected-first", "So sánh Qwen gốc, SFT64 và GRPO96 trên 15 code Validation, seed 42. Nhãn SFT ở lượt này đặt expected trước input.", "Tỷ lệ hợp lệ tăng sau học; số code phát hiện vẫn là 3/15.", ["validation-comparison.png"]),
-    "apps-adversarial": ("Curriculum đối kháng với nhãn expected-first", "Hai nhánh dùng cùng SFT64 cha, cùng hai vòng × 48 bước GRPO. Bảng dùng seed sinh 42.", "Cố định và đối kháng đều phát hiện 2/15 code ở mốc cuối.", ["validation-comparison.png"]),
-    "apps-adversarial-review": ("Lấy mẫu lại hai nhánh expected-first", "Đánh giá bốn checkpoint trên các seed sinh 42/43/44. Mỗi checkpoint được huấn luyện một lần.", "Cố định phát hiện trung bình 2,67/15 code; đối kháng 3/15. Biến động giữa các seed còn lớn.", ["sampling.png"]),
-    "apps-input-first-adversarial": ("Curriculum đối kháng với nhãn input-first", "Hai nhánh bắt đầu từ SFT64 input-first, cùng hai vòng × 48 bước GRPO. Bảng dùng seed sinh 42.", "Hai nhánh cùng phát hiện 3/15 code ở seed 42.", ["validation-comparison.png"]),
-    "apps-input-first-review": ("Lấy mẫu lại hai nhánh input-first", "So sánh Qwen gốc, SFT64 và hai nhánh GRPO trên ba seed sinh 42/43/44.", "Cố định và đối kháng cùng đạt trung bình 4/15 code và 5/60 test bắt lỗi. Nhánh đối kháng cần thêm thời gian sinh và lọc code.", ["sampling.png"]),
-    "apps-target-order": ("Thứ tự trường trong nhãn SFT", "Giữ nguyên 319 cặp input/expected và cấu hình học; đổi thứ tự hai trường ngoài cùng của target. So riêng các mốc SFT và GRPO.", "Input-first tăng expected ở cả ba seed sinh. Phần lớn thay đổi xuất hiện ngay sau SFT; mức tăng test bắt lỗi tập trung ở bài làm tròn 2947.", ["comparison.png"]),
-    "apps-shared-sft-budget": ("Ngân sách SFT với nhãn input-first", "Checkpoint 64 và 256 được lấy từ cùng một lượt học, chung model khởi đầu và 64 bước đầu. Bảng Validation dùng ba seed sinh.", "Expected trung bình tăng 19 lên 26/60; test bắt lỗi 5,33 lên 10,33/60; code phát hiện 4 lên 7/15.", ["learning-curve.png"]),
-    "apps-sft256-grpo": ("GRPO sau SFT256", "Thêm 96 bước GRPO từ đúng adapter SFT256, trên code Train cố định. So với parent trên cùng ba seed sinh.", "GRPO tăng nhẹ số test hợp lệ nhưng giảm expected, test bắt lỗi và code phát hiện. SFT256 được giữ làm checkpoint tốt hơn trong cặp này.", ["comparison.png"]),
-    "apps-sft-budget": ("Ngân sách SFT với nhãn expected-first", "So sánh 64 và 256 bước SFT với cùng pool nhãn và prompt. Có checkpoint 64 của chính lượt học mới để đối chiếu.", "SFT256 tăng expected nhưng giảm số code phát hiện. Kết quả này thuộc cấu hình nhãn cũ.", ["validation-comparison.png", "learning-curve.png"]),
-    "apps-reward-ablation": ("Tỷ trọng reward trong GRPO", "Hai nhánh cùng SFT64 expected-first, cùng 96 bước GRPO; so trọng số 0,1/0,2/0,7 với chia đều 1/3.", "Reward chia đều tăng nhẹ ở seed 42, nhưng mức tăng chưa ổn định khi sinh lại với seed 43/44.", ["validation-comparison.png", "training-components.png"]),
-    "apps-error-analysis": ("Phân tích lỗi ở lượt đối kháng ban đầu", "Phân loại đầu ra Validation của các checkpoint expected-first và đối chiếu những input có thể làm lộ lỗi.", "Expected sai làm mất một phần cơ hội bắt lỗi, kể cả khi input đã phân biệt được reference với mutant.", ["failure-breakdown.png"]),
-    "apps-expected-diagnosis": ("Phân tích expected sai", "Đếm lỗi trên ba seed sinh của Qwen gốc, SFT64 input-first và các nhánh GRPO.", "Ở SFT64 + GRPO96, có 69/180 mẫu hợp lệ nhưng expected sai; 36 input trong số đó có thể làm lộ lỗi. Dữ liệu từng bài nằm trong per-problem.csv.", ["expected-errors.png"]),
-    "apps-serialization-diagnosis": ("Thứ tự khóa JSON sau SFT", "Các nhãn cũ đều đặt expected trước input do hàm canonical sắp xếp tên khóa.", "Sau SFT, phần lớn JSON model sinh cũng bắt đầu bằng expected. Phép so sánh thứ tự target được lưu riêng tại apps-target-order.", []),
-    "apps-input-difficulty": ("Phân bố input làm lộ lỗi", "Vét cạn miền input Validation để đo tỷ lệ input phân biệt được reference với từng mutant.", "Xác suất phát hiện với bốn lần chọn đều có hoàn lại là 1−(1−p)^4, giả sử expected luôn đúng. Đây là phân tích bằng reference, không phải thành tích của model.", []),
-    "apps-lora-coverage": ("Phạm vi adapter LoRA", "So profile q_proj/v_proj của self-attention với profile thêm projection của linear attention.", "Profile cũ có 208.896 tham số trên 6/24 khối; profile mở rộng có 798.720 tham số trên 24/24 khối. Hai lượt SFT64 hoàn tất; phép thử dừng trước Validation để kiểm tra thứ tự nhãn.", []),
-    "apps-expected-budget": ("Lượt SFT dừng ở kiểm tra replay", "Chạy lại mốc 64 để kiểm tra điều kiện so ngân sách với adapter lịch sử.", "Lượt này dừng sau 116/256 bước. Relative L2 tại mốc 64 là 0,002685916, vượt ngưỡng 0,001. Nhãn, thứ tự ví dụ và mã dùng chung trùng hash; nguyên nhân độ lệch chưa được xác định. Không có đánh giá chất lượng mới trong lượt này.", []),
-    "apps-tuning": ("Thinking và hợp đồng đầu ra", "Các phép thử suy luận trên Train với adapter đóng băng: bật thinking và thay diễn đạt kiểu đầu ra trong prompt.", "Nhánh thinking lưu 20 mẫu đều bị cắt ở trần 768 token. Hai prompt v3/v4 cũng không qua điều kiện Train; không chấm thêm Validation cho các ứng viên này.", []),
-    "apps-data-profile": ("Thống kê dữ liệu", "Tập con APPS gồm 29 bài, 74 mutant, chia theo bài thành Train/Validation/Test. Phần thống kê đặc trưng dùng Train; số lượng tập chia lấy từ manifest.", "Dữ liệu nguồn, hợp đồng input và bộ chấm được mô tả trong tài liệu dữ liệu.", ["dataset-profile.png", "pipeline.png"]),
-    "apps-final-test": ("Đánh giá Test", "Đánh giá các checkpoint và cấu hình đã chốt trên tập Test phát triển.", "Kết quả được tổng hợp từ các lượt đánh giá đã lưu.", ["comparison.png"]),
-}
+HEADERS = ("Valid /60", "Correct expected /60", "Bug-detecting tests /60", "Functions detected /15")
+LABELS = {'base': 'Base Qwen',
+ 'baseline_validation': 'Base Qwen',
+ 'fresh_grpo_pilot': 'Initial GRPO',
+ 'sft': 'SFT64',
+ 'sft256': 'SFT256',
+ 'sft256-grpo96': 'SFT256 + GRPO96',
+ 'grpo': 'GRPO',
+ 'control': 'Fixed-code GRPO',
+ 'adaptive': 'Adversarial GRPO',
+ 'sft_validation': 'SFT64',
+ 'pilot_validation': 'SFT64 + GRPO96',
+ 'SFT64_parent': 'SFT64',
+ 'legacy-v1': 'Weighted reward (0.1/0.2/0.7)',
+ 'equal-v1': 'Equal reward',
+ 'SFT64_historical': 'Earlier SFT64',
+ 'SFT64_same_trajectory': 'Same-run SFT64',
+ 'SFT256': 'SFT256'}
+NOTES = {'apps-pilot': ('Initial APPS pilot',
+                'Base Qwen and the initial GRPO run, using prompt v1. Each Validation function receives four '
+                'tests with generation seed 42.',
+                'This trial predates the revised prompt and SFT warm start.',
+                []),
+ 'apps-sft-grpo': ('SFT and GRPO with expected-first labels',
+                   'Base Qwen, SFT64 and GRPO96 evaluated on 15 Validation functions with generation seed '
+                   '42. SFT targets place expected before input.',
+                   'Training increased valid outputs, while detected functions remained at 3/15.',
+                   ['validation-comparison.png']),
+ 'apps-adversarial': ('Expected-first adversarial curriculum',
+                      'Both branches start from the same SFT64 adapter and run two rounds of 48 GRPO steps. '
+                      'Results below use generation seed 42.',
+                      'The fixed-code and adversarial branches each detected 2/15 functions.',
+                      ['validation-comparison.png']),
+ 'apps-adversarial-review': ('Expected-first resampling',
+                             'Four checkpoints evaluated with generation seeds 42/43/44. Each checkpoint '
+                             'comes from one training run.',
+                             'The fixed-code branch detected 2.67/15 functions on average, compared with '
+                             '3.00/15 for the adversarial branch.',
+                             ['sampling.png']),
+ 'apps-input-first-adversarial': ('Input-first adversarial curriculum',
+                                  'Both branches start from SFT64 with input-first targets and run two '
+                                  'rounds of 48 GRPO steps. Results below use generation seed 42.',
+                                  'Both branches detected 3/15 functions at seed 42.',
+                                  ['validation-comparison.png']),
+ 'apps-input-first-review': ('Input-first resampling',
+                             'Base Qwen, SFT64 and both GRPO branches evaluated with generation seeds '
+                             '42/43/44.',
+                             'Both GRPO branches detected an average of 4/15 functions and produced 5/60 '
+                             'bug-detecting tests.',
+                             ['sampling.png']),
+ 'apps-target-order': ('SFT target field order',
+                       'The study keeps the same 319 input/expected pairs and training settings while '
+                       'changing the order of the two top-level target fields. SFT and GRPO checkpoints are '
+                       'compared separately.',
+                       'Input-first targets increased correct expected outputs at all three generation '
+                       'seeds. Most of the change appeared after SFT; the gain in bug-detecting tests was '
+                       'concentrated in rounding problem 2947.',
+                       ['comparison.png']),
+ 'apps-shared-sft-budget': ('Input-first SFT budget',
+                            'The 64-step and 256-step checkpoints come from one training trajectory, sharing '
+                            'initialization and the first 64 steps. Validation uses three generation seeds.',
+                            'The 256-step checkpoint improved correct outputs and bug detection over the '
+                            '64-step checkpoint in this run.',
+                            ['learning-curve.png']),
+ 'apps-sft256-grpo': ('GRPO after SFT256',
+                      'A 96-step GRPO stage starts from the SFT256 adapter and uses fixed Train code. Parent '
+                      'and child are evaluated with the same three generation seeds.',
+                      'GRPO slightly increased valid outputs but reduced correct expected outputs and bug '
+                      'detection.',
+                      ['comparison.png']),
+ 'apps-sft-budget': ('Expected-first SFT budget',
+                     'Comparison of 64 and 256 SFT steps with the same label pool and prompt. The new '
+                     'training run retains its own 64-step checkpoint for comparison.',
+                     'SFT256 increased correct expected outputs but detected fewer functions. This trial '
+                     'uses the earlier expected-first labels.',
+                     ['validation-comparison.png', 'learning-curve.png']),
+ 'apps-reward-ablation': ('GRPO reward weights',
+                          'Both runs start from the same expected-first SFT64 adapter and use 96 GRPO steps. '
+                          'Component weights 0.1/0.2/0.7 are compared with equal weights of 1/3.',
+                          'Equal weights improved the seed-42 result slightly, but the gain was not '
+                          'consistent when resampled with seeds 43/44.',
+                          ['validation-comparison.png', 'training-components.png']),
+ 'apps-error-analysis': ('Output errors in the initial adversarial trial',
+                         'Validation outputs from expected-first checkpoints are classified by failure type '
+                         'and compared with inputs that could expose a bug.',
+                         'Incorrect expected outputs prevent some otherwise useful inputs from counting as '
+                         'bug-detecting tests.',
+                         ['failure-breakdown.png']),
+ 'apps-expected-diagnosis': ('Incorrect expected outputs',
+                             'Error counts across three generation seeds for base Qwen, input-first SFT64 '
+                             'and the GRPO branches.',
+                             'SFT64 + GRPO96 produced 69/180 valid samples with an incorrect expected '
+                             'output. Of those, 36 inputs could expose a bug. Per-problem counts are in '
+                             'per-problem.csv.',
+                             ['expected-errors.png']),
+ 'apps-serialization-diagnosis': ('JSON field order after SFT',
+                                  'Earlier SFT labels placed expected before input because canonical '
+                                  'serialization sorted the keys.',
+                                  'Most JSON outputs after SFT also began with expected. The controlled '
+                                  'ordering comparison is recorded in [SFT target field '
+                                  'order](../apps-target-order/README.md).',
+                                  []),
+ 'apps-input-difficulty': ('Bug-exposing input density',
+                           'Exhaustive enumeration of each Validation input domain measures the fraction of '
+                           'inputs that distinguish the reference solution from a mutant.',
+                           'With four independent uniform draws with replacement, detection probability is 1 '
+                           '- (1 - p)^4, assuming every expected output is correct. This is a '
+                           'reference-based calculation, not a model score.',
+                           []),
+ 'apps-lora-coverage': ('LoRA target coverage',
+                        'Comparison of self-attention q_proj/v_proj targets with a profile that also '
+                        'includes linear-attention projections.',
+                        'The original profile has 208,896 trainable parameters across 6/24 blocks; the '
+                        'expanded profile has 798,720 across 24/24. Both SFT64 runs completed, but the trial '
+                        'stopped before Validation to investigate target ordering.',
+                        []),
+ 'apps-expected-budget': ('SFT replay gate',
+                          'A replay of the 64-step checkpoint checks whether a longer training-budget '
+                          'comparison can use the historical adapter as a matching baseline.',
+                          'The run stopped after 116/256 steps. Relative L2 at step 64 was 0.002685916, '
+                          'above the 0.001 threshold. Label, example-order and shared-source hashes matched; '
+                          'the cause of the divergence remains unresolved. No new quality evaluation was '
+                          'completed.',
+                          []),
+ 'apps-tuning': ('Thinking and output contracts',
+                 'Train-only inference trials with frozen adapters: enabling thinking and changing the '
+                 'output-type instructions in the prompt.',
+                 'All 20 saved thinking samples were truncated at the 768-token limit. Prompt variants v3/v4 '
+                 'also failed the Train gate, so these candidates were not evaluated further on Validation.',
+                 []),
+ 'apps-data-profile': ('Earlier APPS dataset profile',
+                       'The earlier subset contains 29 problems and 74 mutants, split by source problem into '
+                       'Train, Validation and Test. Feature summaries use Train; split sizes come from the '
+                       'manifest.',
+                       'See [dataset construction](../../docs/APPS_DATASET.md) for source and verifier '
+                       'details. This profile describes the earlier subset, not the expanded 58-problem '
+                       'Train set.',
+                       ['dataset-profile.png', 'pipeline.png']),
+ 'apps-final-test': ('Held-out evaluation',
+                     'Evaluation of the selected checkpoints and settings on the development holdout.',
+                     'Results are summarized from saved evaluation runs.',
+                     ['comparison.png'])}
 
 
 def read(path):
@@ -46,7 +158,7 @@ def label(value):
 
 def number(value):
     if isinstance(value, dict) and "mean" in value:
-        return f'{value["mean"]:.2f} ± {value["sample_sd"]:.2f}'.replace(".", ",")
+        return f'{value["mean"]:.2f} ± {value["sample_sd"]:.2f}'
     return str(value).replace("|", "\\|")
 
 
@@ -70,7 +182,7 @@ def csv_table(path, metric_headers=HEADERS):
     if not {valid, "correct_expected", bug, "cases_detected"}.issubset(headers):
         return ""
     keys = [k for k in ("variant", "profile", "sft_steps", "order", "stage", "generation_seed") if k in headers]
-    titles = {"variant": "Cấu hình", "profile": "LoRA", "sft_steps": "Bước SFT", "order": "Nhãn", "stage": "Mốc", "generation_seed": "Seed sinh"}
+    titles = {"variant": "Configuration", "profile": "LoRA", "sft_steps": "SFT steps", "order": "Target order", "stage": "Stage", "generation_seed": "Generation seed"}
     return table([titles[k] for k in keys] + list(metric_headers),
                  [[label(row[k]) for k in keys] + [row[f] for f in (valid, "correct_expected", bug, "cases_detected")] for row in records])
 
@@ -87,70 +199,70 @@ def summary_table(data, metric_headers=HEADERS):
             for stage, values in fields.items():
                 if isinstance(values, dict) and "correct_expected" in values:
                     rows.append([name + " / " + stage, *[values[f] for f in FIELDS]])
-    return table(["Cấu hình", *metric_headers], rows, highlight=True) if rows else ""
+    return table(["Configuration", *metric_headers], rows, highlight=False) if rows else ""
 
 
 def write_result_readme(folder):
     folder = Path(folder)
-    title, intro, conclusion, figures = NOTES.get(folder.name, ("Kết quả thực nghiệm", "Số liệu và cấu hình của lượt chạy.", "", []))
+    title, intro, conclusion, figures = NOTES.get(folder.name, ("Experiment results", "Recorded settings and results.", "", []))
     metrics = folder / "metrics.json"
     data = read(metrics) if metrics.exists() else {}
     headers = HEADERS
     if folder.name == "apps-final-test" and data:
         slots, cases = data["test_slots_per_run"], data["test_cases"]
-        headers = (f"Hợp lệ /{slots}", f"Expected đúng /{slots}", f"Test bắt lỗi /{slots}", f"Code phát hiện /{cases}")
+        headers = (f"Valid /{slots}", f"Correct expected /{slots}", f"Bug-detecting tests /{slots}", f"Functions detected /{cases}")
         selected = label(data["selected_variant_before_test"])
-        intro = f'Test phát triển gồm {cases} code, mỗi lượt có {slots} test. Checkpoint được chọn từ Validation trước đợt đánh giá: {selected}.'
-        conclusion = 'Đây là tập giữ lại từ APPS Train; APPS Test chính thức được ghi riêng trong protocol.json. Bảng trình bày trung bình và SD của các seed sinh, với một lượt train cho mỗi cấu hình.'
+        intro = f'The development holdout contains {cases} faulty functions and {slots} generated tests per run. The checkpoint selected using Validation before evaluation was {selected}.'
+        conclusion = 'The holdout is drawn from APPS Train; official APPS Test usage is recorded separately in protocol.json. Tables show generation-seed means and standard deviations, with one training run per configuration.'
     parts = ["# " + title, "", intro, ""]
     if metrics.exists():
         summary = data.get("summary", {})
         if folder.name == "apps-sft256-grpo":
             winner = label(data["selected_within_this_pair"])
-            conclusion = f'Trong cặp so sánh này, {winner} có kết quả tốt hơn theo tiêu chí chọn checkpoint. Các số đếm trước và sau GRPO được giữ riêng trong bảng.'
+            conclusion = f'{winner} was selected within this pair using the recorded checkpoint-selection criterion. The table retains counts before and after GRPO.'
         elif folder.name == "apps-shared-sft-budget" and summary:
             a, b = summary["64"], summary["256"]
-            conclusion = f'Expected trung bình ở SFT64 và SFT256 lần lượt là {a["correct_expected"]["mean"]:.2f} và {b["correct_expected"]["mean"]:.2f}/60; số code phát hiện là {a["cases_detected"]["mean"]:.2f} và {b["cases_detected"]["mean"]:.2f}/15.'
+            conclusion = f'Mean correct expected outputs were {a["correct_expected"]["mean"]:.2f}/60 at SFT64 and {b["correct_expected"]["mean"]:.2f}/60 at SFT256; mean detected functions were {a["cases_detected"]["mean"]:.2f}/15 and {b["cases_detected"]["mean"]:.2f}/15, respectively.'
         elif folder.name in ("apps-adversarial-review", "apps-input-first-review"):
             a, b = summary["control"], summary["adaptive"]
-            conclusion = f'Nhánh cố định phát hiện trung bình {a["cases_detected"]["mean"]:.2f}/15 code; nhánh đối kháng {b["cases_detected"]["mean"]:.2f}/15. Chi phí sinh và lọc code được lưu trong costs.csv.'
+            conclusion = f'The fixed-code branch detected {a["cases_detected"]["mean"]:.2f}/15 functions on average; the adversarial branch detected {b["cases_detected"]["mean"]:.2f}/15. Generation and filtering costs are recorded in costs.csv.'
         elif folder.name == "apps-lora-coverage" and summary:
-            conclusion = 'So sánh các cấu hình LoRA trên cùng ngân sách và các seed sinh. Tham số, chi phí và kết quả từng lượt nằm trong các tệp dữ liệu bên dưới.'
+            conclusion = 'LoRA configurations are compared at the same budget and generation seeds. Parameters, costs and per-run results are available in the files below.'
         elif folder.name == "apps-expected-budget" and data.get("result", {}).get("status") != "stopped_at_replay_gate":
-            title = "Ngân sách SFT"
+            title = "SFT budget"
             parts[0] = "# " + title
-            conclusion = f'Trạng thái: {data["result"]["status"]}. Kết quả đánh giá, nếu có, được giữ riêng theo checkpoint và seed sinh.'
+            conclusion = f'Status: {data["result"]["status"]}. Available evaluations are recorded separately by checkpoint and generation seed.'
         text = summary_table(data, headers)
         if text:
-            parts += [text, "", "Trung bình ± SD trên ba seed sinh; mỗi cấu hình có một lượt train.", ""]
+            parts += [text, "", "Mean ± sample SD across three generation seeds; one training run per configuration.", ""]
     if (folder / "metrics.csv").exists():
         details = csv_table(folder / "metrics.csv", headers)
         if details:
-            parts += ["## Kết quả từng lượt", "", details, ""]
+            parts += ["## Per-run counts", "", details, ""]
     if folder.name == "apps-expected-diagnosis":
         counts = folder / "counts.csv"
         with counts.open(encoding="utf-8", newline="") as stream:
             records = list(csv.DictReader(stream))
-        parts += [table(["Checkpoint", "Expected đúng /180", "Hợp lệ, expected sai /180", "Input lộ lỗi nhưng expected sai"],
+        parts += [table(["Checkpoint", "Correct expected /180", "Valid but incorrect expected /180", "Bug-exposing input with incorrect expected"],
                         [[label(r["variant"]), r["correct_expected"], r["wrong_expected"], r["input_exposes_bug_but_expected_wrong"]] for r in records]), ""]
     parts += [conclusion, ""]
     for index, image in enumerate(figures, 1):
-        parts += [f'![{title}]({image})', "", f'Hình {index}. {title}.', ""]
+        parts += [f'![{title}]({image})', "", f'Figure {index}. {title}.', ""]
     if folder.name == "apps-reward-ablation" and (folder / "sampling-metrics.csv").exists():
-        parts += ["[Kết quả sinh lại với ba seed](SAMPLING.md).", ""]
+        parts += ["[Resampling across three seeds](SAMPLING.md).", ""]
     data_files = [p.name for p in sorted(folder.iterdir()) if p.suffix in (".csv", ".json") and p.name not in ("review.json", "ui-review.json")]
     if data_files:
-        parts += ["## Dữ liệu", "", " · ".join(f'[{name}]({name})' for name in data_files), ""]
-    parts += ["[Cấu hình và chỉ số đánh giá](../../docs/EXPERIMENTS.md).", ""]
+        parts += ["## Data files", "", " · ".join(f'[{name}]({name})' for name in data_files), ""]
+    parts += ["[Evaluation guide](../../docs/EXPERIMENTS.md).", ""]
     (folder / "README.md").write_text("\n".join(parts), encoding="utf-8", newline="\n")
 
 
 def write_sampling_notes(folder):
     folder = Path(folder)
-    text = "# Reward: kết quả theo seed sinh\n\nCác checkpoint cố định được đánh giá với seed sinh 42/43/44, mỗi lượt 60 test trên 15 code Validation.\n\n"
+    text = "# Reward comparison by generation seed\n\nFixed checkpoints evaluated with generation seeds 42/43/44. Each run generates 60 tests for 15 Validation functions.\n\n"
     text += csv_table(folder / "sampling-metrics.csv")
-    text += "\n\nMột seed train, ba seed sinh. Các số đếm theo seed được giữ để xem biến động lấy mẫu.\n\n"
-    text += "![Kết quả theo seed](sampling-variability.png)\n\nHình 1. Kết quả sinh lại của các checkpoint.\n\n[Dữ liệu](sampling-metrics.json) · [Thí nghiệm reward](README.md).\n"
+    text += "\n\nOne training seed and three generation seeds. Per-seed counts show sampling variability.\n\n"
+    text += "![Results by generation seed](sampling-variability.png)\n\nFigure 1. Resampled checkpoint results.\n\n[Data files](sampling-metrics.json) · [Reward experiment](README.md).\n"
     (folder / "SAMPLING.md").write_text(text, encoding="utf-8", newline="\n")
 
 
